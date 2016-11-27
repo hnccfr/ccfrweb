@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="ResourceConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+			 	<value>classpath*:client.properties</value>
+				<value>WEB-INF/conf/server.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- URLBrokers -->
+	<bean id="appServerBroker" class="com.hundsun.network.melody.common.web.url.URLBroker">
+		<property name="encoding" value="${web.encoding}"></property>
+		<property name="config">
+			<bean class="com.hundsun.network.melody.common.web.url.URLConfig">
+				<property name="host" value="${app.server.host}"></property>
+				<property name="port" value="${app.server.port}"></property>
+				<property name="followContextPath" value="true"></property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="imageServerBroker" class="com.hundsun.network.melody.common.web.url.StampURLBroker">
+		<property name="encoding" value="${web.encoding}"></property>
+		<property name="config">
+			<bean class="com.hundsun.network.melody.common.web.url.URLConfig">
+				<property name="host" value="${image.server.host}"></property>
+				<property name="port" value="${image.server.port}"></property>
+				<property name="followContextPath" value="true"></property>
+			</bean>
+		</property>
+		<property name="stamp" value="${web.stamp}"></property>
+	</bean>
+
+	<bean id="uploadServerBroker" class="com.hundsun.network.melody.common.web.url.StampURLBroker">
+		<property name="encoding" value="${web.encoding}"></property>
+		<property name="config">
+			<bean class="com.hundsun.network.melody.common.web.url.URLConfig">
+				<property name="host" value="${upload.server.host}"></property>
+				<property name="port" value="${upload.server.port}"></property>
+				<property name="path" value="${upload.server.path}"></property>
+				<property name="followContextPath" value="true"></property>
+			</bean>
+		</property>
+		<property name="stamp" value="${web.stamp}"></property>
+	</bean>
+	
+	<bean id="bookingServerBroker" class="com.hundsun.network.melody.common.web.url.URLBroker">
+		<property name="encoding" value="${web.encoding}"></property>
+		<property name="config">
+			<bean class="com.hundsun.network.melody.common.web.url.URLConfig">
+				<property name="host" value="${booking.server.host}"></property>
+				<property name="port" value="${booking.server.port}"></property>
+				<property name="path" value="${booking.server.path}"></property>
+				<property name="followContextPath" value="true"></property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean class="com.hundsun.network.melody.common.web.url.ServletContextInitHelper">
+		<property name="brokers">
+			<list>
+				<ref bean="appServerBroker"/>
+				<ref bean="imageServerBroker"/>
+				<ref bean="uploadServerBroker"/>
+				<ref bean="bookingServerBroker"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="encodingFilterBean" class="org.springframework.web.filter.CharacterEncodingFilter">
+		<property name="encoding" value="${web.encoding}"></property>
+		<property name="forceEncoding" value="false"></property>
+	</bean>
+
+	<!-- cookyjar 配置 -->
+	<bean id="cookieCrypto" class="com.hundsun.network.melody.common.util.crypto.impl.AESCryptoImpl">
+		<property name="key" value="${cookie.aes.key}"></property>
+		<property name="ivParameter" value="${cookie.aes.iv}"></property>
+	</bean>
+
+	<bean id="cookyjarConfigure" class="com.hundsun.network.melody.common.web.cookyjar.CookyjarConfigure">
+		<!-- cookie缺省配置 -->
+		<property name="defaultConfigure">
+			<bean class="com.hundsun.network.melody.common.web.cookyjar.CookieConfigure">
+				<property name="path" value="/" />
+				<property name="lifeTime" value="-1" />
+				<property name="domain" value=".${app.domain}" />
+				<property name="httpOnly" value="true" />
+			</bean>
+		</property>
+		<!-- 每个cookie的配置是 本身配置+缺省配置 -->
+		<property name="cookieConfigures">
+			<list>
+				<bean class="com.hundsun.network.melody.common.web.cookyjar.CookieConfigure">
+					<property name="name" value="eclpUserAgent" />
+					<property name="clientName" value="_aa_" />
+					<property name="crypto" ref="cookieCrypto" />
+					<property name="selfDependenceClass" value="com.hundsun.eclp.client.common.GenericUserAgent"></property>
+					<property name="randomChar" value="4" />
+					<property name="httpOnly" value="true" />
+				</bean>
+				<bean class="com.hundsun.network.melody.common.web.cookyjar.CookieConfigure">
+					<property name="name" value="settlerAgent" />
+					<property name="clientName" value="sy_iu_" />
+					<property name="crypto" ref="cookieCrypto" />
+					<property name="selfDependenceClass" value="com.hundsun.network.hseccms.admin.security.SettlerAgent"></property>
+					<property name="randomChar" value="4" />
+					<property name="httpOnly" value="true" />
+				</bean>
+				<!-- 验证码 -->
+				<bean class="com.hundsun.network.melody.common.web.cookyjar.CookieConfigure">
+					<property name="name" value="webCCode" />
+					<property name="clientName" value="_cc_" />
+					<property name="crypto" ref="cookieCrypto" />
+					<property name="selfDependenceClass" value="com.hundsun.network.hseccms.common.CheckCode"></property>
+					<property name="randomChar" value="4" />
+					<property name="httpOnly" value="true" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="responseOutputBufferFilterBean" class="com.hundsun.network.melody.common.web.filter.ResponseOutputBufferFilter">
+		<property name="outCharset" value="${web.encoding}"></property>
+	</bean>
+	<bean id="cookyjarFilterBean" class="com.hundsun.network.melody.common.web.cookyjar.CookyjarFilter">
+		<property name="cookyjarConfigure" ref="cookyjarConfigure"></property>
+	</bean>
+	
+	<!-- 用户权限过滤器配置 -->	
+	<bean id="userPermissionFilterBean" class="com.hundsun.eclp.client.filter.UserPermissionFilter">
+		<property name="remoteUserService" ref="remotingClient"></property>
+		<property name="currentSystemCode" value="${subsystemCode}"></property>
+		<property name="plantformLoginUrl" value="${plantformLoginUrl}"></property>
+		<property name="agentName" value="settlerAgent"></property>
+		<property name="agentProxy" ref="agentProxy"></property>	
+	</bean>
+	
+	<bean id="fileRepository" class="com.hundsun.network.hseccms.admin.util.FileRepository">
+		<property name="uploadResource" value="${site.resource}"/>
+	</bean>
+	
+</beans>

@@ -1,0 +1,27 @@
+这边是正 --正---正--文
+#*
+<p>	
+<a href="$!{appServer}/demo/trade/auto.htm">点击这里会触发全部订单定时任务</a>
+</p>
+
+
+<p>	
+<a href="$!{appServer}/demo/trade/auto/remind.htm">订单提醒任务</a>
+</p>
+	
+
+<p>	
+<a href="$!{appServer}/demo/trade/auto/grnorder.htm">订单工单任务</a>
+</p>
+	
+
+<p>	
+<a href="$!{appServer}/demo/trade/auto/uncomment.htm">订单自动好评任务</a>
+</p>
+	
+
+
+<p>	
+<a href="$!{appServer}/demo/trade/auto/project.htm">挂牌项目自动撤牌任务</a>
+</p>
+*#

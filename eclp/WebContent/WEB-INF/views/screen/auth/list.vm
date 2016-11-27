@@ -1,0 +1,206 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+<body>
+    <div class="main">
+        <h2>权限管理</h2>
+		#if("$isSuccess" == "true")
+			<div class="mag-t2">
+				操作成功！
+			</div>
+		#elseif("$isSuccess" == "false")
+            <div class="mag-t1">
+    			$!{errorMsg}
+            </div>
+		#end
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_openAll.gif" title="张开已载入" onclick="expandAll(true);" />：点击张开所有已经载入的节点</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_closeAll.gif" title="折叠已载入" onclick="expandAll(false);" />：点击折叠所有已经载入的节点</p>
+		<br/>
+##    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/admin/up.gif" title="同级向上移动" onclick="moveTreeNode('up');"  /></p><br/>
+##    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/admin/dw.gif" title="同级向下移动" onclick="moveTreeNode('down');"  /></p><br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_refresh.png" title="刷新" onclick="refresh();" />：点击刷新整棵树</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_add.gif" title="新增" onclick="doAdd();" />：点击右侧可以新增权限</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_del.gif" title="删除" onclick="doDel();"  />：点击删除树中复选框选中的权限</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_help.gif" title="帮助" onclick="doDel();"  />：点击显示帮助页</p>
+		<br/><br/>
+		#if( $eclpUserAgent.userType == 1 )
+    	<p class="edit red">您是超级管理员，系统初始化的数据您没有权限修改！</p>
+		#else
+		<p class="edit red">您是应用管理员，“核心”数据您没有权限修改！</p>
+		#end
+	<form id="listForm" action="$!{appServer}/auth/list.htm" method="post">
+	<input type="hidden" id="id" name="id" value="">
+        <!-- 搜索模块
+  <div class="searchBox">
+    <h3><span>搜索活动</span></h3>
+    <table>
+      <tr>
+        <th>活动名称：</th>
+        <td><input type="text" class="inp inp-w160" /></td>
+        <th>活动状态：</th>
+        <td><select name="select" class="select" style="width:95px;">
+          <option>请选择</option>
+        </select></td>
+        <th>&nbsp;</th>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <th>活动时间：</th>
+        <td><input type="text" class="inp inp-w70" onclick="WdatePicker()" />
+          -
+          <input type="text" class="inp inp-w70" onclick="WdatePicker()" /></td>
+        <th>&nbsp;</th>
+        <td>&nbsp;</td>
+        <th>&nbsp;</th>
+        <td><button type="submit" class="btn">搜 索</button></td>
+      </tr>
+    </table>
+  </div>
+  搜索模块 END
+ 		<div class="tool">
+            <span><a href="$!{appServer}/auth/add.htm" hidefocus="true" class="bt_add">新增</a></span>
+            <span><a href="#" hidefocus="true" class="bt_add" onclick="doDel()">删除</a></span>
+        </div> 
+ -->        
+        <div class="clear"></div>
+		
+        <!-- 列表模块
+        <div class="listBox"> 
+          <h3><span>活动列表</span></h3> 
+            <table > 
+                <tr>
+                    <th>活动名称</th> 
+                    <th>活动开始时间</th>
+                    <th>活动结束时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="editactivity.html">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                <tr>
+                  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>已发布</td>      
+                    <td><a href="#">取消</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+				<tr class="bg">
+				  	<td>Apple电脑热卖</td>
+                    <td>2010年05月01日</td>
+                    <td>2011年05月31日</td>
+                    <td>未发布</td>      
+                    <td><a href="#">发布</a> <a href="#">编辑</a> <a href="#">预览</a></td>
+                </tr>
+                
+
+            </table> 
+			
+             <div class="pages-box" >
+                   	  <div class="pages">
+                            <a href="#" style="font-weight:bold">&laquo;</a><b> 1 </b>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            ...
+                            <a href="#">9</a>
+                            <a href="#" style="font-weight:bold">&raquo;</a> 
+                            <input type="text" size="2" title="输入页码按回车">
+                            <a href="#" style="color:#000">GO</a>
+                            页数: [ 1 / 253 ]
+               </div> 
+          </div>
+             
+        </div> 列表模块 END -->   
+        	
+    </form>
+    </div>
+    
+</body>

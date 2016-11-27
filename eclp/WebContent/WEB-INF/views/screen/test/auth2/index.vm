@@ -1,0 +1,38 @@
+##$iDemand.addCss('ligerLayout')
+##$iDemand.addJs('jquery_1_4_4')
+##$iDemand.addJs('ligerLayout')
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head >
+	$contain.get('/contain/htmlhead.htm').put('title',$title)
+<link rel="stylesheet" href="$appServer.get('styles/ligerAll.css')" />
+<link rel="stylesheet" href="$appServer.get('styles/ligerLayout.css')" />
+<script type="text/javascript" src="$appServer.get('scripts/jqueryeasyui/jquery-1.4.4.min.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/ligerLayout.js')"></script>
+#set($layout = 'layout/blank.vm')
+<script type="text/javascript">
+$(function (){
+	$("#layout1").ligerLayout({ leftWidth: 200});
+});
+</script> 
+<style type="text/css"> 
+body{padding:5px; margin:0; padding-bottom:15px;}
+#layout1{  width:100%;margin:0; padding:0;  }  
+.l-page-top{ height:80px; background:#f8f8f8; margin-bottom:3px;}
+h4{ margin:20px;}
+</style>
+</head>
+<body style="padding:10px"> 
+      <div id="layout1">
+            <div position="left" title="权限树">
+	<div style="width:95%; height:500px; margin:5px; float:left; border:1px solid #ccc; overflow:auto; ">
+				<iframe id="authTreeIframe" name="authTreeIframe" border="0" frameSpacing="0" marginHeight="0" src="${appServer}/test/auth2/tree.htm" frameBorder=0 noResize width="100%" height="100%" scrolling="no" vspale="0"></iframe>
+    </div>
+			</div>
+            <div position="center" title="权限列表">
+				<iframe id="authMainIframe" name="authMainIframe" border="0" frameSpacing="0" marginHeight="0" src="${appServer}/test/auth2/list.htm" frameBorder=0 noResize width="100%" scrolling="no" onload="this.height=this.contentWindow.document.documentElement.scrollHeight" vspale="0"></iframe>
+            </div>  
+        </div> 
+</body>
+	</html>

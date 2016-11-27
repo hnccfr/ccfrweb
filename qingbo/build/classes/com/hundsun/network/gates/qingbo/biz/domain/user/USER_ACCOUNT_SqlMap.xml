@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="userAccount" >
+  <typeAlias alias="UserAccount" type="com.hundsun.network.gates.qingbo.biz.domain.user.UserAccount"/>
+  <resultMap id="BaseResultMap" class="UserAccount" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    t_ua.ID, t_ua.ACCOUNT, t_ua.NAME, t_ua.PHONE, t_ua.MOBILE, 
+    t_ua.STATUS, t_ua.GMT_CREATE, t_ua.GMT_MODIFY
+  </sql>
+   
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterClass="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_ACCOUNT t_ua
+    where t_ua.ACCOUNT = #account#
+  </select>
+    
+</sqlMap>

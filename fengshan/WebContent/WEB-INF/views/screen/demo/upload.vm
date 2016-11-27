@@ -1,0 +1,31 @@
+
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<script src="$!{imageServer}/scripts/jquery.datePicker.js" type="text/javascript"></script>
+
+<form id="editForm" name="editForm" method="post" enctype="multipart/form-data" action="$!{appServer.get('/demo/upload.htm')}">
+<br>
+<br>
+<input  type="file" name="uploadFile" id="uploadFile"/>
+#if($imagePath)
+图片地址:$!{imagePath}
+<img src="$!{uploadServer}/$!{imagePath}"/>	
+#end
+<input type="submit"/>
+
+
+</form>
+
+这个是时间控件的运用：
+<input type="text" id="dateDemo" name="dateDemo"/><br>
+强烈建议页面中尽量避免写JS，而是写入到**.js文件中，目录可以跟vm目录同步	<br>
+更多关于 datePicker控件的运用可以参考<br>
+http://www.kelvinluck.com/assets/jquery/datePicker/v2/demo/<br>
+<script >
+$(function() {
+			$("#dateDemo").datePicker({
+				clickInput : true,
+				startDate:"1970-01-01"
+			});
+			
+});
+</script>

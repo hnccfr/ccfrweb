@@ -1,0 +1,114 @@
+<script>
+    function addSubmit(){
+		if(validateData()){
+			$("#addForm").submit();
+		}
+    }
+	
+	//验证
+	function validateData(){
+		var flag = true;
+	    if(jQuery("#proName").val() == ""){
+		   jQuery("#err_proName").text("此项为必填！");
+		   flag = false;
+		}else{
+			jQuery("#err_proName").text("*");
+		}
+		if(jQuery("#proRank").val() == ""){
+		   jQuery("#err_proRank").text("此项为必填！");
+		   flag = false;
+		}else{
+			 var reg = new RegExp("^\\d{0,2}$");
+    		 if (!reg.test(jQuery("#proRank").val())){
+			 	jQuery("#err_proRank").text("只能输入2位数字！");
+				flag = false;
+			 }else{
+			 	jQuery("#err_proRank").text("*");
+			 }
+		}
+	
+		return flag;
+	}
+	
+	function setTop(){
+		jQuery("#rootParCode").val("0");  
+		jQuery("#rootParName").text("顶级类型无父类型");
+    }
+	
+	   //取消按钮
+    function doback(){
+		var tcode = "$!{projectType.parCode}";
+		if(tcode==""){
+			history.go(-1);
+		}else{
+    		location.href = "$!{appServer}/baseset/projecttype/attriList.htm?tCode=$!{projectType.parCode}";
+		}
+    }
+    
+    </script>
+
+<div class="main">
+	<h2>添加项目类型</h2>
+  <form  name="addForm" id="addForm"  action="${appServer}/baseset/projecttype/addtype.htm" method="post" enctype="multipart/form-data" >
+  <div class="formBox">
+    <div class="content">
+	<h3><i></i><span>添加项目类型</span></h3>
+      <table class="c2">
+		<tr>
+          <th><span id="err_proName" class="red">*</span>父类型：</th>
+          <td>
+            <div id="rootParName" style="display:inline">$!{parCodeName}</div>
+			#springBind("projectType.parCode")
+			<input type="hidden" id="rootParCode" name="${status.expression}" value="$!{status.value}">
+			<button type="button"  class="button-s4"  onclick="setTop()">设为顶级类型</button>
+		</td>
+        </tr>
+        <tr>
+          <th><span id="err_proName" class="red">*</span>类型名称：</th>
+          <td>
+			#springBind("projectType.name")
+			<input type="text" class="inp" id="proName" name="${status.expression}" value="$!{status.value}" />
+            <span id="err_proName" class="red">${status.errorMessage}</span>
+		  </td>
+        </tr>
+        <tr>
+          <th><span id="err_proName" class="red">*</span>排序序号：</th>
+          <td>
+			#springBind("projectType.rank")
+			<input type="text" class="inp" id="proRank" name="${status.expression}" value="$!{status.value}" />
+			<span id="err_proRank" class="red">${status.errorMessage}</span>
+		  </td>
+        </tr>
+		<tr>
+          <th><span id="err_proName" class="red">*</span>是否启用：</th>
+          <td>
+			#springBind("projectType.enable")
+			<input type="radio" name="${status.expression}" id="radio" value="0" #if($!{projectType.enable} != 1)  checked #end /> 是
+            <input type="radio" name="${status.expression}" id="radio2" value="1" #if($!{projectType.enable} == 1)  checked #end />  否
+            <span class="red">${status.errorMessage}</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>备注 ：</th>
+          <td>
+			#springBind("projectType.remark")
+			<textarea  cols="3" rows="3" id="proRemark" name="${status.expression}" class="textarea">$!{status.value}</textarea>
+			<span class="red">${status.errorMessage}</span>
+		  </td>
+        </tr>
+      </table>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="addSubmit()">保存类目</button>
+	  <button type="button" class="button-s4" onclick="doback();">取消</button>
+    </div>
+    <!-- 表单按钮区 END -->
+    <div class="clear"></div>
+  </div>
+  </form>
+  <!-- 表单模块 END -->
+  <div class="clear"></div>
+  
+</div>
+

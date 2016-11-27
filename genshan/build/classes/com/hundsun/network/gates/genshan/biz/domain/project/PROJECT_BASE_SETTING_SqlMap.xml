@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ProjectBaseSetting" >
+  <typeAlias alias="ProjectBaseSetting" type="com.hundsun.network.gates.genshan.biz.domain.project.ProjectBaseSetting"/>
+  <typeAlias alias="ProjectBaseSettingQuery" type="com.hundsun.network.gates.genshan.biz.domain.query.ProjectBaseSettingQuery"/>
+  
+  <resultMap id="BaseResultMap" class="ProjectBaseSetting" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PRO_TYPE_CODE" property="proTypeCode" jdbcType="VARCHAR" />
+    <result column="PRO_TYPE_NAME" property="proTypeName" jdbcType="VARCHAR" />
+    <result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+    <result column="MEMBER_LEVEL" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="MEMBER_LEVEL_NAME" property="memberLevelName" jdbcType="VARCHAR" />
+    <result column="GOOD_COMMENT" property="goodComment" jdbcType="DECIMAL" />
+    <result column="BAD_COMMENT" property="badComment" jdbcType="DECIMAL" />
+    <result column="LISTING_CHECK_PROCESS" property="listingCheckProcess" jdbcType="VARCHAR" />
+    <result column="INTENTION_CHECK_PROCESS" property="intentionCheckProcess" jdbcType="VARCHAR" />
+    <result column="LISTING_JY_PROPORTION" property="listingJyProportion" jdbcType="DECIMAL" />
+    <result column="LISTING_JS_PROPORTION" property="listingJsProportion" jdbcType="DECIMAL" />
+    <result column="ORDER_JY_PROPORTION" property="orderJyProportion" jdbcType="DECIMAL" />
+    <result column="ORDER_JS_PROPORTION" property="orderJsProportion" jdbcType="DECIMAL" />
+    <result column="ENABLE" property="enable" jdbcType="CHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    t_pbs.ID, t_pbs.PRO_TYPE_CODE, t_pbs.TRADING_TYPE, t_pbs.MEMBER_LEVEL, t_pbs.GOOD_COMMENT, t_pbs.BAD_COMMENT, t_pbs.LISTING_CHECK_PROCESS, 
+    t_pbs.INTENTION_CHECK_PROCESS, t_pbs.LISTING_JY_PROPORTION/100 LISTING_JY_PROPORTION, t_pbs.LISTING_JS_PROPORTION/100 LISTING_JS_PROPORTION,
+     t_pbs.ORDER_JY_PROPORTION/100 ORDER_JY_PROPORTION, t_pbs.ORDER_JS_PROPORTION/100 ORDER_JS_PROPORTION,
+      t_pbs.ENABLE, t_pbs.GMT_CREATE, t_pbs.GMT_MODIFY, t_pbs.OPERATOR
+  </sql>
+  
+  <sql id="Where_Clause" >
+		<isNotEmpty prepend="and" property="proTypeCode" >
+			t_pbs.PRO_TYPE_CODE = #proTypeCode:VARCHAR# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="tradingType" >
+			t_pbs.TRADING_TYPE = #tradingType:VARCHAR# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="memberLevel" >
+			t_pbs.MEMBER_LEVEL = #memberLevel:VARCHAR# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="goodComment" >
+			<![CDATA[ t_pbs.GOOD_COMMENT >= #goodComment:DECIMAL# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="badComment" >
+			<![CDATA[ t_pbs.BAD_COMMENT <= #badComment:DECIMAL# ]]> 
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 查询分页条数 -->
+	<select id="selectPageList-count" parameterClass="ProjectBaseSettingQuery"
+			resultClass="java.lang.Integer" >
+		select count(*) from PROJECT_BASE_SETTING t_pbs
+		where 1=1 
+		<include refid="Where_Clause" />
+	</select>
+	
+	<!-- 查询分页结果集 -->
+	<select id="selectPageList" parameterClass="ProjectBaseSettingQuery"
+			resultMap="BaseResultMap">
+		<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+			select 
+			t_pbs.ID, t_pbs.PRO_TYPE_CODE, t_pbs.TRADING_TYPE, t_pbs.MEMBER_LEVEL, t_pbs.GOOD_COMMENT, t_pbs.BAD_COMMENT, t_pbs.LISTING_CHECK_PROCESS, 
+		    t_pbs.INTENTION_CHECK_PROCESS, t_pbs.LISTING_JY_PROPORTION/100 LISTING_JY_PROPORTION, t_pbs.LISTING_JS_PROPORTION/100 LISTING_JS_PROPORTION,
+		     t_pbs.ORDER_JY_PROPORTION/100 ORDER_JY_PROPORTION, t_pbs.ORDER_JS_PROPORTION/100 ORDER_JS_PROPORTION,
+		      t_pbs.ENABLE, t_pbs.GMT_CREATE, t_pbs.GMT_MODIFY, t_pbs.OPERATOR
+			,t_pt.name  PRO_TYPE_NAME
+			,b_sms.LEVEL_NAME MEMBER_LEVEL_NAME
+			from PROJECT_BASE_SETTING t_pbs  
+			left join project_type t_pt on t_pbs.PRO_TYPE_CODE=t_pt.code 
+			left join SYSTEM_MEMBERLEVEL_SET b_sms on t_pbs.MEMBER_LEVEL = b_sms.MEMBER_LEVEL 
+			where 1=1 
+		]]>
+		<include refid="Where_Clause" />
+		<![CDATA[
+			order by t_pbs.GMT_CREATE
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+		]]>
+	</select>    
+  
+  <!-- 根据id查询 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,t_pt.name  PRO_TYPE_NAME
+	,b_sms.LEVEL_NAME MEMBER_LEVEL_NAME
+    from PROJECT_BASE_SETTING t_pbs 
+    left join project_type t_pt on t_pbs.PRO_TYPE_CODE=t_pt.code 
+	left join SYSTEM_MEMBERLEVEL_SET b_sms on t_pbs.MEMBER_LEVEL = b_sms.MEMBER_LEVEL 
+    where t_pbs.ID = #id:DECIMAL#
+  </select>
+  
+  <!-- 根据查询条件返回列表，添加、修改时验证name是否已经存在 -->
+   <select id="selectConditionList" parameterClass="ProjectBaseSetting" resultMap="BaseResultMap">
+		select  <include refid="Base_Column_List" />
+		,t_pbs.PRO_TYPE_CODE  PRO_TYPE_NAME
+		,t_pbs.MEMBER_LEVEL MEMBER_LEVEL_NAME
+		from  PROJECT_BASE_SETTING t_pbs
+		where 1=1 
+		<isNotEmpty prepend="and" property="proTypeCode" >
+			t_pbs.PRO_TYPE_CODE = #proTypeCode:VARCHAR# 
+		</isNotEmpty>
+		<isEmpty prepend="and" property="proTypeCode" >
+			t_pbs.PRO_TYPE_CODE is null
+		</isEmpty>	
+		<isNotEmpty prepend="and" property="tradingType" >
+			t_pbs.TRADING_TYPE = #tradingType:VARCHAR# 
+		</isNotEmpty>
+		<isEmpty prepend="and" property="tradingType" >
+			t_pbs.TRADING_TYPE is null
+		</isEmpty>
+		<isNotEmpty prepend="and" property="memberLevel" >
+			t_pbs.MEMBER_LEVEL = #memberLevel:VARCHAR# 
+		</isNotEmpty>
+		<isEmpty prepend="and" property="memberLevel" >
+			t_pbs.MEMBER_LEVEL is null 
+		</isEmpty>
+		<isNotNull prepend="and" property="goodComment" >
+			<![CDATA[ t_pbs.GOOD_COMMENT = #goodComment:DECIMAL# ]]>
+		</isNotNull>
+		<isNull prepend="and" property="goodComment" >
+			t_pbs.GOOD_COMMENT is null
+		</isNull>
+		<isNotNull prepend="and" property="badComment" >
+			<![CDATA[ t_pbs.BAD_COMMENT = #badComment:DECIMAL# ]]> 
+		</isNotNull>
+		<isNull prepend="and" property="badComment" >
+			t_pbs.BAD_COMMENT is null
+		</isNull>
+		<isNotEmpty prepend="and" property="id">
+			<![CDATA[ t_pbs.ID != #id:DECIMAL# ]]>
+		</isNotEmpty>
+  </select>
+  
+  <!-- 新增 -->
+  <insert id="insert" parameterClass="ProjectBaseSetting" >
+    insert into PROJECT_BASE_SETTING (ID, PRO_TYPE_CODE, TRADING_TYPE, MEMBER_LEVEL, 
+      GOOD_COMMENT, BAD_COMMENT, LISTING_CHECK_PROCESS, INTENTION_CHECK_PROCESS, 
+      LISTING_JY_PROPORTION, LISTING_JS_PROPORTION, ORDER_JY_PROPORTION, 
+      ORDER_JS_PROPORTION, ENABLE, GMT_CREATE, GMT_MODIFY, 
+      OPERATOR)
+    values (SEQ_PROJECT_BASE_SETTING.NextVal, #proTypeCode:VARCHAR#, #tradingType:VARCHAR#, #memberLevel:VARCHAR#, 
+      #goodComment:DECIMAL#, #badComment:DECIMAL#, #listingCheckProcess:VARCHAR#, #intentionCheckProcess:VARCHAR#, 
+      #listingJyProportion:DECIMAL#*100, #listingJsProportion:DECIMAL#*100, #orderJyProportion:DECIMAL#*100, 
+      #orderJsProportion:DECIMAL#*100, #enable:CHAR#, sysdate, sysdate, 
+      #operator:VARCHAR#)
+  </insert>
+  
+  <!-- 更新 -->
+  <update id="updateByPrimaryKey" parameterClass="ProjectBaseSetting" >
+    update PROJECT_BASE_SETTING
+    set PRO_TYPE_CODE = #proTypeCode:VARCHAR#,
+      TRADING_TYPE = #tradingType:VARCHAR#,
+      MEMBER_LEVEL = #memberLevel:VARCHAR#,
+      GOOD_COMMENT = #goodComment:DECIMAL#,
+      BAD_COMMENT = #badComment:DECIMAL#,
+      LISTING_CHECK_PROCESS = #listingCheckProcess:VARCHAR#,
+      INTENTION_CHECK_PROCESS = #intentionCheckProcess:VARCHAR#,
+      LISTING_JY_PROPORTION = #listingJyProportion:DECIMAL#*100,
+      LISTING_JS_PROPORTION = #listingJsProportion:DECIMAL#*100,
+      ORDER_JY_PROPORTION = #orderJyProportion:DECIMAL#*100,
+      ORDER_JS_PROPORTION = #orderJsProportion:DECIMAL#*100,
+      ENABLE = #enable:CHAR#,
+      <!-- GMT_CREATE = #gmtCreate:TIMESTAMP#, -->
+      GMT_MODIFY = #gmtModify:TIMESTAMP#,
+      OPERATOR = #operator:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <!-- 设置启用状态 -->
+   <update id="updateEnable" parameterClass="java.util.Map">
+		update PROJECT_BASE_SETTING t_pbs set t_pbs.ENABLE = #enable:CHAR# where ID = #id:DECIMAL#
+  </update>
+</sqlMap>

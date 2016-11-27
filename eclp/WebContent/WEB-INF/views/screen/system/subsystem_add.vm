@@ -1,0 +1,282 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+<script>
+function doSubSystemAdd(){
+	$("#name").blur();
+	$("#fullName").blur();
+
+	//$("#sortErr").html("");
+	$("#domainErr").html("");
+	$("#urlErr").html("");
+    $("#superCodeErr").html("");
+		
+	var temp = $("#hiddenOpenType").val();
+
+//	if($("#sort").val().trim().length==0){
+	//	$("#sortErr").html("排序不能为空");
+	//}else if(isNaN($("#sort").val()) || $("#sort").val()<=0 || $("#sort").val().split(".").length>1){
+	//	$("#sortErr").html("排序只能为大于0的整数");
+	//}
+	if(temp != 1){
+    	if(($("#url").val().trim().length>0) && ($("#url").val().match(/(http|https):\/\/.+/) == null)){
+    		$("#urlErr").html("url格式不对(http(s)://...)");
+    	}
+	}
+	if(($("#superCode").val().trim().length>0) && !/^\d{1,5}$/.test($("#superCode").val().trim()) ){
+		$("#superCodeErr").html("请输入1至5位数字");
+	}
+	if($("#nameErr").html().length==0 && $("#fullNameErr").html().length==0 
+		&& $("#domainErr").html().length==0 && $("#urlErr").html().length==0 && $("#superCodeErr").html().length==0 ){
+	}else{
+		return;
+	}
+
+	if(!confirm('确认要新增吗?')){
+		return;
+	}
+	var myForm=$('#subsystemAdd');
+	myForm.submit();
+}
+
+function changeOpenType(val){
+	$("#hiddenOpenType").val(val);
+	if(val == 1){
+		$("#url").val("");
+		$("#url_th").html("欢迎页面：");
+	}else{
+		$("#url").val("http://");
+		$("#url_th").html("URL：");
+	}
+}
+
+function changeIsCore(val){
+	$("#isCoreHidden").val(val);
+}
+
+String.prototype.trim = function() {
+		return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+$(function(){
+	$("#name").blur(
+    	function(){
+    		$("#nameErr").html("");
+    		jQuery.ajax({
+    			type: "POST",
+    			url: "subsystem_name_check.htm",
+    			data: "name=" + $("#name").val(),
+    			async: false,
+    			success: function(returnVal){
+    				if(returnVal[0] == false){
+    					$("#nameErr").html(returnVal[1]);
+    				}
+    			}
+    		});
+    	}
+	);
+
+	$("#name").click(
+		function(){
+			$("#nameErr").html("");
+		}
+	);
+
+	$("#fullName").blur(
+		function(){
+    		$("#fullNameErr").html("");
+    		jQuery.ajax({
+    			type: "POST",
+    			url: "subsystem_fullname_check.htm",
+    			data: "fullName=" + $("#fullName").val(),
+    			async: false,
+    			success: function(returnVal){
+    				if(returnVal[0] == false){
+    					$("#fullNameErr").html(returnVal[1]);
+    				}
+    			}
+    		});
+		}
+	);
+
+	$("#fullName").click(
+		function(){
+			$("#fullNameErr").html("");
+		}
+	);
+
+	$("#sort").blur(
+    	function(){
+			$("#sortErr").html("");
+        	if($("#sort").val().trim().length==0){
+        		$("#sortErr").html("排序不能为空");
+        	}else if(isNaN($("#sort").val()) || $("#sort").val()<=0 || $("#sort").val().split(".").length>1){
+        		$("#sortErr").html("排序只能为大于0的整数");
+        	}
+		}
+	);
+
+	$("#sort").click(
+		function(){
+			$("#sortErr").html("");
+		}
+	);
+
+	$("#domain").click(
+		function(){
+			$("#domainErr").html("");
+		}
+	);
+
+	$("#url").click(
+		function(){
+			$("#urlErr").html("");
+		}
+	);
+
+	$("#subSysLogo").click(
+		function(){
+			$("#logoErr").html("");
+		}
+	);
+});
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>子系统新增</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/system/subsystem_add.htm')" id="subsystemAdd" name="subsystemAdd" method="post" enctype="multipart/form-data">
+
+			<input type="hidden" id="hiddenOpenType" value="1">
+
+			<table class="c4">
+                <tr>
+                    <th>子系统代码：</th>
+					#springBind("subSystem.name")
+                    <td>
+    					<input type="text" class="inp" id="${status.expression}" maxlength="20" name="${status.expression}" value="$!{status.value}"/>
+    					<span class="red">*</span><span id="nameErr" class="error">#if($!subSystemNameError) $!subSystemNameError #end</span>
+					</td>
+                </tr>
+				<tr>
+                	<th>子系统名称：</th>
+					#springBind("subSystem.fullName")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" maxlength="200" name="${status.expression}" value="$!{status.value}"/>
+						<span class="red">*</span><span id="fullNameErr" class="error">#if($!subSystemFullNameError) $!subSystemFullNameError #end</span>
+					</td>
+				</tr>
+				<tr>
+					<th>是否核心：</th>
+                    #springBind("subSystem.isCore")
+					<input type="hidden" value="2" name="${status.expression}">
+					<td>
+						#if($!subSystem.isCore)
+							<input type="radio" onclick="changeIsCore(2)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="2" #if($!subSystem.isCore == 2) checked="checked" #end>应用级
+    						<input type="radio" onclick="changeIsCore(1)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="1" #if($!subSystem.isCore == 1) checked="checked" #end>核心级
+						#else
+    						<input type="radio" onclick="changeIsCore(2)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="2" checked="checked">应用级
+    						<input type="radio" onclick="changeIsCore(1)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="1">核心级
+						#end
+					<span class="red">*</span><span id="isCoreErr" class="error">$!{status.errorMessage}</span>
+					</td>
+                </tr>
+				<tr>
+					<th>子系统类型：</th>
+                    #springBind("subSystem.type")
+					<td>
+						#if($!subSystem.type)
+    						<input type="radio" name="${status.expression}" value="1" #if($!subSystem.type == 1) checked="checked" #end>内部系统
+    						<input type="radio" name="${status.expression}" value="2" #if($!subSystem.type == 2) checked="checked" #end>外部系统
+						#else
+    						<input type="radio" name="${status.expression}" value="1" checked="checked">内部系统
+    						<input type="radio" name="${status.expression}" value="2" >外部系统
+						#end
+					<span class="red">*</span><span id="typeErr" class="error">$!{status.errorMessage}</span>
+					</td>
+                </tr>
+				<tr>
+					<th>进入系统方式：</th>
+                    #springBind("subSystem.openType")
+					<td>
+						#if($!subSystem.openType)
+							<input type="radio" onclick="changeOpenType(1)" name="${status.expression}" value="1" #if($!subSystem.openType == 1) checked="checked" #end>页面嵌入
+    						<input type="radio" onclick="changeOpenType(2)" name="${status.expression}" value="2" #if($!subSystem.openType == 2) checked="checked" #end>弹出新窗口
+    						<input type="radio" onclick="changeOpenType(3)" name="${status.expression}" value="3" #if($!subSystem.openType == 3) checked="checked" #end>页面跳转
+						#else
+    						<input type="radio" onclick="changeOpenType(1)" name="${status.expression}" value="1" checked="checked">页面嵌入
+    						<input type="radio" onclick="changeOpenType(2)" name="${status.expression}" value="2">弹出新窗口
+    						<input type="radio" onclick="changeOpenType(3)" name="${status.expression}" value="3">页面跳转
+						#end
+					<span class="red">*</span><span id="openTypeErr" class="error">$!{status.errorMessage}</span>
+					</td>
+                </tr>
+			<!--
+				<tr>
+                	<th>排序：</th>
+					#springBind("subSystem.sort")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="3" value="$!{status.value}"/>
+						<span class="red">*</span><span id="sortErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				-->
+				<tr>#springBind("subSystem.domain")
+                	<th>域名：</th>
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="100" value="$!{status.value}"/>
+						<span class="red"></span><span id="domainErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				<tr>
+                	<th id="url_th">欢迎页面：</th>
+					#springBind("subSystem.url")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="100" value="$!{status.value}"/>
+						<span class="red"></span><span id="urlErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				<tr>
+                	<th>子系统Hessian路径：</th>
+					#springBind("subSystem.hessianUrl")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="100" value="$!{status.value}"/>
+						<span class="red"></span><span id="urlErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				<tr>
+                	<th>超级管理员权限CODE：</th>
+					#springBind("subSystem.superCode")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="100" value="$!{status.value}"/>
+						<span class="red"></span><span id="superCodeErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				<!--
+				<tr>
+                	<th>Logo上传：</th>
+                    <td>
+        				<input type="file" id="subSysLogo" name="subSysLogo"/>
+						<span class="red"></span><span id="logoErr" class="error">$!{fileUploadError}</span>
+					</td>
+				</tr>
+				-->
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("SUBSYSTEM_ADD"))
+		<button type="button" class="button-s4" onclick="doSubSystemAdd()">保存</button>
+	  #end
+		<button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/system/subsystem_list.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

@@ -1,0 +1,83 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+#if(${systemStyle}!='default')
+$iDemand.addCss(${systemStyle})
+#end
+$iDemand.addJs('jquery')
+
+<script language=JavaScript>
+function logout(){
+	if (confirm("您确定要退出管理平台吗？"))
+	top.location = "$!appServer/system/logout.htm";
+	return false;
+}
+
+//隐藏菜单功能
+var displaybar = true;
+function shift_status(button)
+{
+	//alert(self.parent.frame["frame2"].cols)
+	if(displaybar){
+		self.parent.document.getElementsByName("frame2")[0].cols = "0,*";
+		displaybar=false;
+		$(".menu_toteBox").css("left", "2px")
+		$(".button_lan").css("background-image", "url(../images/admin/cx.gif)")
+		button.title="显示菜单";
+	}
+	else{
+		self.parent.document.getElementsByName("frame2")[0].cols = "202,*";
+		displaybar=true;
+		$(".menu_toteBox").css("left", "168px")
+		$(".button_lan").css("background-image", "url(../images/admin/yc.gif)")
+		button.title="隐藏菜单";
+	}
+}
+   $(function(){
+	  $(".toptab ul li").click(function(){
+			$(".toptab ul li").removeClass("c")
+			$(this).addClass("c")
+									 })
+	  
+    })
+
+</script>
+
+<div class="ifram_top">
+
+	<div class="admin-top">
+    	<p>
+        	
+				<a class="out" href="#" target="_self" onClick="logout();"></a>
+          
+            <span><a href="$appServer.get('/users/user_info_edit.htm').addQueryData('userId',$eclpUserAgent.id)" target="main">个人中心</a></span>
+            <span><a href="$appServer.get('/users/password_edit.htm').addQueryData('id',$eclpUserAgent.id)" target="main">修改密码</a></span>
+            <span>$!{eclpUserAgent.name}：您好,感谢登陆使用！</span>
+        </p>
+       <img height="41" #if(${systemLogo}) src="$imageServer/$!{systemLogo}" #else src="../images/admin/logo.png" #end>
+        <div class="menu_toteBox">
+        <input type="button" class="button_lan"  title="隐藏菜单" onclick="shift_status(this)"/>
+    </div>
+    </div>
+	</div>
+
+	<div class="toptab">
+      <ul>		 
+		 #foreach($sub in $!sysList)
+			 <li #if($eclpUserAgent.currentSystemCode==$sub.name) class="c" #end >
+				  <span>
+					#if($sub.openType==1)
+					  <a target="leftFrame" href="$appServer.get('contain/crmmenu.htm').addQueryData('subSysId',$sub.id)" >$!sub.fullName</a>					
+					#elseif($sub.openType==2)
+					  <a target="_parent" href="$sub.url"  >$!sub.fullName</a>
+					#elseif($sub.openType==3)
+					  <a target="_blank" href="$sub.url" >$!sub.fullName</a>
+					#end
+			     </span>
+			 </li>
+		 #end
+      </ul>
+	</div>
+
+    </div>
+

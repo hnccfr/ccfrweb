@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ECLP_LOGIN_LOG" >
+  <resultMap id="loginLogResult" class="com.hundsun.eclp.biz.domain.sys.LoginLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="LOGIN_IP" property="loginIp" jdbcType="VARCHAR" />
+    <result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="MAC" property="mac" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap class="com.hundsun.eclp.biz.domain.sys.LoginLog" id = "loginLogJoinUserResult" extends="loginLogResult">
+   <result column="NAME" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <typeAlias alias="loginlogQuery" type="com.hundsun.eclp.biz.query.LoginLogQuery"/>
+
+
+  <select id="selectById" resultMap="loginLogResult" parameterClass="java.lang.Long" >
+    select ID, USER_ID, ACCOUNT, LOGIN_IP, LOGIN_TIME, STATUS, MAC, REMARK
+    from ECLP_LOGIN_LOG
+    where ID = #value#
+  </select>
+
+  <delete id="delete" parameterClass="java.lang.Long" >
+    delete from ECLP_LOGIN_LOG
+    where ID = #value#
+  </delete>
+
+  <insert id="insert" parameterClass="com.hundsun.eclp.biz.domain.sys.LoginLog" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="id">
+		select seq_login_log.nextval from dual
+	</selectKey>
+    insert into ECLP_LOGIN_LOG (ID, USER_ID, ACCOUNT, LOGIN_IP, LOGIN_TIME, STATUS, MAC, REMARK)
+    values (#id:VARCHAR#, #userId:DECIMAL#, #account:VARCHAR#, #loginIp:VARCHAR#,
+      SYSDATE, #status:DECIMAL#, #mac:VARCHAR#, #remark:VARCHAR#)
+  </insert>
+
+  <update id="update" parameterClass="com.hundsun.eclp.biz.domain.sys.LoginLog" >
+    update ECLP_LOGIN_LOG
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="account" >
+        ACCOUNT = #account:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="loginIp" >
+        LOGIN_IP = #loginIp:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="loginTime" >
+        LOGIN_TIME = #loginTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="mac" >
+        MAC = #mac:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:VARCHAR#
+  </update>
+
+	<select id="getLastLoginLog" resultMap="loginLogResult"  parameterClass="java.lang.String">
+			SELECT T.*
+			  FROM (SELECT ID,
+			               USER_ID,
+			               ACCOUNT,
+			               LOGIN_IP,
+			               LOGIN_TIME,
+			               STATUS,
+			               MAC,
+			               REMARK,
+			               ROW_NUMBER() OVER(ORDER BY ID DESC) RN
+			          FROM ECLP_LOGIN_LOG
+			         WHERE ACCOUNT = #account#) T
+			 WHERE RN = 2
+	</select>
+	
+	<select id="loginLogCountAll" parameterClass="loginlogQuery"
+		resultClass="java.lang.Integer">
+		select count(*)
+    from ECLP_LOGIN_LOG log  left join ECLP_USERS USERS ON LOG.USER_ID = USERS.id 
+    <dynamic prepend="WHERE">
+    <isNotEmpty prepend="and" property="account">
+       log.ACCOUNT like
+			concat(concat('%',#account#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ LOG.LOGIN_TIME >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ LOG.LOGIN_TIME <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+     </isNotEmpty>
+    <isNotEmpty prepend="and" property="status">
+       log.status=#status#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="loginIp">
+       LOG.login_ip like
+			concat(concat('%',#loginIp#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="mac">
+       LOG.MAC like
+			concat(concat('%',#mac#),'%')
+    </isNotEmpty>
+    </dynamic>
+	</select>
+	
+	<select id="loginLogselectAll" resultMap="loginLogJoinUserResult" parameterClass="loginlogQuery" >
+	<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+  			  <![CDATA[SELECT * FROM (SELECT ROWNUM AS NUMROW, c.* from   ( ]]>
+			</isNotEmpty>
+		</isNotEmpty>
+      select USERS.NAME,
+       LOG.ACCOUNT,
+       LOG.ID,
+       LOG.LOGIN_TIME,
+       LOG.USER_ID,
+       LOG.LOGIN_IP,
+       LOG.STATUS,
+       LOG.MAC,
+       LOG.REMARK
+     from ECLP_LOGIN_LOG LOG
+  left join ECLP_USERS USERS ON LOG.USER_ID = USERS.id 
+    <dynamic prepend="WHERE">
+    <isNotEmpty prepend="and" property="account">
+       LOG.ACCOUNT like
+			concat(concat('%',#account#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ LOG.LOGIN_TIME >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ LOG.LOGIN_TIME <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+     </isNotEmpty>
+    <isNotEmpty prepend="and" property="status">
+       log.status=#status#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="loginIp">
+       LOG.login_ip like
+			concat(concat('%',#loginIp#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="mac">
+       LOG.MAC like
+			concat(concat('%',#mac#),'%')
+    </isNotEmpty>
+    </dynamic>
+    ORDER BY log.login_time desc
+	<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+    			<![CDATA[ ) c  where rownum<=#pageLastItem#) WHERE NUMROW >= #pageFristItem#
+    			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+    
+  </select>
+
+</sqlMap>

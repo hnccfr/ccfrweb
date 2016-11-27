@@ -1,0 +1,12 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+#if(${systemStyle}!='default')
+$iDemand.addCss(${systemStyle})
+#end
+
+<div class="admin-foot">
+	<p>#if($systemName)$systemName #else 中部林业产权交易服务中心#end</p>
+</div>
+
+

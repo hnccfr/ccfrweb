@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="DailyEndProcess" >
+  
+    <!-- 日终备份资金表和切换交易日 -->
+	<parameterMap id="DailyEndDataBackupParameter" class="map" >
+		<parameter property="tradeDay" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="resultFlag" mode="OUT"  jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="resultMsg" mode="OUT" jdbcType="VARCHAR" javaType="java.lang.String"/>
+	</parameterMap>
+	<procedure id="dailyEndDataBackup" parameterMap="DailyEndDataBackupParameter">
+		<![CDATA[
+			call pack_dailyend.DAILYEND_DATA_BACKUP(?, ?, ?)
+		]]>
+	</procedure>
+	
+	<!-- 日终备份资金流水表、资金汇总表以及平台结算数据 -->
+	<parameterMap id="DailyEndAfterBackupParameter" class="map" >
+		<parameter property="tradeDay" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="resultFlag" mode="OUT"  jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="resultMsg" mode="OUT" jdbcType="VARCHAR" javaType="java.lang.String"/>
+	</parameterMap>
+	<procedure id="dailyEndAfterBackup" parameterMap="DailyEndAfterBackupParameter">
+		<![CDATA[
+			call pack_dailyend.DAILYEND_AFTER_BACKUP(?, ?, ?)
+		]]>
+	</procedure>
+	
+</sqlMap>

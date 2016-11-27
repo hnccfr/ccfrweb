@@ -1,0 +1,87 @@
+#set($title = '我的信用积分信息')
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+			#if($!userAgent.haveFunction("BIZ_U_USER_INFO_EDIT"))
+    			<li><a href="$!{appServer}/user/edit.htm">修改个人信息</a></li>
+			#end
+			#if($!userAgent.haveFunction("BIZ_R_USER_LEVELS_VIEW"))
+                <li><a href="$!{appServer}/user/level/member.htm">积分等级</a></li>
+    			<li><a  class="cursor" href="#"   >信用等级</a></li>
+			#end
+        </ul>
+	</div>
+	<div class="right-body">
+		<div class="formBox">
+	            <div class="content">
+                	<table class="c2">
+						<tr>
+							<th>卖家信用积分：</th>							
+							<td>
+								$!{userCredit.sellerCreditNum}
+                            </td>
+							<th>买家信用积分：</th>							
+							<td>
+								$!{userCredit.buyCreditNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家信用等级：</th>							
+							<td>
+								$!{userCredit.sellerLevelName}
+								<img src="$!{uploadServer}$!{userCredit.sellerImgName}"/>
+                            </td>
+							<th>买家信用等级：</th>							
+							<td>
+								$!{userCredit.buyLevelName}
+								<img src="$!{uploadServer}$!{userCredit.buyImgName}"/>
+                            </td>
+                        </tr>
+					  <tr>
+							<th>卖家好评数：</th>							
+							<td>
+								$!{userCredit.sellerGoodNum}
+                            </td>
+							<th>买家好评数：</th>							
+							<td>
+								$!{userCredit.buyGoodNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家中评数：</th>							
+							<td>
+								$!{userCredit.sellerMiddNum}
+                            </td>
+							<th>买家中评数：</th>							
+							<td>
+								$!{userCredit.buyMiddNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家中评数：</th>							
+							<td>
+								$!{userCredit.sellerBadNum}
+                            </td>
+							<th>买家中评数：</th>							
+							<td>
+								$!{userCredit.buyBadNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家服务态度：</th>							
+							<td>
+								$!{userCredit.serviceAttitude}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家物流速度：</th>							
+							<td>
+								$!{userCredit.logisticsSpeed}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+    </div>
+	<div class="b"></div>
+</div>

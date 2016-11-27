@@ -1,0 +1,81 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//新增按钮
+function doAdd(){
+	window.location.href = "$!{appServer}/baseset/userlevel/add.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+<h2>会员级别管理</h2>
+<!-- 搜索模块 -->
+<form id="userlevelList" action="$!{appServer}/baseset/userlevel/list.htm"  method="post">
+  <div class="searchBox">
+    <h5><span>搜索</span></h5>
+    <table>
+      <tr>
+        <th>会员帐号：</th>
+        <td>
+			#springBind("query.userAccount")
+			<input type="text" class="inp inp-w160" name="$!status.expression" value="$!{status.value}" maxlength="30"/>
+		</td>
+		<th>级别：</th>
+        <td>
+			#springBind("query.memberLevel")
+			<select id="$!status.expression" name="$!status.expression"  >
+				<option value="" #if(""=="$!status.value")selected #end>全部</option>
+				#foreach($smLevelset in $smLevelsetList)
+				<option value="$!smLevelset.memberLevel" #if("$!smLevelset.memberLevel"=="$!status.value")selected #end>$!smLevelset.levelName</option>
+				#end
+            </select>
+		</td>
+		<td>&nbsp;</td>
+        <td><button type="submit" class="btn">搜 索</button></td>
+      </tr>
+    </table>
+  </div>
+</form>
+<div class="tool">
+	##if($!settlerAccess.has('S_B_MEMLEVSET_ADD'))
+	##<span><a href="#" hidefocus="true" class="bt_add" onclick="doAdd();">新增</a></span>
+	##end
+</div>
+<!-- 搜索模块 END -->
+<div class="clear"></div>
+    <!-- 列表模块 -->
+    <div class="listBox"> 
+      <h5><span>会员级别列表</span></h5> 
+        <table width="100%"> 
+            <tr>
+                <th>会员级别</th> 
+                <th>会员帐号</th>
+                <th>积分</th>
+                <th>操作栏</th>
+            </tr>
+			#if($query && $query.getData().size() > 0)
+			#foreach($result in $query.getData())
+            <tr>
+              	<td>##$!result.memberLevel
+					#foreach($smLevelset in $smLevelsetList)
+						#if("$!smLevelset.memberLevel"=="$!result.memberLevel")
+							$smLevelset.levelName
+						#end
+					#end
+				</td>
+                <td><a href="$!{appServer}/user/info.htm?account=$!result.userAccount">$!result.userAccount</a></td>
+                <td>$!result.integral</td>
+                <td>
+					<a href="$!{appServer}/baseset/userlevel/update.htm?id=$!result.id">修改</a>
+					<a href="$!{appServer}/baseset/userlevel/view.htm?id=$!result.id">查看</a>
+				</td>
+            </tr>
+			#end
+			#end
+        </table> 
+		<div class="pages-box" >
+			<div class="pages">
+				#pager($query, "userlevelList")
+            </div> 
+        </div>
+    </div> <!-- 列表模块 END -->   
+  </div>
+</div>

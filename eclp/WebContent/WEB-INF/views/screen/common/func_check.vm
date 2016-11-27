@@ -1,0 +1,18 @@
+<div class="dialog_bid" id="open_bid" title="功能复核">  
+    <div class="formBox">
+       <table class="c6">
+        <tr>
+           <th>复核人</th>
+           <td id="checker_tr">&nbsp;</td>
+        </tr>   
+    	<tr>
+          <th>复核密码</th>
+          <td>
+    		<input type="hidden" id="funcCode" name="funcCode"/>
+    		<input type="password" class="inp2" id="password" name="password" maxlength="20"/>
+            <span>填写复核人登陆密码 </span>
+    	  </td>
+        </tr> 
+      </table>  
+     </div>
+</div>

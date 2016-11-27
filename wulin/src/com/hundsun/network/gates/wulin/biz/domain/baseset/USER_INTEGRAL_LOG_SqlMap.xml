@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_INTEGRAL_LOG" >
+  <resultMap id="userIntegralLogResult" class="com.hundsun.network.gates.wulin.biz.domain.baseset.UserIntegralLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="OPERATE_CODE" property="operateCode" jdbcType="VARCHAR" />
+    <result column="INTEGRAL" property="integral" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 新增 -->
+  <insert id="insert" parameterClass="com.hundsun.network.gates.wulin.biz.domain.baseset.UserIntegralLog" >
+  <selectKey keyProperty="id" resultClass="long" type="pre">
+		select SEQ_USER_INTEGRAL_LOG.Nextval as id from dual 
+	</selectKey>
+    insert into USER_INTEGRAL_LOG (ID, USER_ACCOUNT, ORDER_NO, PROJECT_CODE, OPERATE_CODE, INTEGRAL,
+      GMT_CREATE, GMT_MODIFY, OPERATOR)
+    values (#id:DECIMAL#, #userAccount:VARCHAR#, #orderNo:VARCHAR#, #projectCode:VARCHAR#,
+      #operateCode:VARCHAR#, #integral:DECIMAL#, sysdate, sysdate, #operator:VARCHAR#)
+  </insert>
+  
+  <!-- 根据userAccount查询 -->
+  <select id="selectByUserAccount" resultMap="userIntegralLogResult" parameterClass="string" >
+    select ID, USER_ACCOUNT, ORDER_NO, PROJECT_CODE, OPERATE_CODE, INTEGRAL, GMT_CREATE, GMT_MODIFY,
+      OPERATOR
+    from USER_INTEGRAL_LOG
+    where USER_ACCOUNT = #userAccount:VARCHAR#
+  </select>
+</sqlMap>

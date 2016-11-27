@@ -1,0 +1,124 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+<script type="text/javascript" src="$!{appServer}/scripts/auth.js"></script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+		#if("$isSuccess" == "true")
+			<div class="mag-t2">
+				操作成功！
+			</div>
+		#elseif("$isSuccess" == "false")
+            <div class="mag-t1">
+    			$!{errorMsg}
+            </div>
+		#end
+  <div class="formBox">
+    <h3><i></i><span>查看权限</span></h3>
+	<form id="editForm" action="$!{appServer}/auth/view_user.htm" method="post">
+	<input type="hidden" id="id" name="id" value="$!{authority.id}"/>
+	<input type="hidden" id="sysId" name="sysId" value="$!{authority.subSystemId}"/>
+    <div class="content">
+      <table class="c2">
+		#if( $eclpUserAgent.userType == 2 )
+			<input type="hidden" id="isCore" name="isCore" value="$!{authority.isCore}"/>
+		#else
+        <tr>
+          <th>数据权限：</th>
+          <td>
+			#if( ${authority.isCore} == "1" ) 核心数据  #end
+			#if( ${authority.isCore} == "2" ) 应用数据  #end
+		  </td>
+        </tr>
+		#end
+        <tr>
+          <th>编码：</th>
+          <td>
+			$!{authority.code}
+		  </td>
+        </tr>
+        <tr>
+          <th>名称：</th>
+          <td>
+			#springBind("authority.name")
+			$!{authority.name}
+		  </td>
+        </tr>
+        <tr>
+          <th>类型：</th>
+          <td>
+			  #foreach( $authorityType in $!{authorityTypeList} )
+				 #if( ${authorityType.code} == ${authority.type} ) $!{authorityType.desc}
+				 #end
+			  #end
+		  </td>
+        </tr>
+        <tr>
+          <th>父权限：</th>
+          <td>
+			
+				#if( !$!{authority.parentAllName} || $!{authority.parentAllName}=='')
+					$!{authority.getParentNameByLevel('')}
+				#else
+					$!{authority.parentAllName}
+				#end 
+		  </td>
+        </tr>
+        <tr id="trOpenType">
+          <th>打开方式：</th>
+          <td>
+			#springBind("authority.openType")
+			  #foreach( $authorityOpenType in $!{authorityOpenTypeList} )
+				#if( ${authorityOpenType.code} == ${authority.openType} )$!{authorityOpenType.desc} #end
+			  #end
+		  </td>
+        </tr>
+        <tr id="trUrl">
+          <th>URL：</th>
+          <td>
+			  #foreach( $authorityUrlPrefix in $!{authorityUrlPrefixList} )
+				 #if( ${authorityUrlPrefix.code} == $!{authorityOpenType.code} ) 
+						$!{authorityUrlPrefix.desc}
+				#end		
+			  #end
+            $!{authority.url}
+		  </td>
+        </tr>
+        <tr>
+          <th>排序号：</th>
+          <td>
+			$!{authority.sort}
+		  </td>
+        </tr>
+        <tr>
+          <th>状态：</th>
+          <td>
+			#if( ${authority.status} == "1" ) 启用  #end 
+            #if( ${authority.status} == "2" ) 禁用 #end
+		  </td>
+        </tr>
+		<tr>
+          <th>是否可分配：</th>
+          <td>
+			#if( ${authority.isAssign} == "1" )是  #end
+            #if( ${authority.isAssign} == "2" )否 #end
+		  </td>
+        </tr>
+      </table>
+    </div>
+	 <div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("AUTH_USER"))
+		 <button type="button" class="button-s4" onclick="location.href='$!{appServer}/auth/view_user.htm?id=$!{authority.id}'">查看用户</button>
+	  #end
+      #if($!adminAccess.has("AUTH_ROLE"))
+       <button type="button" class="button-s4" onclick="location.href='$appServer/auth/view_role.htm?authId=$!{authority.id}'">查看角色</button>
+     #end
+    </div>
+    </form>
+  <!-- 表单模块 END -->
+</div>
+</body>

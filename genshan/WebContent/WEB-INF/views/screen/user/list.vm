@@ -1,0 +1,126 @@
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<script src="$!{imageServer}/scripts/jquery.ui.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/user/list.js" type="text/javascript"></script>
+<script type="text/javascript">
+function go(){
+window.location.href=appServer+"/user/add.htm"
+}
+</script>
+
+<div class="main">
+	<h2>会员查询</h2>
+	<div class="clear"></div>
+    <!-- 搜索模块 -->
+	<form id="userAccountListFrom" action="$!{appServer}/user/list.htm"  method="post">
+		<input type="hidden" id="sourceUrlKey" value="user" />
+        <div class="searchBox">
+    		<h5><span>搜索会员</span></h5>
+    		<table>
+    			<tr>
+    				<th class="w110 fn tr">会员账号：</th>
+    				<td>
+						#springBind("query.account")
+    					<input type="text" id="account" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th class="w110 fn tr">会员姓名：</th>
+    				<td>
+						#springBind("query.name")
+    					<input type="text" id="name" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th class="w110 fn tr">会员类型：</th>
+    				<td>
+						#springBind("query.type")
+    					<select class="select"  name="$!{status.expression}" style="width:135px;">
+							<option value="">请选择</option>
+							#foreach($item in $!{userTypeList})
+							<option value="$item.value" #if(${item.value} == $!{status.value}) selected #end>$item.name</option>
+							#end
+						</select>
+    				</td>
+    			</tr>
+    			<tr>
+    				<th class="w110 fn tr">交易权限：</th>
+    				<td>
+						#springBind("query.userRole")
+    					<select class="select"  name="$!{status.expression}" style="width:135px;">
+							<option value="">请选择</option>
+							#foreach($item in $!{userRoleList})
+							<option value="$item.value" #if(${item.value} == $!{status.value}) selected #end>$item.name</option>
+							#end
+						</select>
+    				</td>
+    				<th class="w110 fn tr">状态：</th>
+    				<td>
+						#springBind("query.status")
+    					<select class="select"  name="$!{status.expression}" style="width:135px;">
+							<option value="">请选择</option>
+							#foreach($item in $!{userStatusList})
+							<option value="$item.value" #if(${item.value} == $!{status.value}) selected #end>$item.name</option>
+							#end
+						</select>
+    				</td>
+    				<th class="w110 fn tr">&nbsp;</th>
+    				<td>
+    					<button type="submit" class="btn">搜 索</button>
+
+    				</td>
+    			</tr>
+    		</table>
+    	</div>
+    </form>
+		<div class="tool">
+			<button type="button" class="btn" align="right" onclick="go()">添加普通会员</button>
+		</div>
+		<br>
+	<!-- 搜索模块 END -->
+	<!-- 会员列表BEGIN -->
+	<div class="listBox">
+		<h5><span>会员列表</span></h5>
+		<table width="100%">
+			<tr>
+				<th>账号</th>
+				<th>姓名</th>
+				<th>类型</th>
+				<th>交易权限</th>
+				<th>状态</th>
+				<th>注册时间</th>
+				<th>操作</th>
+            </tr>
+			#if($query && $query.getData().size() > 0)
+				#foreach($!list in $!query.getData())
+					<tr>
+                        <td>$!{list.account}</td>
+                        <td>$!{list.name}</td>
+                        <td>$!{list.userTypeDesc}</td>
+                        <td>$!{list.userRoleDesc}</td>
+                        <td id="userStatus">$!{list.userStatusDesc}</td>
+                        <td>$!dateTool.format("yyyy-MM-dd H:m:s",$!{list.gmtCreate})</td>
+                        <td>
+                            <a href="$!{appServer}/user/info.htm?account=#direct($!{list.account})">查看信息</a>
+                            ##|<a href="$!{appServer}/user/address.htm?userAccount=$!{list.account}&type=P">查看地址</a>
+                            ##|<a onclick="JavaScript:if(confirm('确定重置'))window.location.href='$!{appServer}/user/password/reset.htm?userAccount=$!{list.account}&passwordType=system';">系统密码重置</a>
+							|<a href="#" onclick="JavaScript:resetPassword('$!{list.account}','system');" >系统密码重置</a>
+							##<a onclick="JavaScript:if(confirm('确定重置'))window.location.href='$!{appServer}/user/password/reset.htm?userAccount=$!{list.account}&passwordType=fund';" >资金密码重置</a>
+							|<a href="JavaScript:resetPassword('$!{list.account}','fund')" >资金密码重置</a>
+							##|<a href="$!{appServer}/user/credit.htm?userAccount=$!{list.account}">查看信用</a>
+							#if($!{list.status} == 'F') 
+                                |<a id="open" href="JavaScript:changeUserStatus('$!{list.status}','$!{list.account}')">启用</a>
+							#elseif($!{list.status} == 'N')
+								|<a id="forbidden" href="JavaScript:changeUserStatus('$!{list.status}','$!{list.account}')">禁用</a>
+							#end
+							#if($!{list.status} == 'U')
+								|<a href="$!{appServer}/fund/openAccountMock.htm?fundAccount=$!{list.fundAccount}&bankNo=$!{list.bank}&bankAccount=$!{list.bankCard}&idKind=$!{list.certificateType}&idNo=$!{list.certificateNum}" >激活资金账户</a>
+							#end
+						</td>
+                    </tr>
+				#end
+			#end
+        </table>
+		<div class="pages-box" >
+			<div class="pages">
+				#pager($query,"userAccountListFrom")
+            </div> 
+        </div>
+    </div>
+</div>
+<div id="pwdResetDialog"></div>

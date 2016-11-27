@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:component-scan base-package="com.hundsun.network.gates.houchao.biz" />
+	<context:component-scan base-package="com.hundsun.network.gates.houchao.remote" />
+
+	<bean id="fundTransFactory"
+		class="com.hundsun.network.gates.houchao.biz.manager.pojo.FundTransFactoryImpl">
+		<property name="serviceMap">
+			<map>
+				<entry key="100101" value-ref="openedAccountTrans" /><!-- 开户 -->
+				<entry key="100102" value-ref="closedAccountTrans" /><!-- 销户 -->
+				<entry key="200101" value-ref="inFund" /><!-- 入金 -->
+				<entry key="200201" value-ref="outFund" /><!-- 出金 -->
+				<entry key="200301" value-ref="writeOffFTrans" /><!-- 冲正 -->
+				<entry key="301166" value-ref="inFundTrans" /><!-- 收取货款(验票) -->
+				<entry key="301106" value-ref="inFundTrans" /><!-- 收取货款 -->
+				<entry key="301006" value-ref="outFundTrans" /><!-- 支付货款 -->
+				<entry key="301103" value-ref="inFundTrans" /><!-- 收取手续费 -->
+				<entry key="301003" value-ref="outFundTrans" /><!-- 支付手续费 -->
+				<entry key="301105" value-ref="inFundTrans" /><!-- 收取违约金 -->
+				<entry key="301005" value-ref="outFundTrans" /><!-- 支付违约金 -->
+				<entry key="300602" value-ref="freezeTrans" /><!-- 交易冻结保证金 -->
+				<entry key="300702" value-ref="unFreezeTrans" /><!-- 交易解冻保证金 -->
+				<entry key="400602" value-ref="freezeTrans" /><!-- 交收冻结保证金 -->
+				<entry key="400702" value-ref="unFreezeTrans" /><!-- 交收解冻保证金 -->
+			</map>
+		</property>
+	</bean>
+
+    <bean id="dailyWork" class="com.hundsun.network.gates.houchao.biz.manager.pojo.DailyWorkEngine"  init-method="initTradeDay" />
+		
+</beans>

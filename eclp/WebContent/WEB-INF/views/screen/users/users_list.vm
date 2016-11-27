@@ -1,0 +1,261 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs("jquery")
+#set($agentUserType = $!{eclpUserAgent.userType})
+<script>
+	function formSubmit(){
+		//var dateStart=jQuery('#startDate').val().replace(/-/g, "/");
+		//var dateEnd=jQuery("#endDate").val().replace(/-/g, "/");
+		//var b_date=new Date(Date.parse(dateStart));
+       // var e_date=new Date(Date.parse(dateEnd));
+		var t_account = jQuery.trim(jQuery('#account').val());
+		var t_realName = jQuery.trim(jQuery('#realName').val());
+		/*
+		if(e_date < b_date){
+    		alert("起始时间不能大于结束时间！");
+    		return false;
+    	}
+		*/
+		if(t_account.length>20){
+			alert('用户帐号长度不能大于20');
+			return false;
+		}
+		if(t_realName.length>20){
+			alert('姓名长度不能大于20');
+			return false;
+		}
+		var myForm=jQuery('#form1');
+		myForm.attr("action","$appServer/users/users_list.htm");
+		myForm.submit();
+	}
+
+	function changeStatus(userId , status,page){
+    	var msg = "";
+    	if(status==0){
+    		msg = "确定要启用吗？" ;
+    	}else if(status==1){
+    		msg = "确定要禁用吗？" ;
+    	}
+
+    	if(!confirm(msg)){
+		    return ;
+    	}
+		var url = '$appServer/users/users_status_change.htm';
+		jQuery.ajax ({
+				type		: 'POST',
+				url			: url,
+				data		: {userId: userId},
+				timeout		: 5000,
+				success		: function(data, textStatus, xhr) {
+					if(data) {
+						alert('操作成功！');
+						jQuery("#page").val(page);
+						var myForm=jQuery('#form1');
+						myForm.submit();
+					} else {
+						alert('操作失败！');
+					}
+				},
+				error		: function(xhr, textStatus, errorThrown) {
+					alert('操作失败1！');
+				}
+			});
+	}
+
+	function resetPassword(userId,page){
+		if(!confirm("确认重置密码吗?")){
+			return;
+		}
+		var  url = '$appServer.get("/users/password_reset.htm")';
+		jQuery.ajax ({
+				type		: 'POST',
+				url			: url,
+				data		: {userId: userId},
+				timeout		: 5000,
+				success		: function(data, textStatus, xhr) {
+					if(data) {
+						alert('操作成功！');
+					} else {
+						alert('操作失败！');
+					}
+				},
+				error		: function(xhr, textStatus, errorThrown) {
+					alert('操作失败1！');
+				}
+			});
+	}
+
+	function dele(userId,page){
+		if(!confirm("确认删除吗?")){
+			return;
+		}
+		var  url = '$appServer.get("/users/users_delete.htm")';
+		jQuery.ajax ({
+				type		: 'POST',
+				url			: url,
+				data		: {userId: userId},
+				timeout		: 5000,
+				success		: function(data, textStatus, xhr) {
+					if(data) {
+						alert('删除成功！');
+						jQuery("#page").val(page);
+						var myForm=jQuery('#form1');
+						myForm.submit();
+					} else {
+						alert('删除失败！');
+					}
+				},
+				error		: function(xhr, textStatus, errorThrown) {
+					alert('删除失败1！');
+				}
+			});
+	}
+
+	function alertEditSuccess(temp){
+		if(temp){
+			alert("修改成功!");
+		}else{
+			alert("修改失败!");
+		}
+	}
+</script>
+</head>
+<body>
+<div class="main">
+  <!-- 搜索模块 -->
+  <div class="searchBox">
+    <h5><span>搜索用户</span></h5>
+    <form action="$appServer/users/users_list.htm" id="form1" name="form1" method="post">
+		<input type="hidden" id="page" name="page" value="1"/>
+      <table>
+        <tr> #springBind("query.account")
+          <th>用户帐号：</th>
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+          
+		  <th>&nbsp;&nbsp;状态：</th>
+          #springBind("query.status")
+          <td><select name="${status.expression}">
+              <option value="">--请选择--</option>
+				#foreach($type in $enumUsersStatus)
+					#if($!{type.code}!=2)
+						<option value="$!{type.code}" #if($!{status.value}==$!{type.code}) selected #end>$!{type.desc} </option>
+					#end
+			     #end
+            </select></td>
+		<!-- <th>用户类型：</th>
+          #springBind("query.userType")
+          <td><select name="${status.expression}">
+              <option value="">--请选择--</option>
+				#foreach($type in $enumUsersType)
+					#if($!agentUserType ==2 && $!{type.code}!=0)
+						<option value="$!{type.code}" #if($!{status.value}==$!{type.code}) selected #end>$!{type.msg} </option>
+					#else
+						<option value="$!{type.code}" #if($!{status.value}==$!{type.code}) selected #end>$!{type.msg} </option>
+					#end
+			     #end
+            </select></td>
+		
+        </tr>
+        <tr> -->
+		
+		#springBind("query.realName")
+          <th>&nbsp;&nbsp;姓名：</th>
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+         <!-- <th>创建时间：</th>
+          #springBind("query.startDate")
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()"  />
+            -
+            #springBind("query.endDate")
+            <input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()" /></td>
+         -->
+		  <th>&nbsp;</th>
+          <td>	
+			#if($!adminAccess.has("USER_QUERY"))
+			<button type="button" class="btn" onclick="formSubmit()">搜 索</button>
+			#end
+		  </td>
+		##  <td><button class="btn" onclick="formSubmit('export')">导出</button></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <!-- 搜索模块 END -->
+   <div class="tool"> #if($!adminAccess.has("USER_ADD"))<span><a href="$appServer/users/users_add.htm" hidefocus="true" class="bt_add">新增</a></span>#end</div>
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>用户列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>用户帐号</th>
+        <th>姓名</th>
+        <th>用户类型</th>
+        <th>状态</th>
+		<th>登录次数</th>
+        <th>最后登录ip</th>
+		<th>最后登录时间</th>
+        <!--
+		<th>创建时间</th>
+		<th>修改时间</th>
+		-->
+        <th>操作功能区</th>
+      </tr>
+      #foreach($users in $query.items)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end id="row_user_$!{users.id}">
+        <td  id="u_name_$!{users.id}">$!{users.account}</td>
+        <td>$!{users.name}</td>
+        <td> #foreach($type in $enumUsersType)
+          #if($!{users.userType} == $!{type.code})
+          $!{type.msg}
+          #end
+          #end </td>
+        <td name="status"> #foreach($status in $enumUsersStatus)
+          #if($!{users.status} == $!{status.code})
+          $!{status.desc}
+          #end
+          #end </td>
+        <td>$!{users.loginNum}</td>
+		<td>$!{users.lastLoginIp}</td>
+		<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.lastLoginTime})</td>
+        ##<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.gmtCreate})</td>
+		##<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.gmtModify})</td>
+        <td name="caozuo">
+		#if($!{eclpUserAgent.userType}==0 ||($!{eclpUserAgent.userType}==1 && $!{users.userType}!=0) || ($!{eclpUserAgent.userType}==2 && $!{eclpUserAgent.userType}==$!{users.userType}))
+    		#if($!{eclpUserAgent.id} != $!{users.id})
+        		#if($!{users.status}==1 && $!adminAccess.has("USER_EDIT"))
+    				<a href="$appServer.get('/users/users_edit.htm').addQueryData('userId',$!{users.id}).addQueryData('page',$!query.currentPage)" target="_blank">修改</a>
+				#end
+				#if($!adminAccess.has("USER_PASS_RESET"))
+					<a href="#" onclick="javascript:resetPassword($!{users.id},$!query.currentPage);">重置密码</a>
+				#end
+				#if($!adminAccess.has("USER_DEL"))
+					<a href="#" onclick="javascript:dele($!{users.id},$!query.currentPage);">删除</a>
+				#end
+    			<a href="javascript:changeStatus($!{users.id},$!{users.status},$!query.currentPage)">
+    				#if($!{users.status}==1 && $!adminAccess.has("USER_DISABLE"))禁用 #elseif($!{users.status}==0 && $!adminAccess.has("USER_ENABLE"))启用 #end
+    			</a>
+				#if($!adminAccess.has("USER_ROLE_ASSIGN"))
+					<a href="$appServer.get('/users/assign_role.htm').addQueryData('userId',$!{users.id}).addQueryData('page',$!query.currentPage)" title="分配角色">分配角色</a>
+				#end
+				#if($!adminAccess.has("USER_VIEW_AUTH"))
+				<a href="$appServer.get('/users/view_auth.htm').addQueryData('userId',$!{users.id}).addQueryData('page',$!query.currentPage)" title="分配角色">查看权限</a>
+				#end
+    		#end
+		#end
+		</td>
+      </tr>
+      #end
+    </table>
+    #if($query.items)
+    $contain.get('/contain/form_page_slider.htm').put('slider_query',$query).put('slider_target',"/users/users_list.htm").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

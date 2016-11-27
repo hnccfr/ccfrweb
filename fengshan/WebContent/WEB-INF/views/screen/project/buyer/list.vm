@@ -1,0 +1,137 @@
+#set($title = '我的采购项目')
+##<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/common.css" />
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/ui.css" />
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+<script language="javascript" type="text/javascript" src="$!{imageServer}/scripts/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+<script src="$!{imageServer}/scripts/jquery.ui.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.bgiframe.js" type="text/javascript"></script>
+
+<script>
+    var appServer = "$!{appServer}";
+</script>
+<script type="text/javascript" src="$!{imageServer}/scripts/project/list.js"></script>
+
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+          <li><a class="cursor" href="#">采购项目</a></li>
+        </ul>
+		
+    </div>
+    <div class="right-body">
+        ##项目搜索区
+        <div class="formBox" id="div_content">
+            <form action="$!{appServer}/project/buyer/list.htm" id="searchForm"  method="post"  >
+                <div class="content">
+                  <table class="c2" >
+                        <tr>
+                            <td >&nbsp;&nbsp;
+								<label>&nbsp;项目名称:</label>
+                               <input type="text" class="inp" id="title"  name="title" value="$!{query.title}"  />
+							&nbsp;&nbsp;&nbsp;&nbsp;
+                               <label>&nbsp;项目分类:</label>
+								<input type="text" id="projectTypeName" readonly   name="projectTypeName"  class="inp" value="$!{query.projectTypeName}"  onclick="showPrjTypeSel(this,'','projectTypeCode','projectTypeName');"/>
+								<input type="hidden" id="projectTypeCode"  name="projectTypeCode" value="$!{query.projectTypeCode}" readonly  />
+								
+							&nbsp;&nbsp;&nbsp;&nbsp;
+								<label>&nbsp;项目状态:</label>
+								<select name="status"  id="status" class="select" style="width:100px;">
+                                    <option value=""  >请选择</option>
+                                    #foreach($status in $!{pjStatus})
+                                        <option value="$status.value" #if($!{query.status} == $status.value)  selected #end >$status.name</option>
+                                    #end 
+                                </select>   
+                            </td>
+                        </tr>
+                        <tr>
+							<td style="width:100%;"> &nbsp;&nbsp;
+								<label>&nbsp;项目编号:</label>
+								<input type="text" class="inp" id="code"  name="code" value="$!{query.code}" />
+								<label>&nbsp;挂牌结束时间:</label>
+								<input type="text" id="li_end_form" name="listingEndTimeFrom"   value="$!dateTool.format("yyyy-MM-dd H:mm:ss",$!{query.listingEndTimeFrom})"      class="inp" style="width:80px;"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"   readonly="readonly" />
+								<label>-</label>
+								<input type="text" id="li_end_to"  name="listingEndTimeTo" value="$!dateTool.format("yyyy-MM-dd H:mm:ss",$!{query.listingEndTimeTo})"  class="inp" style="width:80px;"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"  readonly="readonly" />
+								<input type="submit" class="button-t3" value="搜 索" />
+							</td>
+						</tr>
+					</table>
+					
+				</div>
+			</form>
+		</div>
+		
+		##项目数据展示
+		<div class="listBox">
+			<div>
+    			<table style="width:100%;">
+                    <tr style="height:20px;">
+                        <th class="list-order-field" id="prjCode" title="点击排序">项目编号</th>
+                        <th class="list-order-field" id="prjName" style="width:25%;" title="点击排序">项目名称</th>
+                        <th class="list-order-field" id="prjType" title="点击排序">项目类型</th>
+                        <th class="list-order-field" id="prjDeadTime" title="点击排序">挂牌截止时间</th>
+                        <th class="list-order-field" id="prjTradeType" title="点击排序">交易方式</th>
+                        <th class="list-order-field" id="prjStatus" title="点击排序">项目状态</th>
+                        <th >操作</th>
+                    </tr>
+                    #foreach($item in $!{query.data})
+                        <tr  >
+                                    <td style="text-align:center;font-weight:600; #if($item.waitOpt)  background-color:#FFF999;color:red; #end">
+                                         &nbsp;$!{item.code}
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <a style="color:#0066CC" target="_blank" href="$!{appServer}/project/detail.htm?id=$!{item.id}" title="$!{item.title}">
+                                            #if($!item.title.toString().length()>14)
+                                                $!item.title.toString().substring(0,12)<span>..</span>
+                                                #else
+                                                     &nbsp;$!{item.title}
+                                            #end
+                                        </a>
+                                    </td>
+                                    <td style="text-align:center;">
+                                         &nbsp;$!{item.projectTypeCodeDesc}
+                                    </td>
+                                    <td style="text-align:center;">
+                                         &nbsp;$!dateTool.format("yyyy-MM-dd",$!{item.listingEndTime})
+                                    </td>
+                                    <td style="text-align:center;">
+                                         &nbsp;$!{item.tradingTypeDesc}
+                                    </td>
+                                    <td style="text-align:center;">
+										 &nbsp;$!{item.statusDesc}
+                                    </td>
+                                    <td style="text-align:center;">
+                                        #if($!{item.status} == "C")
+											 &nbsp;<a style="color:#0066CC" href="$!{appServer}/project/seller/edit.htm?proId=$!{item.id}" title="修改">修改</a>
+											<a style="color:#0066CC" href="#" onclick="deletePro($!{item.id});" title="删除">删除</a>
+                                            <a style="color:#0066CC" href="#" onclick="auditSellProjectConfirm($!{item.id});" title="提交审核">提交</a>
+										##elseif($!{item.status} == "S" || $!{item.status} == "W")
+											 ##&nbsp;<a style="color:#0066CC" href="$!{appServer}/home/announcement/annList.htm?projectId=$!{item.id}" title="查看项目公告">公告</a>
+									    #else
+                                               &nbsp;  <a style="color:#0066CC" href="#" title="#"></a>
+                                        
+										#end
+										&nbsp;<a style="color:#0066CC" href="$!{appServer}/home/announcement/annList.htm?projectId=$!{item.id}" title="查看项目公告">公告</a>
+										#if($item.code && ($!item.tradingType=="bidOrder"||$!item.tradingType=="mulitBidOrder") && $!item.status=="O")
+										&nbsp;<a style="color:#0066CC" href="$!{appServer}/auction/project/bidrecordhis.htm?projectCode=$!item.code&returnUrl=project/buyer/list.htm" title="查看报价列表">历史报价</a>
+										#end
+                                    </td>
+                        </tr>
+                    #end
+    			</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{query},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+	<div id="auditSellProjectConfirmDialog"></div>
+</div>
+

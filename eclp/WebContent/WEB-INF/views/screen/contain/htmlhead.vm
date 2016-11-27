@@ -1,0 +1,134 @@
+#set($layout = '')
+  <title>#if($title)$title #else 统一登录平台(E-commerce Login Platform) #end</title>
+
+#if($iDemand.haveCss('basic'))
+  <link rel="stylesheet" href="$appServer.get('styles/basic.css')" />
+#end
+#if($iDemand.haveCss('about'))
+  <link rel="stylesheet" href="$appServer.get('styles/about.css')" />
+#end
+#if($iDemand.haveCss('admin'))
+  <link rel="stylesheet" href="$appServer.get('styles/admin.css')" />
+#end
+
+#if($iDemand.haveCss('skin-one'))
+  <link rel="stylesheet" href="$appServer.get('styles/skin-one.css')" />
+#end
+
+#if($iDemand.haveCss('jquery.ui.all'))
+  <link rel="stylesheet" href="$appServer.get('styles/themes/cupertino/jquery.ui.all.css')" />
+#end
+
+#if($iDemand.haveJs('menuTree'))
+  <script type="text/javascript" src="$appServer.get('/scripts/menuTree.js')"></script>
+#end
+#if($iDemand.haveJs('WdatePicker'))
+	<script type="text/javascript" src="$appServer.get('scripts/My97DatePicker/WdatePicker.js')"></script>
+#end
+#if($iDemand.haveJs('jquery'))
+<script type="text/javascript" src="$appServer.get('scripts/jquery-1.4.2.min.js')"></script>
+#end
+
+#if($iDemand.haveJs('jqueryForm'))
+<script type="text/javascript" src="$appServer.get('scripts/jqueryeasyui/jquery.form.js')"></script>
+#end
+
+#if($iDemand.haveJs('jquery.validate'))
+  <script type="text/javascript" src="$appServer.get('scripts/jquery.validate.js')"></script>
+#end
+#if($iDemand.haveJs('hundsun.validate'))
+  <script type="text/javascript" src="$appServer.get('scripts/hundsun.validate.js')"></script>
+#end
+
+#if($iDemand.haveJs('jquery.metadata'))
+  <script type="text/javascript" src="$appServer.get('scripts/jquery.metadata.js')"></script>
+#end
+
+#if($iDemand.haveJs('jquery.show'))
+  <script type="text/javascript" src="$appServer.get('scripts/jquery-show.js')"></script>
+#end
+
+#if($iDemand.haveJs('jquery.ui'))
+	<script type="text/javascript" src="$appServer.get('scripts/jquery-ui-personalized-1.5.3.min.js')"></script>
+#end
+
+#if($iDemand.haveJs('ztree'))
+	<script type="text/javascript" src="$appServer.get('scripts/jquery.ztree-2.6.js')"></script>
+#end
+
+#if($iDemand.haveCss('ztree'))
+<link rel="stylesheet" type="text/css" href="$appServer.get('styles/zTreeStyle.css')">
+#end
+
+#if($iDemand.haveJs('layer'))
+	<script type="text/javascript" src="$appServer.get('scripts/layer.js')"></script>
+#end
+
+#if($iDemand.haveJs('fckeditor'))
+	<script type="text/javascript" src="$appServer.get('scripts/fckeditor/fckeditor.js')"></script>
+#end
+
+#if($iDemand.haveJs('ckeditor'))
+	<script type="text/javascript" src="$appServer.get('scripts/ckeditor/ckeditor.js')"></script>
+#end
+
+#if($iDemand.haveCss('easyuiCore'))
+<link rel="stylesheet" type="text/css" href="$appServer.get('scripts/jqueryeasyui/themes/default/easyui.css')">
+#end
+
+#if($iDemand.haveCss('easyuiIcon'))
+<link rel="stylesheet" type="text/css" href="$appServer.get('scripts/jqueryeasyui/themes/icon.css')">
+#end
+
+#if($iDemand.haveCss('autocomplete'))
+<link rel="stylesheet" type="text/css" href="$appServer.get('scripts/jqueryautocomplete/jquery.autocomplete.css')">
+#end
+
+#if($iDemand.haveJs('bgiframe'))
+    <script type="text/javascript" src="$appServer.get('scripts/jquery.bgiframe.pack.js')"></script>
+#end
+#if($iDemand.haveJs('autocomplete'))
+    <script type="text/javascript" src="$appServer.get('scripts/jqueryautocomplete/jquery.autocomplete.pack.js')"></script>
+#end
+#if($iDemand.haveJs('checkIdCard'))
+  <script type="text/javascript" src="$appServer.get('/scripts/checkIdCard.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.form'))
+  <script type="text/javascript" src="$appServer.get('/scripts/jquery.form.js')"></script>
+#end
+
+#if($iDemand.haveJs('jquery.ui.core'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.core.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.widget'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.widget.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.mouse'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.mouse.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.draggable'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.draggable.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.position'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.position.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.resizable'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.resizable.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.dialog'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.dialog.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.ui.button'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.ui.button.js')"></script>
+#end
+#if($iDemand.haveJs('jquery.effects.core'))
+  <script type="text/javascript" src="$appServer.get('/scripts/ui/jquery.effects.core.js')"></script>
+#end
+
+#if($iDemand.haveJs('funcCheck'))
+  <script type="text/javascript" src="$appServer.get('/scripts/funcCheck.js')"></script>
+#end
+#if($iDemand.haveJs('addrSelect'))
+  <script type="text/javascript" src="$appServer.get('/scripts/addrSelect.js')"></script>
+#end
+

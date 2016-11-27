@@ -1,0 +1,97 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs("jquery")
+#set($agentUserType = $!{eclpUserAgent.userType})
+<script>
+function formSubmit(){
+		var dateStart=jQuery('#startDate').val().replace(/-/g, "/");
+		var dateEnd=jQuery("#endDate").val().replace(/-/g, "/");
+		var b_date=new Date(Date.parse(dateStart));
+        var e_date=new Date(Date.parse(dateEnd));
+		var t_account = jQuery.trim(jQuery('#account').val());
+		if(e_date < b_date){
+    		alert("起始时间不能大于结束时间！");
+    		return false;
+    	}
+		if(t_account.length>20){
+			alert('用户帐号长度不能大于20');
+			return false;
+		}
+		var myForm=jQuery('#form1');
+		myForm.attr("action","$appServer/system/sys_worklog_list.htm");
+		myForm.submit();
+	}
+</script>
+</head>
+<body>
+<div class="main">
+  <!-- 搜索模块 -->
+  <div class="searchBox">
+    <h5><span>搜索</span></h5>
+    <form id="form1" name="form1" method="post">
+      <table>
+        <tr>
+          <th>用户帐号：</th>
+          #springBind("query.account")
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+
+           <th>开始时间：</th>
+          #springBind("query.startDate")
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()"  />
+            </td>
+             <th>结束时间：</th>
+             <td>
+              #springBind("query.endDate")
+            <input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()" /></td>
+           <th>子系统代码：</th>
+             <td>
+              #springBind("query.subSystemCode")
+            <input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+          <th>&nbsp;</th>
+          <td><button type="button" class="btn" onclick="formSubmit()">搜 索</button></td>
+		##  <td><button class="btn" onclick="formSubmit('export')">导出</button></td>
+        </tr>
+
+      </table>
+    </form>
+  </div>
+  <!-- 搜索模块 END -->
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>操作日志列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>序号</th>
+        <th>操作时间</th>
+		<!--<th>子系统代码</th>-->
+        <th>用户帐号</th>
+        <th>姓名</th>
+        <th>操作</th>
+        <th>操作详细描述</th>
+      </tr>
+      #foreach($log in $query.items)
+      <tr>
+        <td>${velocityCount}</td>
+        <td> $dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{log.gmtCreate})</td>
+		<!--<td>$!{log.subSystemCode}</td>-->
+        <td>$!{log.account}</td>
+        <td>$!{log.name}</td>
+		<td>$!{log.operatorType}</td>
+		<td>$!{log.remark}</td>
+      </tr>
+      #end
+    </table>
+    #if($query.items)
+    $contain.get('/contain/form_page_slider.htm').put('slider_query',$query).put('slider_target',"/system/sys_worklog_list.htm").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

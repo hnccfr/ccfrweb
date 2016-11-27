@@ -1,0 +1,179 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+<script>
+function doRoleAdd(){
+	$("#code").blur();
+	$("#displayName").blur();
+
+	if($("#sort").val().trim().length==0){
+		$("#sortErr").html("排序不能为空");
+	}else if(isNaN($("#sort").val()) || $("#sort").val()<=0 || $("#sort").val().split(".").length>1){
+		$("#sortErr").html("排序只能为大于0的整数");
+	}
+
+	if($("#codeErr").html().length==0 && $("#displayNameErr").html().length==0 && $("#sortErr").html().length==0){
+
+	}else{
+		return;
+	}
+
+	if(!confirm('确认要新增吗?')){
+		return;
+	}
+	var myForm=$('#roleAdd');
+	myForm.submit();
+}
+
+function changeIsCore(val){
+	$("#isCoreHidden").val(val);
+}
+
+String.prototype.trim = function() {
+		return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+$(function(){
+	$("#code").blur(
+    	function(){
+    		$("#codeErr").html("");
+    		jQuery.ajax({
+    			type: "POST",
+    			url: "role_code_check.htm",
+    			data: "code=" + $("#code").val(),
+    			async: false,
+    			success: function(returnVal){
+    				if(returnVal[0] == false){
+    					$("#codeErr").html(returnVal[1]);
+    				}
+    			}
+    		});
+    	}
+	);
+
+	$("#code").click(
+		function(){
+			$("#codeErr").html("");
+		}
+	);
+
+	$("#displayName").blur(
+		function(){
+    		$("#displayNameErr").html("");
+    		jQuery.ajax({
+    			type: "POST",
+    			url: "role_displayname_check.htm",
+    			data: "displayName=" + $("#displayName").val(),
+    			async: false,
+    			success: function(returnVal){
+    				if(returnVal[0] == false){
+    					$("#displayNameErr").html(returnVal[1]);
+    				}
+    			}
+    		});
+		}
+	);
+
+	$("#displayName").click(
+		function(){
+			$("#displayNameErr").html("");
+		}
+	);
+
+	$("#sort").blur(
+    	function(){
+			$("#sortErr").html("");
+        	if($("#sort").val().trim().length==0){
+        		$("#sortErr").html("排序不能为空");
+        	}else if(isNaN($("#sort").val()) || $("#sort").val()<=0 || $("#sort").val().split(".").length>1){
+        		$("#sortErr").html("排序只能为大于0的整数");
+        	}
+		}
+	);
+
+	$("#sort").click(
+		function(){
+			$("#sortErr").html("");
+		}
+	);
+
+});
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>角色新增</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/role/role_add.htm')" id="roleAdd" name="roleAdd" method="post">
+			<table class="c4">
+                <tr>
+                    <th>角色代码：</th>
+					#springBind("role.code")
+                    <td>
+    					<input type="text" class="inp" id="${status.expression}" maxlength="20" name="${status.expression}" value="$!{status.value}"/>
+    					<span class="red">*</span><span id="codeErr" class="error">#if($!roleCodeError) $!roleCodeError #end</span>
+					</td>
+                </tr>
+				<tr>
+                	<th>角色名称：</th>
+					#springBind("role.displayName")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" maxlength="200" name="${status.expression}" value="$!{status.value}"/>
+						<span class="red">*</span><span id="displayNameErr" class="error">#if($!roleDisplayNameError) $!roleDisplayNameError #end</span>
+					</td>
+				</tr>
+				<tr>
+					<th>角色类型：</th>
+                    #springBind("role.roleType")
+					<td>
+						<input type="hidden" name="${status.expression}" value="1">普通角色
+					</td>
+                </tr>
+				<tr>
+					<th>是否核心：</th>
+                    #springBind("role.isCore")
+					<input type="hidden" value="2" id="isCoreHidden" name="${status.expression}">
+					<td>
+						#if($!role.isCore)
+							<input type="radio" onclick="changeIsCore(2)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="2" #if($!role.isCore == 2) checked="checked" #end>应用级
+    						<input type="radio" onclick="changeIsCore(1)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="1" #if($!role.isCore == 1) checked="checked" #end>核心级
+						#else
+    						<input type="radio" onclick="changeIsCore(2)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="2" checked="checked">应用级
+    						<input type="radio" onclick="changeIsCore(1)" #if($!userAgent.userType==2) disabled="disabled" #end name="isCoreRadio" value="1">核心级
+						#end
+					<span class="red">*</span><span id="isCoreErr" class="error">$!{status.errorMessage}</span>
+					</td>
+                </tr>
+				<tr>
+                	<th>排序：</th>
+					#springBind("role.sort")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="10" value="$!{status.value}"/>
+						<span class="red">*</span><span id="sortErr" class="error">$!{status.errorMessage}</span>
+					</td>
+				</tr>
+				<tr>
+                	<th>备注：</th>
+					#springBind("role.remark")
+                    <td>
+						<input type="text" class="inp" id="${status.expression}" name="${status.expression}" maxlength="100" value="$!{status.value}"/>
+					</td>
+				</tr>
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("ROLE_ADD"))
+		<button type="button" class="button-s4" onclick="doRoleAdd()">保存</button>
+	  #end
+		<button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/role/role_list.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

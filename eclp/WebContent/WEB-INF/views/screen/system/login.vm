@@ -1,0 +1,96 @@
+#set($layout="")
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>#if($systemTitle)$systemTitle #else 恒生网络 通用后台管理系统 #end</title>
+    <link href="$appServer.get('styles/basic.css')" rel="stylesheet" type="text/css" />
+    <link href="$appServer.get('styles/admin.css')" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="$appServer.get('scripts/jquery-1.4.2.min.js')"></script>
+    <script>
+
+    	function keyDown(event){
+			if(event.keyCode==13){//Enter 有效
+				doLogin();
+			}
+		}
+
+    	function changeCheckCode(){
+    		var d =new Date();
+    		var url = "$appServer.get('checkcode/simple.htm')?t="+d.getTime();
+    		$("#checkCode").attr("src",url);
+    	}
+
+    	function doLogin(){
+    		if(doCheck()){
+    			$("#form1").submit();
+    		}
+    	}
+
+    	function doCheck(){
+    		if($("#account").val()==""){
+    			alert("请输入帐号！");
+    			return false;
+    		}
+    		if($("#password").val()=="" || $("#password").val().length < 6){
+    			alert("请输入长度至少6位的密码！");
+    			return false;
+    		}
+    		#if($failedTimes>=3)
+    			if($("#code").val()=="" || $("#code").val().length < 5){
+    				alert("请输入长度为5位的验证码！");
+    				return false;
+    			}
+    		#end
+    		return true;
+    	}
+    </script>
+</head>
+
+
+
+
+<body style="background:#183a52;">
+
+<div class="login">
+
+	<div class="login-content">
+	#if($tips)
+    <div class="tip" id="tip">$tips</div>
+    #end
+        <form id="form1" name="form1" method="post" action="$appServer.get('system/login.htm')" target="_parent">
+      <fieldset>
+            <legend>登陆系统管理平台</legend>
+            <div>
+                <label for="username">用户名:</label>
+                #springBind("user.account")
+                <input type="text"  class="inp2" id="account" name="${status.expression}" value="$!{status.value}" maxlength="50"/>
+            </div>
+            <div>
+                <label for="pass">密　码:</label>
+                #springBind("user.password")
+                <input type="password" class="inp2" id="password" name="${status.expression}" value="$!{status.value}" maxlength="20" onkeydown="keyDown(event)" />
+            </div>
+            #if($failedTimes>=3)
+            <div>
+              <label for="chk_code">验证码:</label>
+              <input type="text" class="inp2" name="checkcode" style="width:50px;" id="code" onkeydown="keyDown(event)"/>
+              <img src="$appServer.get('checkcode/simple.htm')" width="50" height="23" id="checkCode" />
+              <span><a href="javascript:changeCheckCode();">更换校验码</a></span>
+            </div>
+            #end
+        <div>
+      <label></label>
+                 <input name="remember" type="checkbox" id="remember" checked="checked" value="1"/>7天内记住用户名
+          </div>
+            <div class="login-btn">
+                <input class="btn2" type="button" value=" " onclick="doLogin()"/>
+            </div>
+        </fieldset>
+</form>
+    </div>
+
+</div>
+
+</body>
+</html>

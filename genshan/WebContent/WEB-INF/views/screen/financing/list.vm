@@ -1,0 +1,113 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript" type="text/javascript" src="$!{imageServer}/scripts/My97DatePicker/WdatePicker.js"></script>
+<div class="main">
+	<h2>融资项目查询</h2>
+	<div class="clear"></div>
+	<form id="financingListFrom" action="$!{appServer}/financing/list.htm"  method="post">
+        <div class="searchBox">
+    		<h5><span>搜索融资项目</span></h5>
+    		<table>
+    			<tr>
+    				<th class="w110 fn tr">融资编号：</th>
+    				<td>
+						#springBind("query.code")
+    					<input type="text" id="code" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+					<th class="w110 fn tr">融资项目名称：</th>
+    				<td>
+						#springBind("query.title")
+    					<input type="text" id="title" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th class="w110 fn tr">融资人：</th>
+    				<td>
+						#springBind("query.userName")
+    					<input type="text" id="userName" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+                    <td></td><td></td>
+					<td>
+    					<button type="submit" class="btn">搜 索</button>
+
+    				</td>
+                </tr>
+				<tr>
+					<th class="w110 fn tr">状态：</th>#springBind("query.status")
+                    <td>
+            			<select class="select" name="${status.expression}" value="$!{status.value}" style="width:95px;">
+            				<option value="">请选择</option>
+            				#foreach($item in $statusList)
+            					<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>	
+            				#end
+                        </select>
+            		</td>
+    				<th class="w110 fn tr">申请时间：</th>
+                    <td>
+            			#springBind("query.gmtApplyL")
+            			<input type="text" id="gmtApplyL" name="${status.expression}"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"   value="$!{status.value}" readonly="readonly" class="date-pick" style="width:115px"/>
+            			-
+            			#springBind("query.gmtApplyR")
+            			<input type="text" id="gmtApplyR" name="${status.expression}"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"   value="$!{status.value}" readonly="readonly" class="date-pick" style="width:115px"/>
+            		</td>
+    			</tr>
+    		</table>
+    	</div>
+    </form>
+		<div class="tool">
+            <span><a href="$!{appServer}/financing/add.htm" hidefocus="true" class="bt_add">添加融资项目</a></span>
+        </div>
+	<div class="listBox">
+		<h5><span>融资项目列表</span></h5>
+		<table width="100%">
+			<tr>
+				<th>融资编号</th>
+				<th>融资项目名称</th>
+				<th>融资人</th>
+				<th>申请金额(元)</th>
+				<th>实际放款(元)</th>
+				<th>申请时间</th>
+				<th>放款时间</th>
+				<th>状态</th>
+				<th>操作</th>
+            </tr>
+			#if($query && $query.getData().size() > 0)
+				#foreach($!list in $!query.getData())
+					<tr>
+                        <td>$!{list.code}</td>
+						<td>$!{list.title}</td>
+						<td>$!{list.userName}</td>
+						<td>$!commonUtils.getMoneyDesc($!{list.applyAmount})</td>
+						<td>#if($!{list.loanAmount})$!commonUtils.getMoneyDesc($!{list.loanAmount})#end</td>
+                        <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{list.gmtApply})</td>
+						<td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{list.gmtLoan})</td>
+						<td>$!{list.statusDes}</td>
+                        <td>
+							<a href="$!{appServer}/financing/info.htm?id=$!{list.id}">查看</a>
+							#if($!{list.canDelete})
+							|&nbsp;<a href="#" onclick="javascript:if(window.confirm('确定删除？')){window.location.href='$!{appServer}/financing/del.htm?id=$!{list.id}';}">删除</a>
+							#end
+							#if($!{list.canEdit})
+                            |&nbsp;<a href="$!{appServer}/financing/edit.htm?id=$!{list.id}">修改</a>
+							#end
+							#if($!{list.canAdvance})
+                            |&nbsp;<a href="$!{appServer}/financing/advance.htm?id=$!{list.id}">审核</a>##初审
+							#end
+							#if($!{list.canFinalAudit})
+                            |&nbsp;<a href="$!{appServer}/financing/audit.htm?id=$!{list.id}">审核</a>##复审
+							#end
+							#if($!{list.canLoan})
+							|&nbsp;<a href="$!{appServer}/financing/loan.htm?id=$!{list.id}">放款</a>
+							#end
+                            #if($!{list.canRepay})
+							|&nbsp;<a href="$!{appServer}/financing/repay.htm?id=$!{list.id}">还款完成</a>
+							#end
+						</td>
+                    </tr>
+				#end
+			#end
+        </table>
+		<div class="pages-box" >
+			<div class="pages">
+				#pager($query,"financingListFrom")
+            </div> 
+        </div>
+    </div>
+</div>

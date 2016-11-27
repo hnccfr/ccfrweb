@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <!-- 账务交易服务
+	<bean id="merchantManager-hessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    	<property name="service" ref="merchantManager"/>
+    	<property name="serviceInterface" value="com.hundsun.network.post.counter.service.merchant.MerchantManager"/>
+	</bean> -->
+
+	<!-- 对账异常处理-退款接口 
+	<bean id="compareRefundService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+      <property name="serviceUrl" value="${compare.refund.hessian.url}"/>
+      <property name="serviceInterface" value="com.hundsun.network.service.CompareRefundService"/>
+     <property name="readTimeout" value="15000"></property>
+     <property name="connectTimeout" value="30000"></property>
+   	</bean>
+	-->
+</beans>

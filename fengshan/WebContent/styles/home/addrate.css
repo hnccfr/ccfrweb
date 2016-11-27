@@ -1,0 +1,679 @@
+@charset "utf-8";
+
+/* CSS Document */ /*publish time:2011-10-20 09:06:07*/
+.comment {
+	padding: 10px 5px;
+	color: #333;
+}
+
+.comment .title {
+	font-weight: bold;
+}
+
+.comment .date {
+	color: #999;
+}
+
+.comment .meta {
+	margin: 5px 0;
+}
+
+.comment .meta .nk {
+	margin: 0 5px 0 0;
+	font-weight: bold;
+}
+
+.sellercomment {
+	color: #960;
+}
+
+.ph-label {
+	position: absolute;
+	padding: 0 0 0 3px;
+	line-height: 1.2; *
+	padding-top: 3px color : #999;
+	opacity: 1;
+	transition: all .2s ease-out;
+	-webkit-transition: all .2s ease-in;
+	-moz-transition: all .2s ease-out;
+}
+
+.nojs .ph-label {
+	display: none;
+}
+
+.ph-hide .ph-label {
+	opacity: 0;
+	visibility: hidden;
+}
+
+.ph-focus .ph-label {
+	color: #ddd;
+}
+
+.line {
+	margin-bottom: 10px;
+}
+
+.rate-icon {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	padding-left: 25px;
+	margin-right: 10px;
+	display: inline-block;
+	height: 18px;
+	line-height: 18px;
+}
+
+.rate-ok {
+	background-position: -237px -104px;
+}
+
+.rate-normal {
+	background-position: -236px -244px;
+}
+
+.rate-bad {
+	background-position: -236px -174px;
+}
+
+.clear {
+	zoom: 1;
+}
+
+.clear:after {
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.dashedborder {
+	background:
+		url(http://img01.taobaocdn.com/tps/i1/T1AVl.XoRDXXXXXXXX-11-1.gif) 50%
+		100% repeat-x;
+}
+
+.hide-text {
+	text-indent: -9999px;
+}
+
+.border {
+	border: 1px solid #c4d5df;
+}
+
+.addcomment {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	padding-left: 20px;
+	background-position: 0 -71px;
+}
+
+table.commentplus .item-detail {
+	margin-left: 10px;
+}
+
+.rate-level-normal .textinput {
+	border: red 1px solid;
+}
+
+.rate-msg-box {
+	display: none;
+	width: 452px;
+}
+
+.rate-msg-box .textinput {
+	padding: 8px;
+	border: 1px solid #abadb3;
+}
+
+.rate-msg-box .ks-placeholder {
+	position: absolute;
+}
+
+.rate-msg-box .text-counter strong {
+	color: #f60;
+	margin: 0 5px;
+}
+
+.rate-msg-box .rate-msg-option {
+	float: right;
+}
+
+.rate-msg-box .rate-msg-option li {
+	float: left;
+	margin-right: 5px;
+}
+
+.rate-msg-box .ph-label {
+	width: 400px;
+	line-height: 1.5;
+	display: block;
+}
+
+.rate-msg-box .rate-msg {
+	width: 100%;
+	_width: 434px;
+	height: 132px;
+	border: 0;
+	outline: 0;
+	resize: none;
+}
+
+.rate-msg-box .ft {
+	position: relative;
+	padding: 2px;
+}
+
+.rate-msg-box .close-msg-box {
+	display: inline-block;
+	width: 70px;
+	height: 18px;
+	text-indent: -9999px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-position: 0 -243px;
+}
+
+.rate-msg-box .close-msg-box:hover {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-position: 0 -214px;
+}
+
+.rate-msg-box .add-comment {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon.png);
+	background-repeat: no-repeat;
+	background-position: 0 -71px;
+}
+
+.st-show-msg-box .rate-msg-box {
+	display: block;
+}
+
+.st-show-msg-box .show-msg-box {
+	display: none;
+}
+
+table.commentplus {
+	width: 100%;
+}
+
+table.commentplus th,table.commentplus td {
+	padding: 7px 10px;
+}
+
+table.commentplus thead th {
+	background: #dedede;
+}
+
+table.commentplus tbody td {
+	background:
+		url(http://img01.taobaocdn.com/tps/i1/T1AVl.XoRDXXXXXXXX-11-1.gif) 50%
+		100% repeat-x;
+	padding: 7px 10px 20px;
+	vertical-align: top;
+}
+
+.ratehelp {
+	float: right;
+}
+
+.shopdetail {
+	position: relative;
+	color: #404040;
+	padding: 18px 0;
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-position: 0 -18px;
+	background-repeat: repeat-x;
+	background-color: #f1f5f8;
+	height: 72px;
+	border: 1px solid #c4d5df;
+}
+
+.shopdetail .tips {
+	position: absolute;
+	right: 20px;
+	width: 430px;
+	bottom: 15px;
+}
+
+.shopdetail .hd {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 110px;
+	width: 39px;
+	line-height: 1.2em;
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-position: 24px -159px;
+}
+
+.shopdetail .hd h3 {
+	width: 1em;
+	padding-top: 25px;
+	margin-left: 10px;
+	color: #666;
+	font-weight: normal;
+}
+
+.shopdetail .bd {
+	padding-left: 100px;
+	margin-left: 39px;
+}
+
+.shopdetail .bd .shop-logo {
+	float: left;
+	width: 70px;
+	height: 70px;
+	margin-left: -80px;
+}
+
+.shopdetail .rank-icon {
+	margin-right: 10px;
+}
+
+.shopdetail .rank-icon img {
+	vertical-align: middle;
+}
+
+.itemlist {
+	border: 1px solid #c4d5df;
+}
+
+.itemlist input {
+	vertical-align: text-bottom;
+	margin-right: 5px;
+}
+
+span.like {
+	font-weight: bold;
+}
+
+span.like strong {
+	color: #f60;
+	font-weight: normal;
+}
+
+.listhd {
+	position: relative;
+}
+
+.listhd h3 {
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-image:
+		url(http://img04.taobaocdn.com/tps/i4/T1zZF.XoNzXXXXXXXX-16-258.png);
+	background-repeat: no-repeat;
+	background-position: 0 -134px;
+	background-repeat: repeat-x;
+	height: 24px;
+	line-height: 24px;
+	font-size: 12px;
+	padding-left: 12px;
+	background-color: #f2f7fa;
+	border-bottom: 1px solid #c4d5df;
+}
+
+.listhd .act {
+	right: 5px;
+	top: 3px;
+	position: absolute;
+}
+
+.listhd .act label {
+	vertical-align: middle;
+}
+
+.listhd .act input {
+	margin-right: 3px;
+	vertical-align: middle;
+}
+
+.listbd label {
+	vertical-align: middle;
+}
+
+.listbd input {
+	vertical-align: middle;
+}
+
+.listbd .msg {
+	margin: 10px 0;
+}
+
+.listbd .labels {
+	background: #f3f8fe;
+	padding: 5px 20px;
+	zoom: 1;
+}
+
+.listbd .labels li {
+	float: left;
+	height: 20px;
+	line-height: 20px;
+}
+
+.listbd .labels .itemdetail {
+	width: 448px;
+}
+
+.listbd .labels .radiolabel {
+	width: 75px;
+}
+
+.listbd .labels:after {
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.listbd .rate-list {
+	margin-bottom: 10px;
+	padding: 0 20px;
+	clear: both;
+}
+
+.listbd .rating-box .bd {
+	position: relative;
+}
+
+.listbd .starstip {
+	position: absolute;
+	top: 25px;
+	left: 276px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-position: 0 -10px;
+	width: 301px;
+	height: 51px;
+}
+
+.listbd .starstip p {
+	padding: 6px 125px 10px 14px;
+}
+
+.item-detail {
+	padding: 10px 0 10px 80px;
+	float: left;
+	position: relative;
+	width: 280px;
+}
+
+.item-detail h3 {
+	font-size: 12px;
+	width: 250px;
+	word-wrap: break-word;
+	wordk-break: break-all;
+	margin-bottom: 10px;
+}
+
+.item-detail .item-d-img {
+	float: left;
+	margin-left: -80px;
+	width: 60px;
+}
+
+.item-detail p {
+	color: #999;
+}
+
+.rate-box {
+	background:
+		url(http://img01.taobaocdn.com/tps/i1/T1AVl.XoRDXXXXXXXX-11-1.gif) 50%
+		100% repeat-x;
+	zoom: 1;
+}
+
+.rate-box .item-rate-score {
+	float: left;
+	min-height: 1px;
+	width: 88px;
+}
+
+.rate-box .item-rate-score .rate-score {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	width: 34px;
+	height: 14px;
+	color: #fff;
+	line-height: 14px;
+	font-size: 10px;
+	display: block;
+	margin: 10px 5px 0 10px;
+	text-align: center;
+	text-indent: -9999px;
+	font-weight: bold;
+}
+
+.rate-box .item-rate-score .good {
+	background-position: -43px -88px;
+	background-color: #ff6d02;
+}
+
+.rate-box .item-rate-score .normal {
+	background-position: -43px -139px;
+	background-color: #f0ca01;
+}
+
+.rate-box .item-rate-score .bad {
+	background-position: -43px -113px;
+	background-color: #999;
+}
+
+.rate-box .item-rate-main {
+	float: left;
+	padding: 10px 0;
+	width: 458px;
+}
+
+.rate-box .item-rate-main .item-rate-act {
+	margin: 10px 0;
+	zoom: 1;
+}
+
+.rate-box .item-rate-main .item-rate-act:after {
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.rate-box .item-rate-main .rate-msg-handle {
+	float: right;
+}
+
+.rate-box .item-rate-main .rate-control-stars {
+	float: left;
+}
+
+.rate-box .item-rate-main .rate-control-stars .ks-ss-tips {
+	display: none;
+}
+
+.rate-box .item-rate-main .rate-controll li {
+	float: left;
+	width: 75px;
+}
+
+.rate-box .item-rate-main .rate-controll label {
+	display: inline-block;
+	width: 17px;
+	vertical-align: middle;
+	height: 16px;
+	text-indent: -9999px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+}
+
+.rate-box .item-rate-main .rate-controll .good label {
+	background-position: -241px -105px;
+}
+
+.rate-box .item-rate-main .rate-controll .normal label {
+	background-position: -241px -245px;
+}
+
+.rate-box .item-rate-main .rate-controll .bad label {
+	background-position: -241px -173px;
+}
+
+.rate-box:after {
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.rate-box-last {
+	background-image: none;
+}
+
+.stars {
+	padding: 20px;
+}
+
+.stars li {
+	margin: 5px 0;
+}
+
+.stars li label {
+	line-height: 23px;
+}
+
+.listbd .form-msg {
+	margin: 20px 0 0 390px;
+}
+
+.submitbox {
+	padding-left: 390px;
+	margin: 10px 0;
+}
+
+.submitbox button {
+	margin-right: 5px;
+}
+
+.ks-simplestar {
+	display: inline-block;
+	vertical-align: middle;
+	border: 1px solid transparent;
+}
+
+* html .ks-simplestar {
+	border-color: pink;
+	filter: chroma(color = pink);
+}
+
+.ks-simplestar img {
+	margin-right: 5px;
+}
+
+.ks-ss-tips {
+	margin-left: 10px;
+}
+
+.ks-ss-tips strong {
+	color: #f60;
+	font-weight: bold;
+}
+
+.ks-ss-focus {
+	border: 1px solid #ddd;
+}
+
+* html .ks-ss-focus {
+	border: 1px solid #ddd;
+}
+
+.ks-ss-tooltip {
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-image: url(http://a.tbcdn.cn/app/rc/img/icon_v2.gif);
+	background-repeat: no-repeat;
+	background-position: 1000px 1000px;
+	position: absolute;
+	visibility: hidden;
+	display: none;
+	padding: 10px 5px 0;
+	background-position: -40px -177px;
+	width: 170px;
+	_width: 180px;
+	height: 57px;
+	_height: 67px;
+}
+
+.ks-ss-tooltip dt {
+	color: #f60;
+}
+
+.nojs .starstip {
+	left: 360px;
+}
+
+.nojs .rate-msg-box {
+	display: block;
+}
+
+.nojs #rate-good-all,.nojs .show-msg-box,.nojs .close-msg-box,.nojs .listhd .act,.nojs .text-counter
+	{
+	display: none;
+}

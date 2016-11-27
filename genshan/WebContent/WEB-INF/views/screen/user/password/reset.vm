@@ -1,0 +1,17 @@
+#set($layout = 'layout/blank.vm')
+<div>
+    #if($!{success})
+    	<div id="success" text-align="center">
+			密码重置成功,新密码为</br><font color="red" size="3">$!{password}</font></br>
+		#if($!{msg})
+			邮件或短信发送失败！请重新尝试或使用其它方式告知会员。
+		#else
+			新密码将以邮件和短信的形式发送给用户！
+		#end
+		</div>
+    #else 
+    	<div id="fail" text-align="center">
+			重置失败-$!{errorMsg}，请重试！
+		</div> 
+    #end
+</div>

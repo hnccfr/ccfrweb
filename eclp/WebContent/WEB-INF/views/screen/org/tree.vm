@@ -1,0 +1,78 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addCss('ztree')
+$iDemand.addJs("jquery")
+$iDemand.addJs("ztree")
+
+<style type="text/css">
+button.diyBtn1 { background:url("$!{appServer}/images/zTree/edit.png") no-repeat scroll 1px 1px transparent;}
+</style>
+<script type="text/javascript">
+  <!--
+		var appServer = '$!{appServer}';
+		var zNodes = [ #direct($!{orgList}) ];
+		var iconArray = [
+            	{ type:"1", icon:"$!{appServer}/images/icon/tree_subsys.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_subsys.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_subsys.gif" },
+            	{ type:"2", icon:"$!{appServer}/images/icon/tree_group.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_group.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_group.gif" },
+            	{ type:"3", icon:"$!{appServer}/images/icon/tree_menu.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_menu.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_menu.gif" },
+            	{ type:"4", icon:"$!{appServer}/images/icon/tree_oper.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_oper.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_oper.gif" }
+            ];
+//-->
+
+function doDel(){
+	nodes = zTree1.getCheckedNodes();
+	if( nodes.length == 0 ){
+		alert("请选择需要删除的组织机构！");
+		return;
+	}
+	if( !confirm( "您确定要删除这些组织机构吗？\删除后无法再找回！" ) ){
+		
+		return;
+	}
+	var ids = "";
+    for( i = 0; i < nodes.length; i++ ){
+    	ids = ids + nodes[i].id + ",";
+    }
+	parent.authMainIframe.location.href = appServer + "/org/del.htm?id=" + ids;
+}
+
+
+  </SCRIPT>
+<script type="text/javascript" src="$!{appServer}/scripts/orgTree.js"></script>
+<body>
+	
+    <div class="ctrls">
+    	<p class="edit"><img src="$!{appServer}/images/icon/tree_openAll.gif" title="张开已载入" onclick="expandAll(true);" /></p>
+    	<p class="edit"><img src="$!{appServer}/images/icon/tree_closeAll.gif" title="折叠已载入" onclick="expandAll(false);" /></p>
+##    	<p class="edit"><img src="$!{appServer}/images/admin/up.gif" title="同级向上移动" onclick="moveTreeNode('up');"  /></p>
+##    	<p class="edit"><img src="$!{appServer}/images/admin/dw.gif" title="同级向下移动" onclick="moveTreeNode('down');"  /></p>
+    	<p class="edit"><img src="$!{appServer}/images/icon/tree_refresh.png" title="刷新" onclick="refresh();" /></p>
+#if($!adminAccess.has("ORG_ADD"))
+	<p class="edit"><img src="$!{appServer}/images/icon/tree_add.gif" title="新增" onclick="doAdd();" /></p>
+#end
+#if($!adminAccess.has("ORG_DEL"))
+    	<p class="edit"><img src="$!{appServer}/images/icon/tree_del.gif" title="删除" onclick="doDel();"  /></p>
+#end
+    	<p class="edit"><img src="$!{appServer}/images/icon/tree_help.gif" title="帮助" onclick="doHelp();"  /></p>
+    	<div style="clear: both;"></div>
+##    	<input type="radio" id="showTypeAsync" name="showType" value="async" #if( ${showType} == "async" )checked#end>按需加载
+##    	<input type="radio" id="showTypeAll" name="showType" value="all" #if( ${showType} == "all" )checked#end>全部加载<br/>
+    	
+    	<input type="radio" id="showUsingAll" name="showUsing" value="ALL" #if( ${showUsing} == "ALL" )checked#end>所有
+		<input type="radio" id="showUsing" name="showUsing" value="USE" #if( ${showUsing} == "USE" )checked#end>启用<br/>
+    </div>
+	<ul id="treeDemo" class="tree" style="width:100%;height:100%overflow:auto;"></ul>
+	
+	
+	
+	
+</body>

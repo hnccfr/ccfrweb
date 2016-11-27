@@ -1,0 +1,73 @@
+#set($layout = '')
+<html>
+<head>
+<title>Insert title here</title>
+	<script >
+		var appServer = "$!{appServer}";
+		var imageServer = "$!{imageServer}";
+    </script>
+	<script type="text/javascript" src="$!{imageServer}/scripts/pushlet/ajax-pushlet-client.js"></script> 
+	<SCRIPT type="text/javascript" src="$!{imageServer}/scripts/jquery-1.4.4.min.js"></SCRIPT>
+	<script type="text/javascript"> 
+		 PL._init(); 
+         PL.joinListen("/addprice"); 
+
+         function onData(event) {
+		    alert("ondata");
+            var newprice=document.getElementById('newprice');
+            var priceList=document.getElementById('priceList');
+			if(newprice.innerHTML!=event.get("price")){
+				newprice.innerHTML=event.get("price");
+				var oldpriceList = priceList.innerHTML;
+				priceList.innerHTML=oldpriceList+event.get("price")+'<p>'
+			}
+         } 
+
+         function addpriceSubmit(num){
+ 			jQuery.ajax({
+ 			      type: "POST",
+ 			      url: "$!{appServer}/pushlet/demo/add.htm",
+ 				  data: "add="+num,
+ 				  dataType: "String",
+ 			      success: function(data){
+ 			         },
+ 					 error: function(data){
+ 					 	alert("error");
+ 					 	alert(data);
+ 					 }
+ 			      });
+          }
+
+    </script> 
+
+</head>
+<body>
+页面获得服务器推送的最新价格不断刷新<p><p>
+
+<div style="float:left;width:150px;" align="left" >
+<font  color="blue">历史加价记录</font>
+<div id="priceList"></div>
+</div>
+
+<div align="center">
+	<table>
+	<tr>
+		<td><font  color="blue">最新价格：</font></td>
+		<td>
+			<div id="newprice" style="font-size:33;"></div>
+		</td>
+	</tr>
+	<tr>
+		<td><input type="button" value="加价30" onclick="javascript:addpriceSubmit('30');"></td>
+		<td><input type="button" value="加价50" onclick="javascript:addpriceSubmit('50');"></td>
+		<td><input type="button" value="加价100" onclick="javascript:addpriceSubmit('100');"></td>
+	</tr>
+	</table>
+</div>
+
+
+
+
+
+</body>
+</html>

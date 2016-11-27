@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_WISH_ORDER" >
+	<typeAlias alias="TradeWishOrder" type="com.hundsun.network.gates.genshan.biz.domain.trade.TradeWishOrder"/>
+	<typeAlias alias="TradeWishOrderQuery" type="com.hundsun.network.gates.genshan.biz.domain.query.TradeWishOrderQuery"/>
+	<resultMap id="BaseResultMap" class="TradeWishOrder" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="WISH_ORDER_NUM" property="wishOrderNum" jdbcType="VARCHAR" />
+		<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+		<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="TRADE_DICTOR" property="tradeDictor" jdbcType="VARCHAR" />
+		<result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="BID_PRICE" property="bidPrice" jdbcType="DECIMAL" />
+		<result column="VALUATION_UNIT" property="valuationUnit" jdbcType="VARCHAR" />
+		<result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+		<result column="MEASURE_UNIT" property="measureUnit" jdbcType="VARCHAR" />
+		<result column="TOTAL_PAY" property="totalPay" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="TRADE_TYPE" property="tradeType" jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="VARCHAR" />
+		<result column="EXPECT_TIME" property="expectTime" jdbcType="TIMESTAMP" />
+		<result column="IS_INVOICE" property="isInvoice" jdbcType="VARCHAR" />
+		<result column="DELIVERY_TYPE" property="deliveryType" jdbcType="VARCHAR" />
+		<result column="LINK_MAN" property="linkMan" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="TRADEMARK" property="trademark" jdbcType="VARCHAR" />
+		<result column="COMMENTS" property="comments" jdbcType="VARCHAR" />
+		<result column="SPECIAL_SIGN" property="specialSign" jdbcType="VARCHAR" />
+		<result column="DEPOSIT" property="deposit" jdbcType="DECIMAL" />
+		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+		<result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR"/>
+		<result column="SUBSTATION_ID" property="substationId" jdbcType="DECIMAL" />
+	</resultMap>
+  	<resultMap id="extendResultMap" extends="BaseResultMap" class="TradeWishOrder" >
+  		<result column="DEAL" property="deal" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<resultMap id="CancelFundResultMap" class="TradeWishOrder">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="DEPOSIT" property="deposit" jdbcType="DECIMAL" />
+		<result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+		<result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR" />
+		<result column="WISH_ORDER_NUM" property="wishOrderNum" jdbcType="VARCHAR" />
+		<result column="TRADEMARK" property="trademark" jdbcType="VARCHAR" />
+	</resultMap>
+	
+  	<!--基础结果集，不加入大字段DEAL-->
+  	<sql id="Base_Column_List" >
+	    t_two.ID, t_two.GMT_CREATE, t_two.GMT_MODIFY, t_two.WISH_ORDER_NUM, t_two.PROJECT_NAME, t_two.PROJECT_CODE, t_two.TRADE_DICTOR, 
+	    t_two.USER_ACCOUNT,t_two.BID_PRICE, t_two.VALUATION_UNIT, t_two.QUANTITY, t_two.MEASURE_UNIT, t_two.TOTAL_PAY, t_two.STATUS, 
+	    t_two.TRADE_TYPE, t_two.PAYMENT_TYPE, t_two.EXPECT_TIME, t_two.IS_INVOICE, t_two.DELIVERY_TYPE, t_two.LINK_MAN, 
+	    t_two.PHONE, t_two.PROVINCE, t_two.CITY, t_two.AREA, t_two.ADDRESS, t_two.TRADEMARK, t_two.COMMENTS, t_two.SPECIAL_SIGN, 
+	    t_two.DEPOSIT, t_two.ZIP_CODE, t_two.STOREHOUSE, t_two.SUBSTATION_ID
+	</sql>
+	<!--扩展结果集，加入大字段DEAL-->
+  	<sql id="Extend_Column_List" >
+	    t_two.ID, t_two.GMT_CREATE, t_two.GMT_MODIFY, t_two.WISH_ORDER_NUM, t_two.PROJECT_NAME, t_two.PROJECT_CODE, t_two.TRADE_DICTOR, 
+	    t_two.USER_ACCOUNT,t_two.BID_PRICE, t_two.VALUATION_UNIT, t_two.QUANTITY, t_two.MEASURE_UNIT, t_two.TOTAL_PAY, t_two.STATUS, 
+	    t_two.TRADE_TYPE, t_two.PAYMENT_TYPE, t_two.EXPECT_TIME, t_two.IS_INVOICE, t_two.DEAL, t_two.DELIVERY_TYPE, t_two.LINK_MAN, 
+	    t_two.PHONE, t_two.PROVINCE, t_two.CITY, t_two.AREA, t_two.ADDRESS, t_two.TRADEMARK, t_two.COMMENTS, t_two.SPECIAL_SIGN, 
+	    t_two.DEPOSIT, t_two.ZIP_CODE, t_two.STOREHOUSE, t_two.SUBSTATION_ID
+  	</sql>
+  	
+  	<sql id="Cancel_Fund_Column_List" >
+    	t_two.ID, t_two.PROJECT_CODE, t_two.USER_ACCOUNT, t_two.DEPOSIT, t_two.QUANTITY, 
+    	t_ua.FUND_ACCOUNT, t_two.WISH_ORDER_NUM, t_two.TRADEMARK
+	</sql>
+  
+	<select id="selectByPrimaryKey" resultMap="extendResultMap" parameterClass="TradeWishOrder" >
+    select 
+		<include refid="Extend_Column_List" />
+    from TRADE_WISH_ORDER t_two
+    where ID = #id:DECIMAL#
+	</select>
+  
+	<select id="selectByOrderNum" resultMap="extendResultMap" parameterClass="java.lang.String" >
+    select 
+		<include refid="Extend_Column_List" />
+    from TRADE_WISH_ORDER t_two
+    where t_two.WISH_ORDER_NUM = #orderNum:DECIMAL#
+	</select>
+  
+	<delete id="deleteByPrimaryKey" parameterClass="TradeWishOrder" >
+    delete from TRADE_WISH_ORDER t_two.
+    where ID = #id:DECIMAL#
+	</delete>
+  
+	<insert id="insert" parameterClass="TradeWishOrder" >
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_trade_wish_order.nextval as id from dual
+		</selectKey>
+    insert into TRADE_WISH_ORDER (ID, GMT_CREATE, GMT_MODIFY, WISH_ORDER_NUM, 
+      PROJECT_NAME, PROJECT_CODE, TRADE_DICTOR, USER_ACCOUNT, 
+      BID_PRICE, VALUATION_UNIT, QUANTITY, MEASURE_UNIT, 
+      TOTAL_PAY, STATUS, TRADE_TYPE, PAYMENT_TYPE, 
+      EXPECT_TIME, IS_INVOICE, DEAL, DELIVERY_TYPE, 
+      LINK_MAN, PHONE, PROVINCE, CITY, AREA, 
+      ADDRESS, TRADEMARK, COMMENTS, SPECIAL_SIGN, 
+      DEPOSIT, ZIP_CODE, STOREHOUSE)
+    values (#id:DECIMAL#, sysdate, sysdate, #wishOrderNum:VARCHAR#, 
+      #projectName:VARCHAR#, #projectCode:VARCHAR#, #tradeDictor:VARCHAR#, #userAccount:VARCHAR#, 
+      #bidPrice:DECIMAL#, #valuationUnit:VARCHAR#, #quantity:DECIMAL#, #measureUnit:VARCHAR#, 
+      #totalPay:DECIMAL#, #status:VARCHAR#, #tradeType:VARCHAR#, #paymentType:VARCHAR#, 
+      #expectTime:TIMESTAMP#, #isInvoice:VARCHAR#, #deal:VARCHAR#, #deliveryType:VARCHAR#, 
+      #linkMan:VARCHAR#, #phone:VARCHAR#, #province:VARCHAR#, #city:VARCHAR#, #area:VARCHAR#, 
+      #address:VARCHAR#, #trademark:VARCHAR#, #comments:VARCHAR#, #specialSign:VARCHAR#, 
+      #deposit:DECIMAL#, #zipCode:VARCHAR#, #storehouse:VARCHAR#)
+	</insert>
+  
+	<update id="updateStatusById" parameterClass="TradeWishOrder" >
+    update TRADE_WISH_ORDER t_two
+    set t_two.STATUS = #status:VARCHAR#
+    where t_two.ID = #id:DECIMAL#
+	</update>
+	<update id="updateByPrimaryKey" parameterClass="TradeWishOrder" >
+    update TRADE_WISH_ORDER
+    set GMT_CREATE = #gmtCreate:TIMESTAMP#,
+      GMT_MODIFY = #gmtModify:TIMESTAMP#,
+      WISH_ORDER_NUM = #wishOrderNum:VARCHAR#,
+      PROJECT_NAME = #projectName:VARCHAR#,
+      PROJECT_CODE = #projectCode:VARCHAR#,
+      TRADE_DICTOR = #tradeDictor:VARCHAR#,
+      USER_ACCOUNT = #userAccount:VARCHAR#,
+      BID_PRICE = #bidPrice:DECIMAL#,
+      VALUATION_UNIT = #valuationUnit:VARCHAR#,
+      QUANTITY = #quantity:DECIMAL#,
+      MEASURE_UNIT = #measureUnit:VARCHAR#,
+      TOTAL_PAY = #totalPay:DECIMAL#,
+      STATUS = #status:VARCHAR#,
+      TRADE_TYPE = #tradeType:VARCHAR#,
+      PAYMENT_TYPE = #paymentType:VARCHAR#,
+      EXPECT_TIME = #expectTime:TIMESTAMP#,
+      IS_INVOICE = #isInvoice:VARCHAR#,
+      DEAL = #deal:VARCHAR#,
+      DELIVERY_TYPE = #deliveryType:VARCHAR#,
+      LINK_MAN = #linkMan:VARCHAR#,
+      PHONE = #phone:VARCHAR#,
+      PROVINCE = #province:VARCHAR#,
+      CITY = #city:VARCHAR#,
+      AREA = #area:VARCHAR#,
+      ADDRESS = #address:VARCHAR#,
+      TRADEMARK = #trademark:VARCHAR#,
+      COMMENTS = #comments:VARCHAR#,
+      SPECIAL_SIGN = #specialSign:VARCHAR#,
+      DEPOSIT = #deposit:DECIMAL#,
+      ZIP_CODE = #zipCode:VARCHAR#,
+      STOREHOUSE = #storehouse:VARCHAR#
+    where ID = #id:DECIMAL#
+	</update>
+  
+	<!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="queryTradeWishOrder_where">
+		<dynamic prepend="where">
+		 	
+			<isNotEmpty prepend="and" property="userAccount">
+			<![CDATA[ t_two.USER_ACCOUNT = #userAccount# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="projectName">
+			<![CDATA[ t_two.PROJECT_NAME like '%'||#projectName#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="wishOrderNum">
+			<![CDATA[ t_two.WISH_ORDER_NUM like '%'||#wishOrderNum#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="tradeDictor">
+			<![CDATA[ t_two.TRADE_DICTOR = #tradeDictor# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="paymentType">
+			<![CDATA[ t_two.PAYMENT_TYPE = #paymentType# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="status">
+			<![CDATA[ t_two.STATUS = #status# ]]>
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property="gmtCreateFrom">
+			<![CDATA[ TRUNC(t_two.GMT_CREATE) >= TRUNC(#gmtCreateFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="gmtCreateTo">
+			<![CDATA[ TRUNC(t_two.GMT_CREATE) <= TRUNC(#gmtCreateTo#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="expectTimeFrom">
+			<![CDATA[ TRUNC(t_two.EXPECT_TIME) >= TRUNC(#expectTimeFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="expectTimeTo">
+			<![CDATA[ TRUNC(t_two.EXPECT_TIME) <= TRUNC(#expectTimeTo#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="substationId">
+			<![CDATA[ t_two.SUBSTATION_ID = #substationId# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="queryTradeWishOrderCount" resultClass="int" parameterClass="TradeWishOrderQuery">
+		select count(1) from
+		TRADE_WISH_ORDER t_two
+		<include refid="queryTradeWishOrder_where" />
+	</select>
+
+	<select id="queryTradeWishOrder" resultMap="BaseResultMap" parameterClass="TradeWishOrderQuery">
+		<include refid="pageSQLHead" />
+		select
+		<include refid="Base_Column_List" />
+		from TRADE_WISH_ORDER t_two 
+		<include refid="queryTradeWishOrder_where" />
+		order by t_two.GMT_CREATE Desc
+		<include refid="pageSQLFoot" />
+	</select>
+	<!-- add by hsl 获取拍卖项目有效竞价人信息 -->
+	<select id="queryAuctionBidder" resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select * from trade_wish_order t_two 
+		where t_two.project_code=#projectCode# and t_two.status=#status#
+	</select>
+	
+	<!-- 获取某个拍卖项目的有效竞价人的牌号 -->
+	<select id="selectTradeMarkListOfOneOrder" parameterClass="TradeWishOrder" resultClass="java.lang.String">
+		select trademark from trade_wish_order where status = #status:VARCHAR# and project_code = #projectCode:VARCHAR#
+	</select>
+	
+	<update id="updateTradeMarkAndStatus" parameterClass="TradeWishOrder">
+		update trade_wish_order set status = #status:VARCHAR#,SPECIAL_SIGN = #specialSign:VARCHAR#, trademark = #trademark:VARCHAR# where id=#id:DECIMAL#
+			and status = 'audit'
+	</update>
+	
+	<select id="selectTradeWishOrderList" parameterClass="TradeWishOrder" resultMap="BaseResultMap">
+		select 
+			<include refid="Base_Column_List" /> 
+		from trade_wish_order t_two
+		<dynamic prepend="where"> 
+			<isNotEmpty prepend="and" property="status">
+				<![CDATA[ t_two.STATUS = #status# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="projectCode">
+				<![CDATA[ t_two.PROJECT_CODE = #projectCode# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="selectListInTradeByProjectCode" resultMap="CancelFundResultMap" parameterClass="java.lang.String" >
+    select 
+		<include refid="Cancel_Fund_Column_List" />
+    from TRADE_WISH_ORDER t_two, USER_ACCOUNT t_ua
+    where t_two.PROJECT_CODE = #value#
+    	and (t_two.STATUS = 'audit' or t_two.STATUS = 'trading' or t_two.STATUS = 'reviewFail')
+    	and t_two.USER_ACCOUNT = t_ua.ACCOUNT(+)
+	</select>
+	
+	<!-- 交易结束时，批量修改意向单状态 -->
+	<update id="updateStatusEndAuctionBatch" parameterClass="TradeWishOrder" >
+		update TRADE_WISH_ORDER
+    	set STATUS = #status:VARCHAR#, GMT_MODIFY = sysdate
+    	where ID = #id:DECIMAL#
+	</update>
+	
+	<update id="cancelCreateTradeWishOrder" parameterClass="java.lang.String" >
+    update TRADE_WISH_ORDER
+    set GMT_MODIFY = sysdate,
+      STATUS = 'bidsucancel'
+    where PROJECT_CODE=#value#
+    	and  STATUS = 'create'
+	</update>
+	
+</sqlMap>

@@ -1,0 +1,159 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+<script>
+	function deleteSubSystem(subSystemId){
+		if(!confirm("确定删除?")){
+			return;
+		}
+		jQuery.ajax({
+			type: "POST",
+			url: "delete_subsystem_check.htm",
+			data: "subSystemId=" + subSystemId,
+			async: false,
+			success: function(returnVal){
+				if(returnVal > 0){
+					alert("该子系统下有子权限,无法删除!");
+					return;
+				}
+				jQuery("#subSystemId").val(subSystemId);
+				jQuery("#submitForm").attr("action","$appServer/system/delete_subsystem.htm");
+				jQuery("#submitForm").submit();
+			}
+		});
+	}
+
+	function changeSubSystemStatus(subSystemId, status){
+		jQuery("#subSystemId").val(subSystemId);
+		jQuery("#status").val(status);
+		jQuery("#submitForm").attr("action","$appServer/system/subsystem_status_modify.htm");
+		jQuery("#submitForm").submit();
+	}
+	function changeSubSystemPosition(subSystemId,flag){
+	    jQuery("#subSystemId").val(subSystemId);
+		jQuery("#flag").val(flag);
+		jQuery("#submitForm").attr("action","$appServer/system/subsystem_position_modify.htm");
+		jQuery("#submitForm").submit();
+
+	}
+
+</script>
+<body>
+<div class="main">
+  <div class="tool">
+	#if($!adminAccess.has("SUBSYSTEM_ADD"))
+		<span><a href="$appServer/system/subsystem_add.htm" hidefocus="true" class="bt_add">新增子系统</a></span>
+	#end
+  </div>
+
+  <form id="submitForm" action="" method="post">
+	<input type="hidden" name="subSystemId" id="subSystemId" value="">
+	<input type="hidden" name="status" id="status" value="">
+	<input type="hidden" name="flag" id="flag" value="">
+  </form>
+
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>子系统列表</span></h5>
+    <table width="100%">
+      <tr>
+		<!--
+        <th>系统图标</th>
+		-->
+        <th>子系统名称Code</th>
+        <th>子系统全称</th>
+        <th>子系统类型</th>
+        <th>进入方式</th>
+        <th>序号</th>
+		<th>域名</th>
+		<th>URL</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      #foreach($subSystem in $subSystemList)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+		<!--
+        <td>
+			#if($!{subSystem.logo})
+                <image src="$imageServer/$!{subSystem.logo}" width="40" height="40" maxlength="1000"/><br/>
+			#end
+		</td>
+		-->
+        <td>$!{subSystem.name}</td>
+        <td>$!{subSystem.fullName}</td>
+        <td>
+			#foreach($type in $enumSubSystemIsCore)
+              #if($!{subSystem.isCore} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+        <td>
+			#foreach($type in $enumSubSystemOpenType)
+              #if($!{subSystem.openType} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+		<td>$!{subSystem.sort}</td>
+		<td>$!{subSystem.domain}</td>
+		<td>$!{subSystem.url}</td>
+		<td>
+			#foreach($type in $enumSubSystemStatus)
+              #if($!{subSystem.status} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+		<td>
+			#if($subSystemList.size()!=1)
+    			#if($velocityCount==1)
+    				<a href="#" title="上移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'up');" style="visibility: hidden;"><img src="$appServer/images/admin/up.gif" /></a>
+    				<a href="#" title="下移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'dw');"><img src="$appServer/images/admin/dw.gif" /></a>	
+    			#elseif($velocityCount==$subSystemList.size())
+    				<a href="#" title="上移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'up');"><img src="$appServer/images/admin/up.gif" /></a>
+    				<a href="#" title="下移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'dw');" style="visibility: hidden;"><img src="$appServer/images/admin/dw.gif" /></a>	
+    			#else
+        			<a href="#" title="上移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'up');"><img src="$appServer/images/admin/up.gif" /></a>
+        			<a href="#" title="下移" onclick="javascript:changeSubSystemPosition($!{subSystem.id},'dw');"><img src="$appServer/images/admin/dw.gif" /></a>	
+    			#end
+			#end
+			
+			#if($!userAgent.userType == 0 && $!subSystem.isCore == 0)
+				<!-- 当前登录的用户类型为基础数据,不显示基础子系统的操作 -->
+			#elseif($!userAgent.userType == 1 && $!subSystem.isCore == 0)
+				<!-- 当前登录的用户类型为开发级,不显示基础子系统的操作 -->
+			#elseif($!userAgent.userType == 2 && $!subSystem.isCore == 1)
+				<!-- 当前登录的用户类型为应用级,不显示核心的子系统的操作 -->
+			#else
+				#if($!adminAccess.has("SUBSYSTEM_EDIT"))
+					<a href="$appServer/system/subsystem_edit.htm?subSystemId=$!{subSystem.id}" title="修改">
+					  <img src="$appServer/images/icon/list/list_edit.gif" />
+					</a>
+				#end
+    			#if($!{subSystem.status} == 2 && $!adminAccess.has("SUBSYSTEM_ENABLE"))
+        			<a href="#" onclick="javascript:changeSubSystemStatus($!{subSystem.id},1);" title="启用">
+					  <img src="$appServer/images/icon/list/list_ok.gif" />
+					</a>
+    			#elseif($!{subSystem.status} == 1 && $!adminAccess.has("SUBSYSTEM_DISABLE"))
+    				<a href="#" onclick="javascript:changeSubSystemStatus($!{subSystem.id},2);" title="禁用">
+					 <img src="$appServer/images/icon/list/list_not.gif" />
+					</a>
+				#end
+				#if($!adminAccess.has("SUBSYSTEM_DEL"))
+					<a href="#" onclick="javascript:deleteSubSystem($!{subSystem.id});" title="删除">
+					 <img src="$appServer/images/icon/list/list_del.gif" />
+					</a>
+				#end
+			#end
+		</td>
+      </tr>
+      #end
+    </table>
+  </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

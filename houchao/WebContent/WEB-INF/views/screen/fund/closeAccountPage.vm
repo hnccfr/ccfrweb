@@ -1,0 +1,80 @@
+##资金账户 销户
+<script type="text/javascript">
+     function openfund(){
+		window.location = "$!{appServer}/fund/open_account_page.htm";
+	}
+
+	function closefund(){
+		window.location = "$!{appServer}/fund/close_account_page.htm";
+	}
+
+</script>
+<div class="main-right" >
+	<div class="basic">
+		<ul class="form-tab">
+			<li class="c">
+                <span><a href="$appServer.get('index.htm')"">首页</a></span>
+            </li>
+            <li class="c">
+                <span><a href="#" onclick="openfund()">开户</a></span>
+            </li>
+			<li class="c">
+                <span><a href="#" onclick="closefund()">销户</a></span>
+            </li>
+		</ul>
+		<div class="formbox">
+			<div class="clear"></div>
+			<form action="$!{appServer}/fund/close_fund_trans.htm" method="post">
+			<div class="nr">
+				<div class="nr-t"></div>
+				<div class="nr-c">
+					<table class="c2">##输出字段(始)
+					    <tr>
+							<th>资料都填完哦，后果自负哈</th>
+							<td>
+							</td>
+						</tr>
+
+						<tr>
+							<th>资金账号:</th>#springBind("transReq.fundAccount")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="$!{status.value}"  maxlength="20"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>操作人:</th>#springBind("transReq.operator")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="gx"  maxlength="20"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>交易日期:</th>#springBind("transReq.transDate")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="20110229"  maxlength="8"/>
+								<span style="color:red;"><label class="error">留意修改</label></span>
+							</td>
+						</tr>
+
+						<tr>
+							<th>备注:</th>#springBind("transReq.memo")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="赚完钱，散人啦"  maxlength="20"/>
+							</td>
+						</tr>##输出字段(终)
+					</table>
+				</div>
+				<div class="nr-b"></div>
+			</div>
+			<div class="form-but">##操作按键区(始)
+				<input type="submit" class="but" value="销户" />
+				<input type="reset" class="but" value="重置" />
+			</div>##操作按键区(终)
+            </form>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+    </div>
+
+</div>

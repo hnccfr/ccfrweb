@@ -1,0 +1,81 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+
+$iDemand.addCss('jquery.ui.all')
+
+$iDemand.addJs("jquery.ui.core")
+$iDemand.addJs("jquery.ui.widget")
+
+$iDemand.addJs("jquery.ui.mouse")
+$iDemand.addJs("jquery.ui.draggable")
+$iDemand.addJs("jquery.ui.position")
+$iDemand.addJs("jquery.ui.resizable")
+$iDemand.addJs("jquery.ui.dialog")
+$iDemand.addJs("jquery.ui.button")
+$iDemand.addJs("jquery.effects.core")
+
+$iDemand.addJs("funcCheck")
+<script>
+  function doSubmit(){
+     jQuery("#form1").submit();
+  }  
+  jQuery(function() {
+      jQuery( "#btn_open" ).click(function() {
+           funcCheck('$!appServer','assignRole','doSubmit');
+      })
+  });
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>分配角色</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/users/assign_role.htm')" id="form1"  method="post">
+			<table class="c4">
+                <tr>
+                    <th>用户帐号：</th>
+                    <td >
+						#springBind("user.id")
+						<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+						$!{user.account}
+					</td>
+                </tr>
+				 <tr>
+                	<th>姓名：</th>
+                    <td>$!{user.name}</td>
+				 </tr>
+				<tr>
+					<th>角色：</th>
+                     <td>
+						#if($allRoleList)
+							#foreach($role in $allRoleList)
+								#springBind("user.roleId")
+								<input type="checkbox" name="${status.expression}" value="$role.id" #if($role.isSelected=='Y') checked #end/>$role.displayName
+								#if($velocityCount%3==0)<br/>#end
+							#end
+						#end
+					 </td>
+                </tr>
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("USER_ROLE_ASSIGN"))
+		<button type="submit" class="button-s4" id="btn_open" >保存</button>
+	  #end
+      <button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/users/users_list.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+
+<!-- 复核功能弹出层-->
+$contain.get('/common/func_check.htm')
+
+</body>

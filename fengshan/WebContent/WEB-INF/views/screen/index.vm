@@ -1,0 +1,8 @@
+#set($layout = 'layout/blank.vm')
+#set($title = '中部林业产权交易服务系统')
+<script src="$!{imageServer}/scripts/jquery.js" type="text/javascript"></script>
+<script>
+$(function() {
+	window.location.href="$!{appServer}/home/list.htm";
+});
+</script>

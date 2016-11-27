@@ -1,0 +1,110 @@
+﻿#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+<script type="text/javascript" src="$!{appServer}/scripts/org.js"></script>
+
+<script >
+   jQuery(function() {
+      jQuery("#btn").click( function () { 
+	        var name = jQuery("#name").val();
+	        if(name=='' || name==null){
+			   alert('组织机构名称不能为空！');
+			   jQuery("#name").focus();
+			   return ;
+			}
+	        var sort = jQuery("#sort").val();
+			if(sort=='' || sort==null){
+			   alert('排序不能为空！');
+			   jQuery("#sort").focus();
+			   return ;
+			}
+	        if (!/^\d+$/.test(sort)) {  
+			   alert('排序必须为数字！');
+			   jQuery("#sort").focus();
+			   return ;
+			}
+
+			jQuery("#editForm").submit();
+	  })
+   }); 
+
+</script>
+
+<body>
+<div class="main">
+  <div class="formBox">
+    <h3><i></i><span>修改组织机构</span></h3>
+	<form id="editForm" action="$!{appServer}/org/save.htm" method="post">
+	<input type="hidden" id="id" name="id" value="$!{org.id}"/>
+    <div class="content">
+      <table class="c2">
+       <tr>
+          <th>组织机构编号：</th>
+          <td>
+			#springBind("org.id")
+			<input type="text" value="$!{status.value}" class="inp" readOnly/>
+		  </td>
+        </tr>
+        <tr>
+          <th>组织机构名称：</th>
+          <td>
+			#springBind("org.name")
+			<input type="text" id="name" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>父组织机构：</th>
+          <td>
+			#springBind("org.parentId")
+			<input type="hidden" id="parentId" name="$!{status.expression}" value="$!{status.value}"/>
+			<input type="text" id="parentAllName" name="parentAllName" value="$!{org.fullName}" readonly="true" class="inp" style="width:300px;"/>
+			<button type="button" class="button-s4" onclick="getParent()">左树中选</button>		
+		  </td>
+        </tr>
+		<tr>
+		 <th>状态：</th>
+          <td>
+			#springBind("org.status")
+			<select name="$!{status.expression}" value="$!{status.value}">
+                <option value="1" #if($!org.status==1) selected #end>启用</option>
+                <option value="0" #if($!org.status==0) selected #end>禁用</option>
+            </select>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+          </td>
+        </tr>
+		 <tr>
+          <th>排序：</th>
+          <td>
+			#springBind("org.sort")
+			<input type="text" id="sort" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10" maxlength="3"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>机构描述：</th>
+          <td>
+			#springBind("org.remark")
+			<textarea id="name" name="$!{status.expression}"   rows="5" cols="40">$!{status.value}</textarea>
+		
+		  </td>
+        </tr>
+      </table>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+        #if(  $!adminAccess.has("ORG_EDIT") )
+              <button type="button" id="btn" class="button-s4">保存</button>
+        #end
+       <button type="submit" class="button-s4 cancel">取消</button>
+    </div>
+	</form>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Authority" >
+  <typeAlias alias="Authority" type="com.hundsun.eclp.biz.domain.auth.Authority"/>
+  <resultMap id="AuthorityResult" class="com.hundsun.eclp.biz.domain.auth.Authority" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="DECIMAL" />
+    <result column="IS_CORE" property="isCore" jdbcType="DECIMAL" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="SUB_SYSTEM_ID" property="subSystemId" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DECIMAL" />
+    <result column="IS_LEAF" property="isLeaf" jdbcType="DECIMAL" />
+    <result column="OPEN_TYPE" property="openType" jdbcType="DECIMAL" />
+    <result column="IS_DELETED" property="isDeleted" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="IS_ASSIGN" property="isAssign" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="selectAllItems">
+  	au.ID, au.CODE, au.NAME, au.TYPE, au.IS_CORE, au.URL, au.SUB_SYSTEM_ID, au.SORT, au.STATUS, 
+  	au.PARENT_ID, au.IS_LEAF, au.OPEN_TYPE, au.IS_DELETED, au.GMT_CREATE, au.GMT_MODIFY, au.IS_ASSIGN
+  </sql>
+
+  <select id="selectAuthorityAll" resultMap="AuthorityResult" parameterClass="java.lang.Short">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY ,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		  WHERE  IS_DELETED='N'
+		  AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		<isNotNull prepend="and" property="value">
+			<![CDATA[ STATUS = #value# ]]>
+			  AND SUB_SYSTEM_ID IN (
+			  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  STATUS = #value#
+			  )
+		</isNotNull>
+		  ORDER BY TYPE ASC, SORT ASC
+  </select>
+
+   <select id="selectCanAssignAuthorityAll" resultMap="AuthorityResult" parameterClass="java.lang.Short">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		  WHERE  IS_DELETED='N' AND IS_ASSIGN=1 AND STATUS = 1
+		  AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N' AND STATUS = 1
+		  )
+		  ORDER BY TYPE ASC, SORT ASC
+  </select>
+
+
+  <select id="selectAuthoritySubSys" resultMap="AuthorityResult" parameterClass="java.lang.Short">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		 WHERE PARENT_ID = -1
+		 AND  IS_DELETED='N'
+		<isNotNull prepend="and" property="value">
+			<![CDATA[ STATUS = #value# ]]>
+		</isNotNull>
+		 ORDER BY SORT ASC
+  </select>
+
+  <select id="selectAuthorityByParent" resultMap="AuthorityResult" parameterClass="java.util.HashMap">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		 WHERE PARENT_ID = #parentId#
+		 AND  IS_DELETED='N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		<isNotNull prepend="and" property="status">
+			<![CDATA[ STATUS = #status# ]]>
+			  AND SUB_SYSTEM_ID IN (
+			  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  STATUS = #status#
+			  )
+		</isNotNull>
+		 ORDER BY SORT ASC
+  </select>
+
+  <select id="selectAuthorityByParentList" resultMap="AuthorityResult" parameterClass="java.util.List">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		  WHERE IS_DELETED = 'N'
+		  AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+    <iterate prepend="AND"  open="(" close=")"
+	   conjunction="OR">
+	   PARENT_ID = #idList[]#
+	</iterate>
+		 ORDER BY SORT ASC
+  </select>
+
+  <select id="selectAuthorityByIdList" resultMap="AuthorityResult" parameterClass="java.util.List">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		WHERE IS_DELETED = 'N'
+		AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND STATUS = 1 AND  IS_DELETED='N'
+		)
+		AND ID IN
+    <iterate conjunction="," open="(" close=")" >
+	   #idList[]#
+	</iterate>
+  </select>
+
+  <select id="selectCountByParentGroupByParent" resultClass="java.util.HashMap" remapResults="true" parameterClass="java.util.HashMap">
+	  	SELECT PARENT_ID, count( ID ) AS ID_COUNT
+		  FROM ECLP_AUTHORITY
+		 WHERE IS_DELETED='N'
+		<isNotNull prepend="and" property="status">
+			<![CDATA[ STATUS = #status# ]]>
+			  AND SUB_SYSTEM_ID IN (
+			  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  STATUS = #status#
+			  )
+		</isNotNull>
+		<isNotNull prepend="and" property="parentIdList">
+			PARENT_ID IN
+	    <iterate conjunction="," open="(" close=")" property="parentIdList">
+		   #parentIdList[]#
+		</iterate>
+		</isNotNull>
+		GROUP BY PARENT_ID
+  </select>
+
+  <select id="selectCountByParent" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+	  	SELECT  count( ID )
+		  FROM ECLP_AUTHORITY
+		WHERE IS_DELETED = 'N'
+		AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		<isNotNull prepend="and" property="status">
+			<![CDATA[ STATUS = #status# ]]>
+			  AND SUB_SYSTEM_ID IN (
+			  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  STATUS = #status#
+			  )
+		</isNotNull>
+		<isNotNull prepend="and" property="parentId">
+			<![CDATA[ PARENT_ID = #parentId# ]]>
+		</isNotNull>
+  </select>
+
+  <select id="selectUseCountByParent" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+	  	SELECT count( ID )
+		  FROM ECLP_AUTHORITY
+		 WHERE PARENT_ID = #parentId#
+		 AND  STATUS='1'
+		 AND  IS_DELETED='N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND STATUS = 1 AND  IS_DELETED='N'
+		  )
+  </select>
+
+  <select id="selectAuthorityAllBySubSys" resultMap="AuthorityResult" parameterClass="java.lang.String">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		 WHERE SUB_SYSTEM_ID = #subSystemId#
+		 AND  IS_DELETED='N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		 ORDER BY SORT ASC
+  </select>
+
+  <select id="selectAuthListBySubSys" resultMap="AuthorityResult" parameterClass="java.lang.String">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		   OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		 WHERE SUB_SYSTEM_ID = #subSystemId#
+		 AND  IS_DELETED='N' AND TYPE IN(3,4)
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		 ORDER BY id ASC
+  </select>
+
+  <select id="selectAuthorityExist" resultMap="AuthorityResult" parameterClass="com.hundsun.eclp.biz.domain.auth.Authority">
+	  	SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      		OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+		  FROM ECLP_AUTHORITY
+		 WHERE ID IS NOT NULL
+		 AND  IS_DELETED='N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+		<isNotNull prepend="and" property="id">
+			<isNotEqual property="id" compareValue="0">
+			<![CDATA[ ID != #id# ]]>
+			</isNotEqual>
+		</isNotNull>
+		 AND (
+		 	(
+		 		NAME = #name#
+		 		AND PARENT_ID = #parentId#
+		 	)
+		 	OR (
+		 		CODE = #code#
+		 		AND SUB_SYSTEM_ID = #subSystemId#
+		 		)
+		 	)
+  </select>
+
+  <select id="selectAuthorityById" resultMap="AuthorityResult" parameterClass="java.lang.Long" >
+    select ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+    from ECLP_AUTHORITY
+    where ID = #id:DECIMAL#
+    and IS_DELETED = 'N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+  </select>
+
+    <select id="selectAuthority" resultMap="AuthorityResult" parameterClass="com.hundsun.eclp.biz.domain.auth.Authority">
+    select ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN
+    from ECLP_AUTHORITY AUTH
+    where  IS_DELETED = 'N'
+		 AND SUB_SYSTEM_ID IN (
+		  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		  )
+    <isNotEmpty prepend="AND" property="isCoreList" >
+      IS_CORE  IN
+      <iterate prepend="WHERE"  open="(" close=")"
+	   conjunction=",">
+	   #isCoreList[]#
+	  </iterate>
+    </isNotEmpty>
+     <isNotEmpty prepend="AND" property="isCore" >
+        IS_CORE = #isCore#
+    </isNotEmpty>
+    <isNotEmpty prepend="AND" property="status" >
+        STATUS = #status#
+			  AND SUB_SYSTEM_ID IN (
+			  	SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  STATUS = #status#
+			  )
+    </isNotEmpty>
+    <isNotEmpty prepend="AND" property="parentId" >
+        parent_id = #parentId#
+    </isNotEmpty>
+    <isNotEmpty prepend="AND" property="roleId" >
+     exists (select tt.auth_id from eclp_role_authority tt where tt.auth_id=AUTH.id and tt.role_id=#roleId# and tt.is_deleted='N')
+    </isNotEmpty>
+  </select>
+
+<!--
+  <delete id="deleteAuthorityById" parameterClass="java.lang.Long" >
+    delete from ECLP_AUTHORITY
+    where ID = #id:DECIMAL#
+  </delete>
+
+  <delete id="deleteAuthorityByIdList" parameterClass="java.util.List" >
+    delete from ECLP_AUTHORITY
+    <iterate prepend="WHERE"  open="(" close=")"
+	   conjunction="OR">
+	   ID = #idList[]#
+	</iterate>
+  </delete>
+ -->
+
+  <delete id="deleteAuthorityById" parameterClass="java.lang.Long" >
+    UPDATE ECLP_AUTHORITY
+    SET IS_DELETED='Y'
+    where ID = #id:DECIMAL#
+  </delete>
+
+	<statement id="deleteAuthorityByIdList" parameterClass="java.util.List">
+		<![CDATA[ UPDATE ECLP_AUTHORITY SET IS_DELETED='Y' ]]>
+		<iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+			<![CDATA[ ID=#listIds[]# ]]>
+		</iterate>
+	</statement>
+  <insert id="insertAuthority" parameterClass="com.hundsun.eclp.biz.domain.auth.Authority" >
+  	 <selectKey resultClass="long" keyProperty="id">
+      SELECT SEQ_AUTHORITY.NEXTVAL AS ID FROM DUAL
+     </selectKey>
+    insert into ECLP_AUTHORITY (ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT,
+      STATUS, PARENT_ID, IS_LEAF, OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN)
+    values (#id:DECIMAL#, #code:DECIMAL#, #name:VARCHAR#, #type:DECIMAL#, #isCore:DECIMAL#,
+      #url:VARCHAR#, #subSystemId:VARCHAR#, #sort:DECIMAL#, 1, #parentId:DECIMAL#,
+      #isLeaf:DECIMAL#, #openType:DECIMAL#, #isDeleted:VARCHAR#, sysdate,
+      sysdate,#isAssign:DECIMAL#)
+  </insert>
+
+  <update id="updateAuthority" parameterClass="com.hundsun.eclp.biz.domain.auth.Authority" >
+    update ECLP_AUTHORITY set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="code" >
+        CODE = #code:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE = #type:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="url" >
+        URL = #url:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="subSystemId" >
+        SUB_SYSTEM_ID = #subSystemId:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sort" >
+        SORT = #sort:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="parentId" >
+        PARENT_ID = #parentId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="isLeaf" >
+        IS_LEAF = #isLeaf:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="openType" >
+        OPEN_TYPE = #openType:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="isDeleted" >
+        IS_DELETED = #isDeleted:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isAssign" >
+      	IS_ASSIGN = #isAssign:DECIMAL#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+
+  <update id="updateAuthoritySubSysByIdList" parameterClass="java.util.HashMap" >
+    UPDATE ECLP_AUTHORITY
+    SET    SUB_SYSTEM_ID = #subSystemId:VARCHAR#
+    WHERE ID IN
+    <iterate conjunction="," open="(" close=")" property="idList">
+	   #idList[]#
+	</iterate>
+  </update>
+
+  <select id="selectAuthorityByUserAndSubsystem" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+  <![CDATA[
+	  	SELECT distinct(a.code)
+		  FROM ECLP_AUTHORITY      A,
+		       ECLP_ROLE_AUTHORITY B,
+		       ECLP_USER_ROLE      C,
+		       ECLP_SUB_SYSTEM     D
+		 WHERE A.ID = B.AUTH_ID
+		   AND B.ROLE_ID = C.ROLE_ID
+		   AND A.SUB_SYSTEM_ID = D.ID
+		   AND A.IS_DELETED = 'N'
+		   AND A.STATUS = 1
+		   AND D.IS_DELETED = 'N'
+		   AND d.status = 1
+		   AND C.USER_ID = #userId#
+		   AND D.NAME = #subSystem#
+		   AND A.TYPE NOT IN(1,2)
+		   AND B.IS_DELETED = 'N'
+		   AND C.IS_DELETED = 'N'
+	]]>
+  </select>
+
+  <select id="selectAllAuthorityByUserAndSubsystem" resultClass="java.lang.Integer" parameterClass="java.util.HashMap">
+  <![CDATA[
+	  	SELECT distinct(a.code)
+		  FROM ECLP_AUTHORITY      A,
+		       ECLP_ROLE_AUTHORITY B,
+		       ECLP_USER_ROLE      C,
+		       ECLP_SUB_SYSTEM     D
+		 WHERE A.ID = B.AUTH_ID
+		   AND B.ROLE_ID = C.ROLE_ID
+		   AND A.SUB_SYSTEM_ID = D.ID
+		   AND A.IS_DELETED = 'N'
+		   AND A.STATUS = 1
+		   AND D.IS_DELETED = 'N'
+		   AND d.status = 1
+		   AND C.USER_ID = #userId#
+		   AND D.NAME = #subSystem#
+		   AND A.TYPE NOT IN(1)
+		   AND B.IS_DELETED = 'N'
+		   AND C.IS_DELETED = 'N'
+	]]>
+  </select>
+
+  <select id="selectSubSystemAuthorityByUser" resultClass="com.hundsun.eclp.biz.domain.sys.SubSystem" parameterClass="com.hundsun.eclp.biz.domain.user.Users">
+	  	SELECT  B.ID, B.NAME, B.FULL_NAME as fullName, B.IS_CORE as isCore, B.TYPE, B.OPEN_TYPE as openType, B.SORT, B.DOMAIN, B.URL, B.STATUS, B.LOGO, B.IS_DELETED as isDeleted,
+      B.GMT_CREATE as gmtCreate, B.GMT_MODIFY as gmtModify, B.HESSIAN_URL as hessianUrl, B.SUPER_CODE as  superCode
+		  FROM ECLP_AUTHORITY      A,
+		       ECLP_SUB_SYSTEM     B,
+		       ECLP_USER_ROLE      C,
+		       ECLP_ROLE_AUTHORITY D
+		 WHERE A.SUB_SYSTEM_ID = B.ID
+		   AND A.ID = D.AUTH_ID
+		   AND D.ROLE_ID = C.ROLE_ID
+		   AND A.IS_DELETED = 'N'
+		   AND B.IS_DELETED = 'N'
+		   AND C.IS_DELETED = 'N'
+		   AND D.IS_DELETED = 'N'
+		   AND A.STATUS = 1
+		   AND C.USER_ID = #id#
+		   AND A.TYPE = 1
+		   AND A.PARENT_ID = -1
+		 ORDER BY B.SORT
+  </select>
+
+
+  <select id="selectMenuByUserIdAndSubsystem" resultMap="AuthorityResult" parameterClass="java.util.HashMap">
+  <![CDATA[
+	  	SELECT DISTINCT A.*
+      FROM ECLP_AUTHORITY      A,
+           ECLP_ROLE_AUTHORITY B,
+           ECLP_USER_ROLE      C,
+           ECLP_SUB_SYSTEM     D
+		 WHERE A.ID = B.AUTH_ID
+		   AND A.IS_DELETED='N'
+		   AND A.SUB_SYSTEM_ID IN (
+		  	  SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND STATUS = 1 AND  IS_DELETED='N'
+		   )
+		   AND C.Role_Id in(SELECT id FROM ECLP_ROLE R where R.IS_DELETED='N' AND R.STATUS=1)
+		   AND B.ROLE_ID = C.ROLE_ID
+		   AND A.SUB_SYSTEM_ID = D.ID
+           AND A.IS_DELETED='N'
+           AND A.STATUS=1
+		   AND B.IS_DELETED='N'
+           AND C.IS_DELETED='N'
+		   AND D.IS_DELETED='N' AND D.STATUS=1
+		   AND C.USER_ID  = #userId#
+		   AND D.NAME = #subSystem#
+		   AND A.TYPE in(2,3)
+	       ORDER BY A.TYPE,A.SORT
+	]]>
+  </select>
+
+  <select id="selectMenuBySubsystem" resultMap="AuthorityResult" >
+  <![CDATA[
+	  	SELECT A.*
+      FROM ECLP_AUTHORITY      A
+		 WHERE  A.IS_DELETED='N'
+           AND A.STATUS=1
+		   AND SUB_SYSTEM_ID = #subSystem#
+		   AND A.TYPE in(2,3)
+	       ORDER BY A.TYPE,A.SORT
+	]]>
+  </select>
+
+  <select id="getChildrenCountOfSubSystem" resultClass="java.lang.Integer" >
+	select count(*) from eclp_authority t where t.sub_system_id = #value# and t.type != 1 and t.parent_id != -1 AND  t.IS_DELETED='N'
+		   AND t.SUB_SYSTEM_ID IN (
+		  	  SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		   )
+  </select>
+
+  <select id="getChildrenOfSubSystem" resultMap="AuthorityResult" >
+	select * from eclp_authority t where t.sub_system_id = #value# and t.type != 1 and t.parent_id != -1 AND  t.IS_DELETED='N'
+		   AND t.SUB_SYSTEM_ID IN (
+		  	  SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		   )
+  </select>
+
+  <select id="getChildrenIdsOfSubSystem" resultClass="java.lang.Long">
+	select t.id from eclp_authority t where t.sub_system_id = #value# and t.type != 1 and t.parent_id != -1 AND  t.IS_DELETED='N'
+		   AND t.SUB_SYSTEM_ID IN (
+		  	  SELECT SUB_SYSTEM_ID FROM ECLP_AUTHORITY WHERE PARENT_ID = -1 AND  IS_DELETED='N'
+		   )
+  </select>
+
+  <select id="getMaxSort" resultClass="java.lang.Short" >
+	select max(sort) from eclp_authority t
+  </select>
+
+  <select id="selectAuthorityBySubSystemId" resultMap="AuthorityResult" >
+	select * from eclp_authority t where t.sub_system_id = #value# and t.type = 1 and t.parent_id = -1 AND  t.IS_DELETED='N'
+  </select>
+  
+  <select id="selectByUserId"  resultClass="java.lang.Long" parameterClass="java.lang.Long">
+  			SELECT DISTINCT A.ID FROM
+               ECLP_AUTHORITY  A,ECLP_ROLE_AUTHORITY RA,ECLP_USER_ROLE UR,ECLP_ROLE R
+               where ra.role_id=r.id and ur.role_id=r.id AND A.ID=RA.AUTH_ID AND R.IS_DELETED='N'
+               AND A.PARENT_ID=-1
+               AND UR.USER_ID=#userId#
+  </select>
+  
+  <select id="selectBySubSystemId"  resultClass="java.lang.Long" parameterClass="java.util.HashMap">
+  			SELECT ID FROM ECLP_AUTHORITY
+			    WHERE  PARENT_ID = -1 AND  IS_DELETED='N' AND sub_system_id IN
+			    <iterate conjunction="," open="(" close=")" property="idList">
+				   #idList[]#
+				</iterate>
+  </select>
+  
+  <select id="selectAuthListByRoleIds" resultMap="AuthorityResult" parameterClass="java.util.List">
+	 SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN 
+      FROM ECLP_AUTHORITY a WHERE a.is_deleted='N' and EXISTS(
+	   SELECT 1 FROM ECLP_ROLE_AUTHORITY ra where a.id=ra.auth_id and ra.is_deleted='N'
+	    and role_id in
+	      <iterate conjunction="," open="(" close=")" >
+				   #value[]#
+		 </iterate>
+	   )
+	    order by sub_system_id,parent_id,sort
+  </select>
+  
+   <select id="selectAuthListBySuperRoleIds" resultMap="AuthorityResult"  parameterClass="java.util.List">
+	 SELECT ID, CODE, NAME, TYPE, IS_CORE, URL, SUB_SYSTEM_ID, SORT, STATUS, PARENT_ID, IS_LEAF,
+      OPEN_TYPE, IS_DELETED, GMT_CREATE, GMT_MODIFY,IS_ASSIGN 
+      FROM ECLP_AUTHORITY a WHERE a.is_deleted='N' and EXISTS(
+	   SELECT 1 FROM eclp_role_system rs where a.sub_system_id=rs.sys_id 
+	    and role_id in
+	      <iterate conjunction="," open="(" close=")" >
+				   #value[]#
+		 </iterate>
+	   )
+	    order by sub_system_id,parent_id,sort
+  </select>
+  
+  <!-- 通过用户id该用户id下分配的所有权限（包括超级角色分配的权限） -->
+  <select id="selectAllAuthByUserId" resultMap="AuthorityResult" parameterClass="java.util.HashMap">
+  	select distinct * 
+  		from (
+		  		(select
+		  	      <include refid="selectAllItems"/>
+		          from eclp_authority au
+		         where au.is_deleted = 'N'
+		           and au.status = 1
+		           and exists
+		         (select 1
+		                  from eclp_role_authority ra
+		                 where ra.is_deleted = 'N'
+		                   and ra.auth_id = au.id
+		                   and exists (select 1
+		                          from eclp_user_role ur,eclp_role r 
+		                          where ur.role_id=r.id and r.status=1 and r.is_deleted='N'
+		                           and ur.is_deleted = 'N'
+		                           and ra.role_id = ur.role_id
+		                           and ur.user_id = #userId:DECIMAL#)))
+		     union
+		     (select 
+		     	 <include refid="selectAllItems"/>
+		         from eclp_authority au
+		        where au.is_deleted = 'N'
+		          and au.status = 1
+		          and exists
+		        (select 1
+		                 from eclp_role_system rs
+		                where rs.sys_id = au.sub_system_id
+		                  and exists (select 1
+		                         from eclp_user_role ur,eclp_role r 
+		                          where ur.role_id=r.id and r.status=1 and r.is_deleted='N'
+		                           and ur.is_deleted = 'N'
+		                          and ur.role_id = rs.role_id
+		                          and ur.user_id = #userId:DECIMAL#)))) t
+	order by t.code
+  	
+  </select>
+  
+</sqlMap>

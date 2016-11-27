@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROJECT_METAS" >
+
+	<typeAlias alias="ProjectMetas" 
+		type="com.hundsun.network.gates.genshan.biz.domain.project.ProjectMetas"/>
+		
+	<resultMap id="BaseResultMap" class="ProjectMetas">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="META_GROUP" property="metaGroup" jdbcType="VARCHAR" />
+		<result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+		<result column="META_KEY" property="metaKey" jdbcType="VARCHAR" />
+		<result column="META_TITLE" property="metaTitle" jdbcType="VARCHAR" />
+		<result column="META_VALUE" property="metaValue" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, META_GROUP, PROJECT_ID, META_KEY, META_TITLE,
+		META_VALUE, OPERATOR,
+		GMT_CREATE,
+		GMT_MODIFY
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="ProjectMetas">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where ID = #id:DECIMAL#
+	</select>
+	<select id="getProjectMetasByProId" resultMap="BaseResultMap" parameterClass="long" >
+    select 
+    ID, META_GROUP, PROJECT_ID, META_KEY, META_TITLE, META_VALUE, OPERATOR, GMT_CREATE, GMT_MODIFY
+    from PROJECT_METAS 
+    where PROJECT_ID = #id:DECIMAL# and META_GROUP = 'projectType'
+	</select>
+	<select id="selectByProjectId" resultMap="BaseResultMap"
+		parameterClass="long">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where PROJECT_ID = #projectId:DECIMAL# 
+	</select>
+	<select id="selectByProjectIdAndMetaGroup" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where 
+			PROJECT_ID = #projectId:DECIMAL# AND
+			META_GROUP =#metaGroup:VARCHAR#
+	</select>
+  <!-- 获取一个项目的某个动态属性值（通过项目id以及属性KEY值） -->
+  <select id="selectMetaValue" resultClass="java.lang.String" parameterClass="ProjectMetas">
+	select meta_value from project_metas where meta_key = #metaKey:VARCHAR# and project_id = #projectId:DECIMAL#
+  </select>
+  
+  	<!-- 用此sql判断当前时间与拍卖开始时间大小 -->
+	<select id="selectBeforeBidStatrdTime" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select count(id) from project_metas where meta_key = 'bidStartTime'
+			and project_id = #projectId:DECIMAL#
+			and to_date(meta_value, 'yyyy-mm-dd hh24:mi:ss') > sysdate
+	</select>
+  
+</sqlMap>

@@ -1,0 +1,66 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+
+<script>
+	
+	var message="$!message";
+	if(message){
+	  alert(decodeURI(message));
+	}
+	function toSubmit(sysCode,serverip,serverPort){
+	  jQuery("#sysCode").val(sysCode);
+	  jQuery("#serverip").val(serverip);
+	  jQuery("#serverPort").val(serverPort);
+	  jQuery("#submitForm").submit();
+	}
+</script>
+<body>
+<div class="main">
+	<div class="tool"><span><a href="$appServer/memo/ref_all.htm" hidefocus="true" class="bt_wu">刷新全部</a></span></div>
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>子系统缓存列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>子系统code</th>
+        <th>服务器</th>
+        <th>端口</th>
+        <th>权限缓存状态</th>
+        <th>操作</th>
+      </tr>
+      #foreach($reg in $regList)
+        
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+        <td>${reg.sysCode}</td>
+        <td>${reg.serverIp}</td>
+        <td>$!{reg.serverPort}</td>
+		<td>
+			#if(${reg.status})
+				待更新
+			#else
+				已更新
+			#end
+		</td>
+		<!--<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", ${reg.permissionUpdateTime})</td>
+		-->
+		<td>
+			<a  onclick="toSubmit('${reg.sysCode}','${reg.serverIp}','$!{reg.serverPort}')" hidefocus="true" >刷新</a>
+		</td>
+      </tr>
+	#end
+    </table>
+	
+  <form id="submitForm" action="$!appServer/memo/upMemo.htm" method="post">
+	<input type="hidden" name="sysCode" id="sysCode" value="">
+	<input type="hidden" name="serverip" id="serverip" value="">
+	<input type="hidden" name="serverPort" id="serverPort" value="">
+  </form>
+	
+  </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

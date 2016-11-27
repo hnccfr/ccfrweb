@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>$!{title}</title>
+<link rel="stylesheet" href="$!{imageServer}/styles/common.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/registe.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/validate.css" type="text/css">
+<script src="$!{imageServer}/scripts/jquery.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery-1.4.min.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/common.js" type="text/javascript"></script>
+<script >
+ var appServer = "$!{appServer}";
+</script>
+</head>
+<body class="r_m">
+
+<div class="main">
+	    <div class="r_top">
+			<div class="logo"><img src="../images/register/logo.gif" /></div>
+			<div class="bar"> <a href="$!{appServer}/index.htm">网站首页</a> | <a href="#">帮助中心</a> </div>
+		</div>
+		
+		<div class="clear"></div>
+		##$contain.get('/contain/header.htm')
+		<!-- wrapper -->
+		##<div id="wrapperBase">
+		##$contain.get('/contain/leftmenu.htm')
+		
+		$screen_content
+		
+        ##<div class="clear"></div>
+    	<div class="clear"></div>
+		##$contain.get('/contain/footer.htm')
+		##<div class="clear"></div>
+</div></div>
+</body>
+</html>
+	
+

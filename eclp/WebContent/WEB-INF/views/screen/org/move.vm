@@ -1,0 +1,54 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+
+<script >
+   jQuery(function() {
+      jQuery("#btn").click( function () { 	 
+	        var val=jQuery('input:radio[name="deptId"]:checked').val();  
+            if(val==null){  
+                alert("请选择一个组织机构!");  
+                return false;  
+            } 
+			jQuery("#editForm").submit();
+	  })
+   }); 
+
+</script>
+<body>
+<div class="main">
+  <div class="formBox">
+    <h3><i></i><span>移动组织机构下用户</span></h3>
+	<form id="editForm" action="$!{appServer}/org/doDel.htm" method="post">
+	<input type="hidden" name="id" value="$!{ids}"/>
+    <div class="content">
+      <table class="c2">
+        <TR><td></td></TR>
+        <tr>
+          <th>组织机构：</th>
+          <td>
+			#if($orgList)
+				#foreach($org in $orgList)
+					<input type="radio" id="deptId" name="deptId" value="$org.id" />&nbsp;$org.name&nbsp;
+					#if($velocityCount%6==0)<br/>#end
+				#end
+			#end
+			
+		  </td>
+        </tr>
+        
+      </table>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+        #if(  !$!{authority.id} && $!adminAccess.has("ORG_DEL")   )
+              <button type="button" id="btn" class="button-s4">保存</button>
+        #end
+    </div>
+	</form>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

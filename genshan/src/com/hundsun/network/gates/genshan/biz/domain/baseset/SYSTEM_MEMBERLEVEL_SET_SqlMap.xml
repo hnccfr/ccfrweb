@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SYSTEM_MEMBERLEVEL_SET" >
+	<resultMap id="systemMemberlevelSetResult" class="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemMemberlevelSet" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="MEMBER_LEVEL" property="memberLevel" jdbcType="VARCHAR" />
+		<result column="LEVEL_NAME" property="levelName" jdbcType="VARCHAR" />
+		<result column="INTEGRAL_START" property="integralStart" jdbcType="DECIMAL" />
+		<result column="INTEGRAL_END" property="integralEnd" jdbcType="DECIMAL" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="IMG_NAME" property="imgName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Where_Clause" >
+		<isNotEmpty prepend="and" property="memberLevel" >
+			MEMBER_LEVEL = #memberLevel:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="levelName" >
+			LEVEL_NAME = #levelName:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="noneId" >
+			<![CDATA[ id <> #noneId# ]]>
+		</isNotEmpty>
+	</sql>
+
+	<!-- 查询分页条数 -->
+	<select id="selectPageList-count" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery"
+			resultClass="java.lang.Integer" >
+		select count(*) from SYSTEM_MEMBERLEVEL_SET
+		where 1=1 
+		<include refid="SYSTEM_MEMBERLEVEL_SET.Where_Clause" />
+	</select>
+	
+	<!-- 查询分页结果集 -->
+	<select id="selectPageList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery"
+			resultMap="systemMemberlevelSetResult">
+		<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+			select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+				OPERATOR, REMARK, IMG_NAME
+			from SYSTEM_MEMBERLEVEL_SET
+			where 1=1 
+		]]>
+		<include refid="SYSTEM_MEMBERLEVEL_SET.Where_Clause" />
+		<![CDATA[
+			order by INTEGRAL_START
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+		]]>
+	</select>
+	
+	<!-- 查询所有 -->
+	<select id="selectAll" resultMap="systemMemberlevelSetResult">
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+			OPERATOR, REMARK, IMG_NAME
+		from SYSTEM_MEMBERLEVEL_SET
+	</select>
+	
+	<!-- 根据条件查询返回列表 -->
+	<select id="selectConditionList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery"
+			resultMap="systemMemberlevelSetResult" >
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+			OPERATOR, REMARK, IMG_NAME
+		from SYSTEM_MEMBERLEVEL_SET
+		where 1=1 
+		<include refid="SYSTEM_MEMBERLEVEL_SET.Where_Clause" />
+	</select>
+	
+	<!-- 检查积分范围是否被占用 -->
+	<select id="checkIntegralRange" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery"
+			resultClass="java.lang.Integer" >
+		<![CDATA[
+		select count(*)
+		from SYSTEM_MEMBERLEVEL_SET
+		where 
+			((#integralStart:DECIMAL#<=INTEGRAL_START and INTEGRAL_END <= #integralEnd:DECIMAL#)
+			or(INTEGRAL_START <= #integralStart:DECIMAL# and #integralStart:DECIMAL# <= INTEGRAL_END)
+			or(INTEGRAL_START <= #integralEnd:DECIMAL# and #integralEnd:DECIMAL# <= INTEGRAL_END))
+		]]>
+		<isNotEmpty prepend="and" property="noneId" >
+			<![CDATA[ id <> #noneId# ]]>
+		</isNotEmpty>
+	</select>
+	
+	<!-- 根据条件查询返回条数 -->
+	<select id="selectConditionCount" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery" 
+			resultClass="java.lang.Integer">
+		select count(*)
+		from SYSTEM_MEMBERLEVEL_SET
+		where 1=1 
+		<include refid="SYSTEM_MEMBERLEVEL_SET.Where_Clause" />
+	</select>
+	
+	
+	<!-- 获取会员级别列表 -->
+	<select id="selectSystemMemberlevelList" resultMap="systemMemberlevelSetResult">
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+			OPERATOR, REMARK, IMG_NAME
+		from SYSTEM_MEMBERLEVEL_SET
+		order by INTEGRAL_START
+	</select>
+  
+	<!-- 新增 -->
+	<insert id="insert" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemMemberlevelSet" >
+	<selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_SYSTEM_MEMBERLEVEL_SET.NEXTVAL AS VALUE FROM DUAL   
+    </selectKey>
+		insert into SYSTEM_MEMBERLEVEL_SET (ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END,
+		  GMT_CREATE, GMT_MODIFY, OPERATOR, REMARK, IMG_NAME)
+		values (#id:DECIMAL# , #memberLevel:VARCHAR#, #levelName:VARCHAR#, #integralStart:DECIMAL#,
+		  #integralEnd:DECIMAL#, sysdate, sysdate, #operator:VARCHAR#,
+		  #remark:VARCHAR#, #imgName:VARCHAR#)
+	</insert>
+  
+	<!-- 根据ID更新 -->
+	<update id="updateByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemMemberlevelSet" >
+		update SYSTEM_MEMBERLEVEL_SET
+		<dynamic prepend="set" >
+			<isNotNull prepend="," property="memberLevel" >
+			  MEMBER_LEVEL = #memberLevel:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="levelName" >
+			  LEVEL_NAME = #levelName:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="integralStart" >
+			  INTEGRAL_START = #integralStart:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="integralEnd" >
+			  INTEGRAL_END = #integralEnd:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtCreate" >
+			  GMT_CREATE = #gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtModify" >
+			  GMT_MODIFY = #gmtModify:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="operator" >
+			  OPERATOR = #operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="remark" >
+			  REMARK = #remark:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="imgName" >
+			  IMG_NAME = #imgName:VARCHAR#
+			</isNotNull>
+		</dynamic>
+		where ID = #id:DECIMAL#
+	</update>
+  
+	<!-- 根据条件更新 -->
+	<update id="updateBySelective" >
+		update SYSTEM_MEMBERLEVEL_SET
+		<dynamic prepend="set" >
+			<isNotNull prepend="," property="id" >
+			  ID = #id:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="memberLevel" >
+			  MEMBER_LEVEL = #memberLevel:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="levelName" >
+			  LEVEL_NAME = #levelName:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="integralStart" >
+			  INTEGRAL_START = #integralStart:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="integralEnd" >
+			  INTEGRAL_END = #integralEnd:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtCreate" >
+			  GMT_CREATE = #gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtModify" >
+			  GMT_MODIFY = #gmtModify:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="operator" >
+			  OPERATOR = #operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="remark" >
+			  REMARK = #remark:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="imgName" >
+			  IMG_NAME = #imgName:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</update>
+	
+	<!-- 查询所属级别 -->
+	<select id="selectByLevelNum" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemMemberlevelSetQuery"
+			resultMap="systemMemberlevelSetResult" >
+		<![CDATA[
+			select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+				OPERATOR, REMARK, IMG_NAME
+			from SYSTEM_MEMBERLEVEL_SET t_sms 
+			where t_sms.integral_start>=#levelNum# and #levelNum#<=t_sms.integral_end
+		]]>
+	</select>
+	
+	<!-- 根据ID值查找用户级别设置 -->
+	<select id="selectByPrimaryKey" parameterClass="java.lang.Long"
+			resultMap="systemMemberlevelSetResult" >
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+			OPERATOR, REMARK, IMG_NAME
+		from SYSTEM_MEMBERLEVEL_SET t_sms 
+		where ID = #id:DECIMAL#
+	</select>
+	
+	<!-- 查询分值所在会员级别 -->
+	<select id="selectByIntegral" parameterClass="java.lang.Integer" resultMap="systemMemberlevelSetResult">
+	<![CDATA[
+		select * from (
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+		      OPERATOR, REMARK, IMG_NAME
+		    from SYSTEM_MEMBERLEVEL_SET
+		    where  #value#>= INTEGRAL_START and #value#<=INTEGRAL_END
+		    order by INTEGRAL_START 
+		)a where rownum<=1
+	]]>
+	</select>
+	
+</sqlMap>

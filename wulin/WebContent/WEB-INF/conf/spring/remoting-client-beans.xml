@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 基础核心远程服务 -->
+	<!--<bean id="remoteBaseService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+			<property name="serviceUrl" value="${gold.baseService.url}"/>
+			<property name="serviceInterface" value="com.hundsun.network.greenlake.gold.remote.service.RemoteBaseService"/>
+		</bean>
+	-->	 
+	<bean id="remoteFundService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${houchao.remoteFundService.hessian.url}"/>
+		<property name="serviceInterface" value="com.hundsun.network.gates.luosi.houchao.reomte.service.RemoteFundService"/>
+	</bean>
+	<!--
+		<bean id="remoteFundService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+			<property name="serviceUrl" value="${houchao.remoteFundService.hessian.url}"/>
+			<property name="serviceInterface" value="com.hundsun.network.gates.luosi.houchao.reomte.service.RemoteFundService"/>
+		</bean>
+		-->
+	<!-- 客户端taiping远程服务 -->
+	<bean id="remoteAuctionPushletService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${fengshan.remoteAuctionPushletService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.taiping.reomte.service.RemoteAuctionPushletService" />
+	</bean>
+</beans>

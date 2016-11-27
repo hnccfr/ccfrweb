@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 定时器配置 -->
+
+	<!-- 第四步,定义我们的时间任务对象,我们自己的类(整个配置文件中,唯一一个需要我们自己去实现的类定义) -->
+	<!-- bean begin 
+		<bean id="initBaseServiceBean"
+			class="com.hundsun.network.greenlake.gold.biz.service.base.pojo.BaseServiceImpl">
+		</bean>
+		-->
+	<!-- bean end -->
+
+	<!-- 第三步,定义我们的时间任务,主要是用来配置要运行的任务的方法 -->
+	<!-- detail begin 旧的定义方法  
+	<bean id="auctionControlTaskServiceDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		< !- - 类头注解的方式定义了 - - >
+		<property name="targetObject" ref="testTaskService" />
+		<property name="targetMethod" value="testRun" />
+		< !- - 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. - - >
+		<property name="concurrent" value="false" />
+	</bean>
+	 -->
+	 <!-- 为了集群改造(1)  
+	<bean id="auctionControlTaskServiceDetail"
+		class="com.hundsun.network.gates.luosi.common.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="auctionControlTaskService" />
+		<property name="targetMethod" value="controlAuctionRun" />
+		<property name="concurrent" value="false" />
+		<property name="shouldRecover" value="false"/>
+	</bean>
+	 -->
+	 <!-- 为了集群改造(2)  -->
+	<bean id="auctionControlTaskServiceDetail"
+		class="com.hundsun.network.gates.luosi.common.quartz.BeanInvokingJobDetailFactoryBean">
+        <property name="targetBean" value="auctionControlTaskService" />  
+		<property name="targetMethod" value="controlAuctionRun" />
+		<!-- 
+		<property name="targetMethod" value="testRun" />
+		 -->
+		<property name="group" value="qingbo" />
+		<property name="concurrent" value="false" />
+		<property name="shouldRecover" value="false"/>
+	</bean>
+
+	<!-- 第二步,定义任务triggers对象,主要是用来配置时间任务对象,及其运行时间和运行周期等 -->
+	<!--trigger begin -->
+	<bean id="auctionControlTaskServiceTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="auctionControlTaskServiceDetail" />
+		<property name="cronExpression" value="0/1 * * * * ?" />
+		<property name="group" value="qingbo" />
+	</bean>
+	
+
+	
+
+
+	<!-- 第一步,定义时间程序对象,实现类是Spring提供的,我们只要使用他就可以了. -->
+	<bean id="QingBoTaskScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- 以下就是我们自己的时间程序任务triggers列表了,也是配置的Bean对象
+				 -->
+				 <ref bean="auctionControlTaskServiceTrigger" /> 
+				
+			</list>
+		</property>
+		<property name="autoStartup">
+			<value>true</value>
+		</property>
+		<property name="schedulerName">
+			<value>QingBoTaskScheduler</value>
+		</property>
+		
+		<!-- 集群新加配置 -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="WEB-INF/conf/quartz.properties" />
+		<!-- 就是下面这句，因为该 bean 只能使用类反射来重构 -->
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" /> 
+		<!-- 延时启动，这个很重要，必须要有足够长的时间让你的应用先启动完成后再让 Scheduler启动， 
+		这里设置60秒,如果你的应用启动时间较长，要相应增加startupDelay的时间--> 
+		<property name="startupDelay" value="10"/>   
+	</bean>
+
+
+	<!-- executor end  -->
+</beans>

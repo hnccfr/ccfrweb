@@ -1,0 +1,127 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+<script>
+  jQuery(function(){
+       jQuery("#doSave").bind("click",function(){
+	        if(!doCheck()){
+			   return;
+			}
+			jQuery("#saveForm").submit();
+	   }) ;
+  });
+  function doCheck(){
+    var funcChecker = jQuery.trim(jQuery("#funcChecker").val());
+	var regex = /^([A-Z]|[a-z]|[\d]|[_]|[\,]|[\s])*$/;
+	if(funcChecker==''){
+	   alert('复核人不能为空');
+	   jQuery("#funcChecker").focus();
+	   return false;
+	} else if(!regex.test(funcChecker)) {
+		alert('填写的复核人格式不正确，多个复核人以英文逗号隔开');
+	    jQuery("#funcChecker").focus();
+	    return false;
+	}
+	var flag = true;
+	
+	var account = jQuery("#funcChecker").val();
+	jQuery.ajax({
+		type : 'POST',
+		async : false,
+		url :  '$appServer/sys/do_check_user.htm',
+		data : {account : account},
+		success : function(msg) {
+		    if("null"==msg){
+			   alert("复核人不能为空，请输入");
+			   flag = false;
+			} else if("checkError"==msg){
+			   alert("最多只能添加5个复核人");
+			   flag = false;
+			} else if("patternError"==msg) {
+				alert("逗号之间的复核人账号不能为空");
+			    flag = false;
+			} else {
+			   if(msg != "") {
+			       var errMsg = msg.split(',');
+    			   if(errMsg != undefined) {
+    			   	  var len = errMsg.length;
+    				  if(len > 1) {
+    				  	alert("复核人[" + errMsg[1] + "]不存在，请确认复核人账号");
+    					flag = false;
+    				  } else if(errMsg[1] == "error") {
+    				  	alert("复核人不存在，请确认复核人账号");
+    					flag = false;
+    				  }
+    			   }
+			   }
+			}
+		}
+	});
+	var remark = jQuery("#remark").val();
+	if(jQuery.trim(remark)!=''){
+	    if(jQuery.trim(remark).length>200){
+		   alert('备注不能大于200个字符')
+		   return false;
+		}
+	}
+	
+    return flag;
+  }
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>复核功能设置</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/sys/save_func_recheck.htm')" id="saveForm" name="saveForm" method="post">
+			<table class="c4">
+                <tr>
+                    <th>复核功能：</th>
+					#springBind("funcCheck.id")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/>
+					#springBind("funcCheck.funcCode")
+					<input type="hidden" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/>					
+                    <td>
+            			  #foreach( $funcCheck in $!{funcRecheckList} )
+            				#if( ${funcCheck.code} == ${status.value} )$!{funcCheck.desc} #end
+            			  #end
+					</td>
+                </tr>				
+				<tr>
+					<th>复核人：</th>
+					<td>
+                    #springBind("funcCheck.funcChecker")
+					<input type="text" class="inp" style="width:250px;" id="${status.expression}" maxlength="33" name="${status.expression}" value="$!{status.value}"/>
+					<span class="red">*</span>
+					#if($!roleCodeError)
+                     <span id="codeErr" class="error"> $!roleCodeError</span>
+					#else 
+					  <span>填写复核人登陆账号 <!--,多个以“,”分隔，最多支持5个 --></span>
+					#end
+					</td>
+                </tr>
+				
+				<tr>
+                	<th>备注：</th>
+					#springBind("funcCheck.remark")
+                    <td>
+                        <textarea class="w400 h100" id="${status.expression}" name="${status.expression}" maxlength="200">$!{status.value}</textarea>
+					</td>
+				</tr>
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+		<button type="button" class="button-s4" id="doSave">保存</button>
+	 
+		<button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/sys/func_recheck_list.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

@@ -1,0 +1,91 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addJs('jquery')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+#if(${systemStyle}!='default')
+$iDemand.addCss(${systemStyle})
+#end
+
+
+<script>
+$(function(){
+   $(".type").each(function(){
+       if($(this).next().attr("class")=="type")
+       {
+          $(this).after("<div class='content' style='font-size:0'></div>")
+          }
+       })
+   var h3 =$(".type");
+   $(".content:first").css("height","auto")
+   h3.click(function(){
+      $(".type a").removeClass("c")
+      $(this).children("a").addClass("c")
+      var index =  h3.index(this); 
+      $(".content")
+            .eq(index).css("height",function(){
+                                     $(this).css("height","auto")
+                                     })
+            .siblings(".content").css("height","0");
+   })
+   
+});   
+</script>
+<body style="background:#EEF2FB;" onload="javascript:init()">	
+   <input  type="hidden" id="domain" value="$!subSys.domain"/>
+   <input  type="hidden" id="url" value="$!subSys.url"/>
+<div class="menu-tree" >
+  <h3 class="type"><a href="javascript:void(0)">欢迎使用</a></h3>
+  <div class="content">
+    <ul>
+      <li>
+		<a href="$!appServer/contain/crmbody.htm" target="main" id="fristPage">管理员首页  </a>	  
+	  </li>
+    </ul>
+  </div>
+  #if($!menuList)
+	
+     #foreach($m in $!menuList)		
+	   <h3 class="type"><a href="javascript:void(0)">$m.name</a></h3>
+	  
+	   #if($m.isLeaf==2)
+		<div class="content">
+            <ul>
+			  #foreach($c in $m.childList)
+				#if($c.openType==1)					
+					#if($subSys.domain)
+                         <li><a href="$subSys.domain/$!c.url" target="main">$c.name</a></li>
+					#else
+						<li><a href="$appServer/$!c.url" target="main">$c.name</a></li>
+					#end
+				#else
+					<li><a href="$!c.url" target="_blank">$c.name</a></li>
+				#end
+			  #end
+            </ul>
+        </div>
+	   #else
+		
+	   #end
+	 #end
+  #end
+</div>
+<script type="text/javascript">
+       function init(){
+        	var domain = document.getElementById("domain").value;
+        	var url =  document.getElementById("url").value;
+			var fristPage = document.getElementById("fristPage");			
+        	if(domain!='' && url!=''){
+        	    window.parent.main.location=domain+"/"+url;
+				fristPage.href=domain+"/"+url;
+        	}else if(url!=''){
+        	   window.parent.main.location=url;
+			   fristPage.href=url;
+        	}else{
+			  window.parent.main.location="$!appServer/contain/crmbody.htm";
+			}      		
+		}		
+		
+    </script>
+</body>
+
+

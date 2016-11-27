@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_SCREEN" >
+
+	<typeAlias alias="TradeScreen" 
+		type="com.hundsun.network.gates.genshan.biz.domain.project.TradeScreen"/>
+	<typeAlias alias="TradeScreenQuery"
+		type="com.hundsun.network.gates.genshan.biz.domain.query.TradeScreenQuery" />
+		
+	<resultMap id="BaseResultMap" class="TradeScreen" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="SUBSTATION_ID" property="substationId" jdbcType="DECIMAL" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="DIY_CFG" property="diyCfg" jdbcType="CLOB" />
+	</resultMap>
+  
+	<sql id="Base_Column_List" >
+			t_ts.ID,
+			t_ts.SUBSTATION_ID,
+			t_ts.NAME,
+			t_ts.CREATOR,
+			t_ts.OPERATOR,
+			t_ts.GMT_CREATE,
+			t_ts.GMT_MODIFY,
+			t_ts.DIY_CFG
+	</sql>
+  
+  
+	<select id="getTotalCount" resultClass="java.lang.Integer" parameterClass="TradeScreenQuery">
+		select
+			count(*)
+		from TRADE_SCREEN t_ts
+		<dynamic prepend="where" >
+			<isNotEmpty prepend="and" property="name">
+				<![CDATA[t_ts.NAME '%$name$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="substationId">
+				t_ts.SUBSTATION_ID = #substationId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getPaginated" parameterClass="TradeScreenQuery" resultMap="BaseResultMap">
+		select *
+		  from (select t1.*, rownum linenum
+		          from (select 
+		<include refid="Base_Column_List" />
+			from TRADE_SCREEN t_ts
+		    	<dynamic prepend="where" >
+					<isNotEmpty prepend="and" property="name">
+						<![CDATA[t_ts.NAME '%$name$%' ]]>
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="substationId">
+						t_ts.SUBSTATION_ID = #substationId#
+					</isNotEmpty>
+				</dynamic>
+		order by t_ts.GMT_MODIFY desc					   
+					      ) t1
+		         where rownum &lt;= #endIndex#) t2
+		 where t2.linenum &gt;= #beginIndex#
+	</select>
+  
+  	<select id="getTradeScreenById" parameterClass="long" resultMap="BaseResultMap">
+  		select
+		<include refid="Base_Column_List" />
+		from TRADE_SCREEN t_ts
+		where t_ts.ID = #id:DECIMAL#
+  	</select>
+  	
+  	<delete id="deleteById" parameterClass="long" >
+	    delete from TRADE_SCREEN
+	    where ID = #id:DECIMAL#
+	</delete>
+	
+	<insert id="addScreenDiy" parameterClass="TradeScreen">
+		<![CDATA[
+			insert into TRADE_SCREEN
+				(ID, SUBSTATION_ID, CREATOR, OPERATOR, GMT_CREATE, GMT_MODIFY, NAME, DIY_CFG)
+			values
+				(#id#, #substationId#, #creator#, #operator#, sysdate, sysdate, #name#, #diyCfg#)
+		]]>
+		<selectKey keyProperty="id" resultClass="java.lang.Long" type="pre" >
+				SELECT SEQ_TRADE_SCREEN.NEXTVAL AS ID FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<update id="editScreenDiy" parameterClass="TradeScreen" >
+    	update TRADE_SCREEN
+		set GMT_MODIFY = sysdate
+			<isNotNull prepend="," property="name" >
+       			NAME = #name:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="diyCfg" >
+        		DIY_CFG = #diyCfg:CLOB#
+			</isNotNull>
+			<isNotNull prepend="," property="operator" >
+        		OPERATOR = #operator:DECIMAL#
+			</isNotNull>
+    	where ID = #id:DECIMAL#
+	</update>
+</sqlMap>

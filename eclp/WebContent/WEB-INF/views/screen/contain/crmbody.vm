@@ -1,0 +1,12 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')	
+$iDemand.addCss('skin-one')
+<div class="welcome">
+	<ul>
+    	<li>你好，<strong>$!{eclpUserAgent.name}</strong>！ 欢迎你使用#if($systemName)$systemName #else 恒生网络 通用后台管理系统#end</li>
+        <li>上次登录：<span>$!lastLoginTime</span></li>
+        <li>登录IP：<span>$!{eclpUserAgent.lastLoginIp}</span></li>
+       ## <li>常用操作：</li>
+    </ul>
+</div>

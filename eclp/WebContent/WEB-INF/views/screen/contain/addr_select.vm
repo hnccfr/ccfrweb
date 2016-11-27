@@ -1,0 +1,59 @@
+#set($layout='')
+$iDemand.addJs('addrSelect')
+<tr >
+	<th >所属地址：</th>
+	<td colspan="3">
+		<select id="regProvinceCode" name="regProvinceCode" value="$!userInfo.regProvinceCode" onchange="getCityList('$appServer/getRegionList.htm')" >
+          <option value="">请选择</option>
+          #foreach($item in $provinceList)
+        	<option value="$!item.code">$!item.regionName</option>
+          #end
+        </select>
+        <input type="hidden" id="regProvince"  name="regProvince"  value="$!{userInfo.regProvince}"/>
+        
+        <select id="regCityCode" name="regCityCode" value="$!userInfo.regCityCode" onchange="getDistrictList('$appServer/getRegionList.htm')" style="display:none">
+            <option value="">请选择</option>
+        	 #foreach($item in $cityList)
+            	<option value="$!item.code" >$!item.regionName</option>
+             #end
+        </select>
+        <input type="hidden" id="regCity"  name="regCity"  value="$!{userInfo.regCity}"/>
+        
+        <select id="regDistrictCode" name="regDistrictCode" value="$!userInfo.regDistrictCode" style="display:none" onchange="setDistrict()">
+            <option value="">请选择</option>
+        	 #foreach($item in $districtList)
+            	<option value="$!item.code" >$!item.regionName</option>
+             #end
+        </select>
+        <input type="hidden" id="regDistrict"  name="regDistrict"  value="$!{userInfo.regDistrict}"/>
+        
+        <span id="regDistrict_span" class="error"></span>
+    </td>
+</tr>
+<tr>
+	<th>详细地址：</th>
+	<td colspan="3">
+		#springBind("userInfo.regAddr")
+		<input type="text" id="${status.expression}" name="${status.expression}" style="width:450px" maxlength="300" class="inp" value="$!{status.value}" />
+		<span class="error">$!{status.errorMessage}</span>
+	</td>
+ </tr>
+<script type="text/javascript">
+	jQuery(function(){
+		if("$!{userInfo.regProvinceCode}"!=""){
+			jQuery("#regProvinceCode").show();
+			$('#regProvinceCode option[value="$userInfo.regProvinceCode"]').attr('selected',true);
+		}
+		if("$!{userInfo.regCityCode}"!=""){
+			jQuery("#regCityCode").show();
+			$('#regCityCode option[value="$userInfo.regCityCode"]').attr('selected',true);
+		}
+		if("$!{userInfo.regDistrictCode}"!=""){
+			jQuery("#regDistrictCode").show();
+			$('#regDistrictCode option[value="$userInfo.regDistrictCode"]').attr('selected',true);
+		}
+		$("#regProvince").val(jQuery('#regProvinceCode option:selected').html());
+		$("#regCity").val(jQuery('#regCityCode option:selected').html());
+		$("#regDistrict").val(jQuery('#regDistrictCode option:selected').html());
+	})
+</script>

@@ -1,0 +1,26 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+<body>
+    <div class="main">
+        <h2>组织机构操作说明</h2>		
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_openAll.gif" title="张开已载入" />：点击张开所有已经载入的节点</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_closeAll.gif" title="折叠已载入"  />：点击折叠所有已经载入的节点</p>
+		<br/>
+##    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/admin/up.gif" title="同级向上移动" onclick="moveTreeNode('up');"  /></p><br/>
+##    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/admin/dw.gif" title="同级向下移动" onclick="moveTreeNode('down');"  /></p><br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_refresh.png" title="刷新"  />：点击刷新整棵树</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_add.gif" title="新增"  />：点击右侧可以新增组织结构</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_del.gif" title="删除"  />：点击删除树中复选框选中的组织结构</p>
+		<br/>
+    	<p class="edit"><img style="vertical-align:middle;" src="$!{appServer}/images/icon/tree_help.gif" title="帮助"   />：点击显示帮助页</p>
+		<br/><br/>
+	
+    </div>
+    
+</body>

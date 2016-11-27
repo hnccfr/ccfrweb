@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TradeOrder" >
+  <typeAlias alias="TradeOrder" type="com.hundsun.network.gates.fengshan.biz.domain.order.TradeOrder"/>
+  <typeAlias alias="TradeOrderQuery" type="com.hundsun.network.gates.fengshan.biz.domain.query.TradeOrderQuery"/>
+  <typeAlias alias="DateStatistics"
+		type="com.hundsun.network.gates.fengshan.biz.domain.common.DateStatistics" />
+  <resultMap id="TradeOrderResult" class="TradeOrder" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+    <result column="BID_PRICE" property="bidPrice" jdbcType="DECIMAL" />
+    <result column="VALUATION_UNIT" property="valuationUnit" jdbcType="VARCHAR" />
+    <result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+    <result column="MEASURE_UNIT" property="measureUnit" jdbcType="VARCHAR" />
+    <result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="HAS_SELLER_CONFIRM" property="hasSellerConfirm" jdbcType="CHAR" />
+    <result column="HAS_BUYER_CONFIRM" property="hasBuyerConfirm" jdbcType="CHAR" />
+    <result column="SELLER_DEPOSIT_AMOUNT" property="sellerDepositAmount" jdbcType="DECIMAL" />
+    <result column="BUYER_DEPOSIT_AMOUNT" property="buyerDepositAmount" jdbcType="DECIMAL" />
+    <result column="DELIVERY_TYPE" property="deliveryType" jdbcType="VARCHAR" />
+    <result column="PAYMENT_TYPE" property="paymentType" jdbcType="VARCHAR" />
+    <result column="HAS_PAY" property="hasPay" jdbcType="CHAR" />
+    <result column="SELLER_ACCOUNT" property="sellerAccount" jdbcType="VARCHAR" />
+    <result column="BUYER_ACCOUNT" property="buyerAccount" jdbcType="VARCHAR" />
+    <result column="EXPECT_TIME" property="expectTime" jdbcType="TIMESTAMP" />
+    <result column="END_DATE_PAY" property="endDatePay" jdbcType="TIMESTAMP" />
+    <result column="END_DATE_GOODS" property="endDateGoods" jdbcType="TIMESTAMP" />
+    <result column="END_DATE_BILL" property="endDateBill" jdbcType="TIMESTAMP" />
+    <result column="HAS_SELLER_RANK" property="hasSellerRank" jdbcType="CHAR" />
+    <result column="HAS_BUYER_RANK" property="hasBuyerRank" jdbcType="CHAR" />
+    <result column="HAS_INVOICE" property="hasInvoice" jdbcType="CHAR" />
+    <result column="WISH_ORDER_NUM" property="wishOrderNum" jdbcType="VARCHAR" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="END_DATE_SEND_GOODS" property="endDateSendGoods" jdbcType="TIMESTAMP" />
+    <result column="END_DATE_CONFIRM" property="endDateConfirm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="TradeOrderAndProResult" extends="TradeOrderResult"
+		class="com.hundsun.network.gates.fengshan.biz.domain.order.TradeOrderAndPro">
+  		<result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+		<result column="BREED_STANDARD" property="breedStandard" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap class="DateStatistics" id="DateStatisticsMap">
+		<result column="STATISTICS_DATE" property="statisticsDate" 
+			jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+	</resultMap>
+	
+  <sql id="Base_Column_List">
+  	ID, ORDER_NO, TRADING_TYPE, BID_PRICE, VALUATION_UNIT, QUANTITY, MEASURE_UNIT,
+      ORDER_AMOUNT, HAS_SELLER_CONFIRM, HAS_BUYER_CONFIRM, SELLER_DEPOSIT_AMOUNT,
+      BUYER_DEPOSIT_AMOUNT, DELIVERY_TYPE, PAYMENT_TYPE, HAS_PAY, SELLER_ACCOUNT, BUYER_ACCOUNT,
+      EXPECT_TIME, END_DATE_PAY, END_DATE_GOODS, END_DATE_BILL, HAS_SELLER_RANK, HAS_BUYER_RANK,
+      HAS_INVOICE, WISH_ORDER_NUM, PROJECT_CODE, PROJECT_NAME, STATUS, GMT_CREATE, GMT_MODIFY,
+      CREATOR, OPERATOR , END_DATE_SEND_GOODS,END_DATE_CONFIRM
+  </sql>
+  
+  <!-- 根据 orderNo获取订单-->
+  <select id="selectByOrderNo" resultMap="TradeOrderResult" parameterClass="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TRADE_ORDER
+    where ORDER_NO = #value#
+  </select>
+  
+  <!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+	         	]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+        		]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="queryTradeOrder_where">
+	   <dynamic prepend="where">
+			<isNotEmpty prepend="and" property="orderNo">
+				<![CDATA[  ORDER_NO = #orderNo#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="tradingType">
+				<![CDATA[ TRADING_TYPE= #tradingType# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="status">
+				<![CDATA[ STATUS = #status# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startDate">
+				<![CDATA[ TRUNC(GMT_CREATE) >= TRUNC(#startDate#) ]]>
+			</isNotEmpty> 
+			<isNotEmpty prepend="and" property="endDate">
+				<![CDATA[ TRUNC(GMT_CREATE) <= TRUNC(#endDate#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sellerAccount">
+				<![CDATA[ SELLER_ACCOUNT = #sellerAccount# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="buyerAccount">
+				<![CDATA[ BUYER_ACCOUNT = #buyerAccount# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="hasSellerRank">
+				<![CDATA[ HAS_SELLER_RANK = #hasSellerRank# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="hasBuyerRank">
+				<![CDATA[ HAS_BUYER_RANK = #hasBuyerRank# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	
+	<sql id="queryTradeOrder_order">
+		<dynamic prepend="order by ">
+			<isNotEmpty property="orderStr">
+				<isEqual property="orderStr" compareValue="id asc">ID asc</isEqual>
+				<isEqual property="orderStr" compareValue="orderNo asc">ORDER_NO asc</isEqual>
+				<isEqual property="orderStr" compareValue="tradingType asc">TRADING_TYPE asc</isEqual>
+				<isEqual property="orderStr" compareValue="bidPrice asc">BID_PRICE asc</isEqual>
+				<isEqual property="orderStr" compareValue="valuationUnit asc">VALUATION_UNIT asc</isEqual>
+				<isEqual property="orderStr" compareValue="quantity asc">QUANTITY asc</isEqual>
+				<isEqual property="orderStr" compareValue="measureUnit asc">MEASURE_UNIT asc</isEqual>
+				<isEqual property="orderStr" compareValue="orderAmount asc">ORDER_AMOUNT asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasSellerConfirm asc">HAS_SELLER_CONFIRM asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasBuyerConfirm asc">HAS_BUYER_CONFIRM asc</isEqual>
+				<isEqual property="orderStr" compareValue="sellerDepositAmount asc">SELLER_DEPOSIT_AMOUNT asc</isEqual>
+				<isEqual property="orderStr" compareValue="buyerDepositAmount asc">BUYER_DEPOSIT_AMOUNT asc</isEqual>
+				<isEqual property="orderStr" compareValue="deliveryType asc">DELIVERY_TYPE asc</isEqual>
+				<isEqual property="orderStr" compareValue="paymentType asc">PAYMENT_TYPE asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasPay asc">HAS_PAY asc</isEqual>
+				<isEqual property="orderStr" compareValue="sellerAccount asc">SELLER_ACCOUNT asc</isEqual>
+				<isEqual property="orderStr" compareValue="buyerAccount asc">BUYER_ACCOUNT asc</isEqual>
+				<isEqual property="orderStr" compareValue="expectTime asc">EXPECT_TIME asc</isEqual>
+				<isEqual property="orderStr" compareValue="endDatePay asc">END_DATE_PAY asc</isEqual>
+				<isEqual property="orderStr" compareValue="endDateGoods asc">END_DATE_GOODS asc</isEqual>
+				<isEqual property="orderStr" compareValue="endDateBill asc">END_DATE_BILL asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasSellerRank asc">HAS_SELLER_RANK asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasBuyerRank asc">HAS_BUYER_RANK asc</isEqual>
+				<isEqual property="orderStr" compareValue="hasInvoice asc">HAS_INVOICE asc</isEqual>
+				<isEqual property="orderStr" compareValue="wishOrderNum asc">WISH_ORDER_NUM asc</isEqual>
+				<isEqual property="orderStr" compareValue="projectCode asc">PROJECT_CODE asc</isEqual>
+				<isEqual property="orderStr" compareValue="projectName asc">PROJECT_NAME asc</isEqual>
+				<isEqual property="orderStr" compareValue="status asc">STATUS asc</isEqual>
+				<isEqual property="orderStr" compareValue="gmtCreate asc">GMT_CREATE asc</isEqual>
+				<isEqual property="orderStr" compareValue="gmtModify asc">GMT_MODIFY asc</isEqual>
+				<isEqual property="orderStr" compareValue="creator asc">CREATOR asc</isEqual>
+				<isEqual property="orderStr" compareValue="operator asc">OPERATOR asc</isEqual>
+				<isEqual property="orderStr" compareValue="id desc">ID desc</isEqual>
+				<isEqual property="orderStr" compareValue="orderNo desc">ORDER_NO desc</isEqual>
+				<isEqual property="orderStr" compareValue="tradingType desc">TRADING_TYPE desc</isEqual>
+				<isEqual property="orderStr" compareValue="bidPrice desc">BID_PRICE desc</isEqual>
+				<isEqual property="orderStr" compareValue="valuationUnit desc">VALUATION_UNIT desc</isEqual>
+				<isEqual property="orderStr" compareValue="quantity desc">QUANTITY desc</isEqual>
+				<isEqual property="orderStr" compareValue="measureUnit desc">MEASURE_UNIT desc</isEqual>
+				<isEqual property="orderStr" compareValue="orderAmount desc">ORDER_AMOUNT desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasSellerConfirm desc">HAS_SELLER_CONFIRM desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasBuyerConfirm desc">HAS_BUYER_CONFIRM desc</isEqual>
+				<isEqual property="orderStr" compareValue="sellerDepositAmount desc">SELLER_DEPOSIT_AMOUNT desc</isEqual>
+				<isEqual property="orderStr" compareValue="buyerDepositAmount desc">BUYER_DEPOSIT_AMOUNT desc</isEqual>
+				<isEqual property="orderStr" compareValue="deliveryType desc">DELIVERY_TYPE desc</isEqual>
+				<isEqual property="orderStr" compareValue="paymentType desc">PAYMENT_TYPE desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasPay desc">HAS_PAY desc</isEqual>
+				<isEqual property="orderStr" compareValue="sellerAccount desc">SELLER_ACCOUNT desc</isEqual>
+				<isEqual property="orderStr" compareValue="buyerAccount desc">BUYER_ACCOUNT desc</isEqual>
+				<isEqual property="orderStr" compareValue="expectTime desc">EXPECT_TIME desc</isEqual>
+				<isEqual property="orderStr" compareValue="endDatePay desc">END_DATE_PAY desc</isEqual>
+				<isEqual property="orderStr" compareValue="endDateGoods desc">END_DATE_GOODS desc</isEqual>
+				<isEqual property="orderStr" compareValue="endDateBill desc">END_DATE_BILL desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasSellerRank desc">HAS_SELLER_RANK desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasBuyerRank desc">HAS_BUYER_RANK desc</isEqual>
+				<isEqual property="orderStr" compareValue="hasInvoice desc">HAS_INVOICE desc</isEqual>
+				<isEqual property="orderStr" compareValue="wishOrderNum desc">WISH_ORDER_NUM desc</isEqual>
+				<isEqual property="orderStr" compareValue="projectCode desc">PROJECT_CODE desc</isEqual>
+				<isEqual property="orderStr" compareValue="projectName desc">PROJECT_NAME desc</isEqual>
+				<isEqual property="orderStr" compareValue="status desc">STATUS desc</isEqual>
+				<isEqual property="orderStr" compareValue="gmtCreate desc">GMT_CREATE desc</isEqual>
+				<isEqual property="orderStr" compareValue="gmtModify desc">GMT_MODIFY desc</isEqual>
+				<isEqual property="orderStr" compareValue="creator desc">CREATOR desc</isEqual>
+				<isEqual property="orderStr" compareValue="operator desc">OPERATOR desc</isEqual>
+			</isNotEmpty>
+			<isEmpty property="orderStr">
+				GMT_MODIFY desc
+			</isEmpty>
+		</dynamic>
+  </sql>
+	
+  
+  <select id="queryTradeOrderCount" parameterClass="TradeOrderQuery" resultClass="int">
+		select  count(1) from 
+			 trade_order
+		<include refid="queryTradeOrder_where"/>
+	</select>
+
+	<select id="queryTradeOrder" parameterClass="TradeOrderQuery" resultMap="TradeOrderResult">
+		<include refid="pageSQLHead"/>
+		 select  
+		 <include refid="Base_Column_List" />
+		 from trade_order
+		<include refid="queryTradeOrder_where"/> 
+		<include refid="queryTradeOrder_order"/>
+		<include refid="pageSQLFoot"/>
+	</select>
+  
+  <!-- 此方法是用于代替自动生成的updateByOrderNo 原方法可能会导致错误的更新 特别是采用基础类型时 -->
+  <update id="updateParamByOrderNo" parameterClass="java.util.Map">
+  		update TRADE_ORDER
+	      set GMT_MODIFY = sysdate
+	      <isNotNull prepend="," property="tradingType" >
+	        TRADING_TYPE = #tradingType:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="bidPrice" >
+	        BID_PRICE = #bidPrice:DECIMAL#
+	      </isNotNull>
+	      <isNotNull prepend="," property="valuationUnit" >
+	        VALUATION_UNIT = #valuationUnit:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="quantity" >
+	        QUANTITY = #quantity:DECIMAL#
+	      </isNotNull>
+	      <isNotNull prepend="," property="measureUnit" >
+	        MEASURE_UNIT = #measureUnit:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="orderAmount" >
+	        ORDER_AMOUNT = #orderAmount:DECIMAL#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasSellerConfirm" >
+	        HAS_SELLER_CONFIRM = #hasSellerConfirm:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasBuyerConfirm" >
+	        HAS_BUYER_CONFIRM = #hasBuyerConfirm:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="sellerDepositAmount" >
+	        SELLER_DEPOSIT_AMOUNT = #sellerDepositAmount:DECIMAL#
+	      </isNotNull>
+	      <isNotNull prepend="," property="buyerDepositAmount" >
+	        BUYER_DEPOSIT_AMOUNT = #buyerDepositAmount:DECIMAL#
+	      </isNotNull>
+	      <isNotNull prepend="," property="deliveryType" >
+	        DELIVERY_TYPE = #deliveryType:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="paymentType" >
+	        PAYMENT_TYPE = #paymentType:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasPay" >
+	        HAS_PAY = #hasPay:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="sellerAccount" >
+	        SELLER_ACCOUNT = #sellerAccount:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="buyerAccount" >
+	        BUYER_ACCOUNT = #buyerAccount:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="expectTime" >
+	        EXPECT_TIME = #expectTime:TIMESTAMP#
+	      </isNotNull>
+	      <isNotNull prepend="," property="endDatePay" >
+	        END_DATE_PAY = #endDatePay:TIMESTAMP#
+	      </isNotNull>
+	      <isNotNull prepend="," property="endDateGoods" >
+	        END_DATE_GOODS = #endDateGoods:TIMESTAMP#
+	      </isNotNull>
+	      <isNotNull prepend="," property="endDateBill" >
+	        END_DATE_BILL = #endDateBill:TIMESTAMP#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasSellerRank" >
+	        HAS_SELLER_RANK = #hasSellerRank:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasBuyerRank" >
+	        HAS_BUYER_RANK = #hasBuyerRank:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="hasInvoice" >
+	        HAS_INVOICE = #hasInvoice:CHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="wishOrderNum" >
+	        WISH_ORDER_NUM = #wishOrderNum:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="projectCode" >
+	        PROJECT_CODE = #projectCode:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="projectName" >
+	        PROJECT_NAME = #projectName:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="status" >
+	        STATUS = #status:VARCHAR#
+	      </isNotNull>
+	      <isNotNull prepend="," property="operator" >
+	        OPERATOR = #operator:VARCHAR#
+	      </isNotNull>
+	    where ORDER_NO = #orderNo:VARCHAR#
+  </update>	
+  	
+	<!-- 修改 -->
+  <update id="updateByOrderNo" parameterClass="TradeOrder" >
+    update TRADE_ORDER
+      set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="tradingType" >
+        TRADING_TYPE = #tradingType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bidPrice" >
+        BID_PRICE = #bidPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="valuationUnit" >
+        VALUATION_UNIT = #valuationUnit:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="quantity" >
+        QUANTITY = #quantity:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="measureUnit" >
+        MEASURE_UNIT = #measureUnit:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="orderAmount" >
+        ORDER_AMOUNT = #orderAmount:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="hasSellerConfirm" >
+        HAS_SELLER_CONFIRM = #hasSellerConfirm:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="hasBuyerConfirm" >
+        HAS_BUYER_CONFIRM = #hasBuyerConfirm:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerDepositAmount" >
+        SELLER_DEPOSIT_AMOUNT = #sellerDepositAmount:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerDepositAmount" >
+        BUYER_DEPOSIT_AMOUNT = #buyerDepositAmount:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deliveryType" >
+        DELIVERY_TYPE = #deliveryType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="paymentType" >
+        PAYMENT_TYPE = #paymentType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="hasPay" >
+        HAS_PAY = #hasPay:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerAccount" >
+        SELLER_ACCOUNT = #sellerAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerAccount" >
+        BUYER_ACCOUNT = #buyerAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="expectTime" >
+        EXPECT_TIME = #expectTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="endDatePay" >
+        END_DATE_PAY = #endDatePay:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="endDateGoods" >
+        END_DATE_GOODS = #endDateGoods:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="endDateBill" >
+        END_DATE_BILL = #endDateBill:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="hasSellerRank" >
+        HAS_SELLER_RANK = #hasSellerRank:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="hasBuyerRank" >
+        HAS_BUYER_RANK = #hasBuyerRank:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="hasInvoice" >
+        HAS_INVOICE = #hasInvoice:CHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="wishOrderNum" >
+        WISH_ORDER_NUM = #wishOrderNum:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="projectCode" >
+        PROJECT_CODE = #projectCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="projectName" >
+        PROJECT_NAME = #projectName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+    where ORDER_NO = #orderNo:VARCHAR#
+  </update>
+  
+  <select id="selectLatestOrderByCounts" resultMap="TradeOrderAndProResult" parameterClass="TradeOrderQuery">
+		select b.* from(    
+			select 
+			t.ID, 
+			t.ORDER_NO,
+			t.TRADING_TYPE, 
+			t.BID_PRICE, 
+			t.VALUATION_UNIT,
+			t.QUANTITY,
+			t.MEASURE_UNIT,
+			t.ORDER_AMOUNT,
+			t.HAS_SELLER_CONFIRM,
+			t.HAS_BUYER_CONFIRM, 
+			t.SELLER_DEPOSIT_AMOUNT,
+			t.BUYER_DEPOSIT_AMOUNT,
+			t.DELIVERY_TYPE, 
+			t.PAYMENT_TYPE, 
+			t.HAS_PAY,
+			t.SELLER_ACCOUNT, 
+			t.BUYER_ACCOUNT,
+			t.EXPECT_TIME, 
+			t.END_DATE_PAY, 
+			t.END_DATE_GOODS, 
+			t.END_DATE_BILL,
+			t.HAS_SELLER_RANK,
+			t.HAS_BUYER_RANK,
+			t.HAS_INVOICE, 
+			t.WISH_ORDER_NUM,
+			t.PROJECT_CODE, 
+			t.PROJECT_NAME, 
+			t.STATUS, 
+			t.GMT_CREATE,
+			t.GMT_MODIFY,
+			t.CREATOR,
+			t.OPERATOR, 
+			t.END_DATE_SEND_GOODS, 
+			t.GMT_FINISHED,
+			t.END_DATE_CONFIRM,
+			p.ID as PROJECT_ID,
+			p.BREED_STANDARD
+			from TRADE_ORDER t,PROJECT_LISTING p
+			where t.project_code = p.code
+			<isNotEmpty prepend="and" property="projectTypeCode">
+				<![CDATA[p.PROJECT_TYPE_CODE LIKE '$projectTypeCode$%' ]]>
+			</isNotEmpty>
+			order by t.gmt_create desc
+			) b
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="tradeOrderCount">
+				<![CDATA[rownum <= #tradeOrderCount# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryProjectListingByDate" parameterClass="java.util.Map"
+		resultMap="DateStatisticsMap">
+		SELECT COUNT (*) AS amount,
+			TO_CHAR (GMT_CREATE, '$type.value$') AS statistics_date,
+			#type.value# AS TYPE
+		FROM TRADE_ORDER t_to
+		WHERE TO_CHAR (t_to.GMT_CREATE, #type.value#) >
+		<isEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (ADD_MONTHS (SYSDATE, -#interval:DECIMAL#),#type.value#)
+		</isEqual>
+		<isNotEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (SYSDATE -(#interval:DECIMAL# * #type.interval#),#type.value#)
+		</isNotEqual>
+		GROUP BY TO_CHAR (t_to.GMT_CREATE, '$type.value$')
+		ORDER BY statistics_date
+	</select>
+	
+	<select id="queryDateRange" parameterClass="java.util.Map" resultMap="DateStatisticsMap">
+	   <![CDATA[
+		SELECT 
+			DISTINCT 
+			]]>
+		<isEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (ADD_MONTHS (SYSDATE, (1 - ROWNUM)),#type.value#)
+		</isEqual>
+		<isNotEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (SYSDATE - ((ROWNUM - 1) * #type.interval#),#type.value#)
+		</isNotEqual>
+		<![CDATA[
+			 AS statistics_date,
+               0 AS amount, #type.value# AS TYPE
+         FROM TRADE_ORDER
+         WHERE ROWNUM <= #interval:DECIMAL#
+      	 ORDER BY statistics_date
+		]]>	
+	</select>
+</sqlMap>

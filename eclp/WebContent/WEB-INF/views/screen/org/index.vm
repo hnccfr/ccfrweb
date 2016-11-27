@@ -1,0 +1,35 @@
+#set($layout = 'layout/blank.vm')
+<script type="text/javascript" src="$appServer.get('scripts/layer.js')"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<frameset cols="250,*"  id="frame">
+	<frame src="${appServer}/org/tree.htm" name="authTreeIframe" marginwidth="0" marginheight="0" frameborder="0" 
+        	style="overflow-x:scroll;overflow-y:scroll;" overflow-x="auto" scrolling-y="auto" target="main" />
+	<frame src="${appServer}/org/help.htm" name="authMainIframe" marginwidth="0" marginheight="0" frameborder="0" scrolling="auto" target="_self" />
+</frameset>
+<div class="layer" id="layer" align="center"></div>
+   <div class="lay" id="layer2">
+    <div class="searchBox">
+      <h3><img src="../images/admin/close.png" onClick="unload('layer2');" alt="点击关闭"/><span>操作</span></h3>
+      <table>
+        <tr>
+          <th>转移到：</th>
+          <td><input name="" type="checkbox" value="" class="ml10"/>部门一
+          <input name="" type="checkbox" value="" class="ml10"/>部门二<input name="" type="checkbox" value="" class="ml10"/>部门三</td>
+        </tr>
+        <tr>
+          <td colspan="2" class="ttali-cent"><button type="submit" class="btn">确认修改</button>
+            <button type="submit" class="btn" onClick="unload('layer2');">取消</button></td>
+        </tr>
+      </table>
+    </div>
+  </div> 
+<noframes>
+	
+<body>
+您的浏览器不支持框架结构，请使用IE等支持框架结构的浏览器！
+</body>
+</noframes>
+</html>

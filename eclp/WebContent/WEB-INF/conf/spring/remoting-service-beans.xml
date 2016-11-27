@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <!-- 用户管理远程服务(示例) -->
+    <bean id="remoteUserServiceHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    	<property name="service" ref="remoteUserService"/>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemoteUserService" />
+	</bean>
+	<!-- 子系统注册服务-->
+	 <bean id="remoteClientAutoRegHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    	<property name="service" ref="remoteClientAutoRegisterService"/>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemoteClientAutoRegisterService" />
+	</bean>
+	<!-- 子系统权限更新服务-->
+	 <bean id="remotePermissionUpdateStatusHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    	<property name="service" ref="remotePermissionUpdateStatusService"/>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemotePermissionUpdateStatusService" />
+	</bean>
+	<!-- 获取子系统权限服务-->
+	 <bean id="remoteSubsystemPermissionHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    	<property name="service" ref="remoteSubsystemPermissionService"/>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemoteSubsystemPermissionService" />
+	</bean>
+	<!-- 远程登录服务 -->
+	<bean id="remoteLoginHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="remoteUserLoginService"></property>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemoteUserLoginService"></property>
+	</bean>
+	<!-- 远程日志服务 -->
+	<bean id="remoteLogHessian" class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="remoteLogService"></property>
+		<property name="serviceInterface" value="com.hundsun.eclp.client.remote.client.RemoteLogService"></property>
+	</bean>
+</beans>

@@ -1,0 +1,46 @@
+#set($title = $!{standard.name}+' - 中部林业产权交易服务系统')
+#set($keywords = $!{standard.name}+' - 中部林业产权交易服务系统')
+#set($description = $!{standard.name}+' - 中部林业产权交易服务系统')
+#set($layout = 'layout/home.vm')  
+<script type="text/javascript">
+$(function(){
+	$(".list table tr:even").addClass("bg");
+});
+
+$(function(){
+	$(".property .hd span:first").addClass("selected");
+	$(".property .bd .content:first").show().siblings().hide();
+	var tab_menu=$(".property .hd span")
+	tab_menu.click(function()
+	 {
+		 $(this).addClass("selected").siblings().removeClass("selected");
+		 var index=tab_menu.index(this);
+		 $(".property .bd .content").eq(index).show().siblings().hide();
+	 })
+});
+</script>
+
+<div class="main">
+  <div class="clear"></div>
+  <div class="w735 fl" style="width:100%">
+    <div class="path mt10">
+		当前位置：
+		<a href="$!{cmsServer}">首页</a> &raquo; <a href="$!{appServer}/home/list.htm">交易大厅</a> &raquo; 标准规格
+		
+	</div>
+    <div class="article">
+		<h2>$!{standard.name}</h2>
+		<h6>
+			项目类型:【$!{standard.proTypeName}】
+		</h6>
+		<ul style="text-align:left;padding-left:30px;">
+			#direct($!standard.content)
+		</ul>
+    </div>
+   </div>
+   <div class="w255 fr mt10">
+  </div>
+  <div class="clear"></div>
+</div>
+
+

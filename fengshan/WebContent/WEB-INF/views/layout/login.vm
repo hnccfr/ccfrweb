@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>$!{title}</title>
+<link rel="stylesheet" href="$!{imageServer}/styles/base.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/manage.css" type="text/css">
+</head>
+<body>
+
+<div class="main">
+<!--head-->
+<div id="headIndex">
+    <div class="l"></div>
+    <div class="c">
+        <a class="logo" href="$!{cmsServer}"></a>
+        <div class="about">
+            <!--<a href="#">新用户注册</a>-->
+            <a href="$!{appServer}/login.htm">返回登录首页</a>
+        </div>
+    </div>
+    <div class="r">
+		
+    </div>
+</div>      
+$screen_content
+$contain.get('/contain/footer.htm')
+<div class="clear"></div>
+</div>
+
+</body>
+</html>
+

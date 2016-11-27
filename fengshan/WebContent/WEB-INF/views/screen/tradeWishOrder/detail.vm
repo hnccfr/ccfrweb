@@ -1,0 +1,42 @@
+#set($title = '意向单详情')
+<script src="$!{imageServer}/scripts/area.js" type="text/javascript"></script>
+<script language="JavaScript">
+	$(function() {
+		var area = new Area("$!{appServer}/ajax","$!{userAddress.province}","$!{userAddress.city}","$!{userAddress.area}",'province','city','area');
+	});
+</script>
+
+<div class="wrapperRight">
+    <div id="rightTab" class="t">
+        <ul>
+            <li>
+				#if($!{tradeWishOrder.tradeDictor} == "buy")
+					<a class="cursor" href="#">采购意向单详情</a>
+				#elseif($!{tradeWishOrder.tradeDictor} == "sell")
+					<a class="cursor" href="#">销售意向单详情</a>
+				#else
+					<a class="cursor" href="#">？？？</a>
+				#end
+            </li>
+        </ul>
+    </div>
+    <div class="right-body">
+        <div class="formBox">
+            <div class="content">
+				#if($!{tradeWishOrder.tradeType} == "bidOrder" || $!{tradeWishOrder.tradeType} == "mulitBidOrder")
+					#parse('/screen/tradeWishOrder/registration/auction.vm')
+				#elseif($!{tradeWishOrder.tradeType} == "placeOrder")
+					#parse('/screen/tradeWishOrder/placeOrder/place.vm')
+				#elseif($!{tradeWishOrder.tradeType} == "transferOrder")
+					#parse('/screen/tradeWishOrder/registration/transfer.vm')
+				#elseif($!{tradeWishOrder.tradeType} == "tenderOrder")
+					#parse('/screen/tradeWishOrder/registration/tender.vm')
+				#end
+				<div class="form-but">          
+					<button type="button" onclick="window.close();" class="button-t3">关        闭</button>
+				</div> 
+            </div>
+        </div>
+    </div>
+	<div class="b"></div>
+</div>

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+    	 <meta http-equiv="Cache-Control" content="no-store"/>
+    	 <meta http-equiv="Pragma" content="no-cache"/>
+    	 <meta http-equiv="Expires" content="0"/>
+    	 <title>$!{title}</title>
+    	 <link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/auction.css" />
+    	 <script type="text/javascript" src="$!{imageServer}/scripts/jquery-1.4.4.min.js" ></script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/common.js"></script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+		 <script >
+ 			var appServer = "$!{appServer}";
+			var imageServer = "$!{imageServer}";
+			var fengshanAppServer = "$!{fengshanAppServer}";
+		 </script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/pushlet/ajax-pushlet-client.js"></script> 
+		 <script type="text/javascript" src="$!{imageServer}/scripts/auction/hallFunction.js" ></script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/auction/hallAjax.js" ></script>
+		 <script type="text/javascript" src="$!{imageServer}/scripts/auction/hall.js" ></script>
+	</head>
+	<body class="bg_co1">
+		<div class="body1000" >
+			<div class="hall-top">
+				<div class="name">
+					<p>
+						#if($userAgent)
+        					<span>欢迎您：$!{userAgent.name}</span>
+        				#else
+        						<a href="$!{fengshanAppServer}/login.htm">请登录</a>
+        				#end
+					</p>
+				</div>
+				<div class="nav">
+                    <a target="_blank" href="$!{cmsServer}"><img src="$!{imageServer}/images/auction/nav_01.png" /></a><a target="_blank"  href="$!{fengshanAppServer}/home/list.htm"><img src="$!{imageServer}/images/auction/nav_02.png" /></a> <a  target="_blank" href="$!{fengshanAppServer}/home/announcement/auctionAnnouncement/more.htm?projectId=$!{projectId}"><img src="$!{imageServer}/images/auction/nav_03.png" /></a><a target="_blank"  href="$!{fengshanAppServer}/home/detail.htm?projectCode=$!{projectCode}"><img src="$!{imageServer}/images/auction/nav_04.png" /></a><a target="_blank"  href="$!{cmsServer}/html/help/"><img src="$!{imageServer}/images/auction/nav_05.png" /></a><a  href="$!{fengshanAppServer}/user/index.htm"><img src="$!{imageServer}/images/auction/nav_06.png" /></a>
+				</div>
+			</div>
+			$screen_content
+			<div class="clear"></div>
+		</div>
+		<div class="foot">
+		    <p>
+				<a href="$!{cmsServer}">返回首页</a>
+				| <a href="$!{cmsServer}/html/aboutUsCorp.html">关于我们</a>
+				| <a href="$!{cmsServer}/html/employ/">诚聘英才</a>
+				| <a href="$!{cmsServer}/html/adv/">广告服务</a>
+				| <a href="$!{cmsServer}/html/aboutUsLink.html">联系我们</a>
+			</p>
+			<p>
+				<span>
+					中部林业产权服务（湖南）有限责任公司<br>
+		长沙市雨花区城南中路232号HNAFI大楼 <br>
+		电话：0731-85365478 传真： 0731-85365479 EMAIL：ccfrt@ccfrt.com.cn 湘ICP备13011572号
+				</span>
+			</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+ 
+	<bean id="fileService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean" lazy-init="true">
+		<property name="serviceUrl" value="${file.hessian.url}"/>
+		<property name="serviceInterface" value="com.hundsun.network.file.client.service.FileService"/>
+	</bean>
+	
+	<bean id="cmsRemoteService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${cms.hessian.url}"/>
+		<property name="serviceInterface" value="com.hundsun.network.cms.client.service.CmsRemoteService"/>
+	</bean>
+	
+</beans>

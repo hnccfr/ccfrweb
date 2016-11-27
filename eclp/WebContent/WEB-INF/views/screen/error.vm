@@ -1,0 +1,20 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+<script language="javascript">
+function goUrl(){
+	#if($!{url})
+		window.location.href = '$!{appServer}$!{url}';
+	#else
+		history.go(-1);
+	#end
+}
+</script>
+<div class="r-error">
+	<h3>#if($!{message})$!{message}#else 操作失败 #end</h3>
+	#if( !$noBack )
+	<button class="button-s9" type="button" onclick="goUrl()">返回</button>
+	#end
+	<!--<p>相关操作：<a href="#">管理员首页</a> <a href="#">新增用户</a> <a href="#">用户列表</a></p>--> 
+</div>
+    

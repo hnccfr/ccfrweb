@@ -1,0 +1,72 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+<script>
+  function assaign(){
+     var checked = "false";
+     jQuery("#form1").find("input[type=radio]").each(function(){
+        var jObj = $(this);
+        if(jObj.attr("checked")==true)
+        {
+         checked="true";
+        }
+     });
+     if(checked=="false")
+     {
+       alert("请选择一个用户");
+       return ;
+     }
+     jQuery("#form1").submit();
+  }
+  
+  
+  
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>分配用户</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/userinfo/assign_users.htm')" id="form1"  method="post">
+			<table class="c4">
+				 <tr>
+					<input type="hidden" id="page" name="page" value="$!page"/>
+				 #springBind("userinfo.id")
+				<input type="hidden" name="${status.expression}" value="$!{uinfo.id}"/>
+                	<th>姓名：</th>
+                    <td>$!{uinfo.realName}</td>
+				 </tr>
+				<tr>
+					<th>用户：</th>
+                     <td>
+						#if($usersList)
+							#foreach($u in $usersList)
+							    #springBind("userinfo.userId")
+								<input type="radio" name="${status.expression}" value="$u.id" value="$u.id"							 
+                                  #if($!{uinfo.userId} == $!{u.id})
+								   checked
+								  #end
+								/>$u.account
+								#if($velocityCount%3==0)<br/>#end
+							#end
+						#end
+					 </td>
+                </tr>
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("STAFF_ASSIGN_USER"))
+		<button type="submit" class="button-s4" onclick="assaign()">保存</button>
+	  #end
+     <button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/userinfo/main.htm?page=$!{page}'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="RoleSystem" >
+  <resultMap id="RoleSystemResult" class="com.hundsun.eclp.biz.domain.role.RoleSytem" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="SYS_ID" property="sysId" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <insert id="insertRoleSystem" parameterClass="com.hundsun.eclp.biz.domain.role.RoleSytem" >
+	<selectKey resultClass="long" keyProperty="id">
+      SELECT SEQ_ROLE_SYSTEM_ID.NEXTVAL AS ID FROM DUAL
+     </selectKey>
+    insert into ECLP_ROLE_SYSTEM (ID, ROLE_ID, SYS_ID,GMT_CREATE, GMT_MODIFY)
+    values (#id:DECIMAL#, #roleId:DECIMAL#, #sysId:DECIMAL#,sysdate, sysdate)
+  </insert>
+  
+  <select id="getRoleIDBySystemID" parameterClass="java.lang.Long" resultClass="java.lang.String">
+  	select role_id from eclp_role_system t WHERE t.sys_id = #subsystemID#
+  </select>
+  
+  <select id="getRoleIDBySystemCode" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT ROLE_ID FROM ECLP_ROLE_SYSTEM T ,eclp_sub_system t1 WHERE t.sys_id = t1.id AND T1.name = #subsystemCode# and t1.IS_DELETED='N'
+  </select>
+  
+  <select id="selectSystemByUserId" resultClass="com.hundsun.eclp.biz.domain.sys.SubSystem" >
+  select ss.ID, ss.NAME, ss.FULL_NAME as fullName, ss.IS_CORE as isCore, ss.TYPE, ss.OPEN_TYPE as openType, ss.SORT, ss.DOMAIN, ss.URL, ss.STATUS, ss.LOGO, ss.IS_DELETED as isDeleted,
+      ss.GMT_CREATE as gmtCreate, ss.GMT_MODIFY as gmtModify, ss.HESSIAN_URL as hessianUrl, ss.SUPER_CODE as  superCode from eclp_sub_system ss, eclp_role_system  rs
+  WHERE ss.id = rs.sys_id and ss.status=1 and ss.is_deleted='N'
+	AND role_id in (
+		select er.id from eclp_role er,eclp_user_role eur 
+			where er.id = eur.role_id and eur.user_id=#userid# 
+			and er.status=1 and er.is_deleted='N'  and er.role_type=0
+			and eur.is_deleted='N'
+	)
+	ORDER BY ss.SORT
+  </select>
+
+</sqlMap>

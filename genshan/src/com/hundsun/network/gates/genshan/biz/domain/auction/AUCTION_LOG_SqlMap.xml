@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="AUCTION_LOG" >
+  <typeAlias alias="AuctionLog" type="com.hundsun.network.gates.genshan.biz.domain.auction.AuctionLog"/>
+  <resultMap id="BaseResultMap" class="AuctionLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="BEFORE_STATUS" property="beforeStatus" jdbcType="VARCHAR" />
+    <result column="NEW_STATUS" property="newStatus" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="DATA_JSON" property="dataJson" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERATOR_TYPE" property="operatorType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, PROJECT_CODE, BEFORE_STATUS, NEW_STATUS, GMT_CREATE, GMT_MODIFY, DATA_JSON, REMARK, 
+    OPERATOR, OPERATOR_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="AuctionLog" >
+    select 
+    <include refid="Base_Column_List" />
+    from AUCTION_LOG
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="AuctionLog" >
+    delete from AUCTION_LOG
+    where ID = #id:DECIMAL#
+  </delete>
+  <!-- 新增交易日志表 -->
+  <insert id="insert" parameterClass="AuctionLog" >
+    <selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_AUCTION_LOG.NextVal AS VALUE FROM DUAL   
+    </selectKey>
+    insert into AUCTION_LOG (ID, PROJECT_CODE, BEFORE_STATUS, NEW_STATUS, 
+      GMT_CREATE, GMT_MODIFY, DATA_JSON, REMARK, 
+      OPERATOR, OPERATOR_TYPE)
+    values (#id:DECIMAL#, #projectCode:VARCHAR#, #beforeStatus:VARCHAR#, #newStatus:VARCHAR#, 
+      sysdate, sysdate, #dataJson:VARCHAR#, #remark:VARCHAR#, 
+      #operator:VARCHAR#, #operatorType:VARCHAR#)
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="AuctionLog" >
+    update AUCTION_LOG set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="projectCode" >
+        PROJECT_CODE = #projectCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="beforeStatus" >
+        BEFORE_STATUS = #beforeStatus:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="newStatus" >
+        NEW_STATUS = #newStatus:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="dataJson" >
+        DATA_JSON = #dataJson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorType" >
+        OPERATOR_TYPE = #operatorType:VARCHAR#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+ 
+</sqlMap>

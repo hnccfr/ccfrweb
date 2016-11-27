@@ -1,0 +1,34 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addCss('ztree')
+$iDemand.addJs("jquery")
+$iDemand.addJs("ztree")
+<style type="text/css">
+button.diyBtn1 { background:url("$!{appServer}/images/zTree/edit.png") no-repeat scroll 1px 1px transparent;}
+</style>
+<script type="text/javascript">
+  <!--
+		var appServer = '$!{appServer}';
+		var zNodes = [ #direct($!{orgList}) ];
+		var iconArray = [
+            	{ type:"1", icon:"$!{appServer}/images/icon/tree_subsys.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_subsys.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_subsys.gif" },
+            	{ type:"2", icon:"$!{appServer}/images/icon/tree_group.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_group.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_group.gif" },
+            	{ type:"3", icon:"$!{appServer}/images/icon/tree_menu.gif", 
+            				iconOpen:"$!{appServer}/images/icon/tree_menu.gif", 
+            				iconClose:"$!{appServer}/images/icon/tree_menu.gif" }
+            ];
+//-->
+  </SCRIPT>
+<script type="text/javascript" src="$!{appServer}/scripts/assign_dept_tree.js"></script>
+<body>
+    <div class="ctrls">
+
+    	<div style="clear: both;"></div>
+    </div>
+	<ul id="treeDemo" class="tree" style="width:100%;height:100%overflow:auto;"></ul>
+</body>

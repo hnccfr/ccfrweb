@@ -1,0 +1,247 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('basic')
+$iDemand.addCss('admin')
+$iDemand.addJs("jquery")
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs('checkIdCard')
+<script type="text/javascript" src="$appServer.get('scripts/jquery.validate.min.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/messages_cn.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/jquery.metadata.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/hundsun.validate.js')"></script>
+<script>
+$().ready(function() {
+ $("#userModify").validate();
+});
+
+function doUserModify(){
+	if(!confirm('确认要修改吗?')){
+		return;
+	}
+	if($('#idType').val()=='0' && checkIdcard($('#idCard').val())!="验证通过!"){
+		$('#idCard + span').html('身份证不符合规定');
+    	return;
+	}
+	var myForm=$('#userModify');
+	myForm.submit();
+}
+String.prototype.trim = function() {
+		return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+</script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  #if($fail)
+	<div class="mag-t1">
+		修改失败
+    </div>
+  #end
+  #if($success)
+    <div class="mag-t2">
+    	修改成功
+    </div>
+  #end
+  <div class="formBox">
+    <h3><i></i><span>个人中心</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/users/user_info_edit.htm')" id="userModify" name="userModify" method="post">
+			#springBind("userInfo.id")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			#springBind("userInfo.userId")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			#springBind("user.userType")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			#springBind("user.account")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			#springBind("user.status")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<table class="c4">
+                <tr>
+                    <th>用户帐号：</th>
+                    <td >
+						$!{user.account}
+					</td>
+					<th>Email：</th>
+    				<td>
+    					#springBind("userInfo.emall")
+    					<input type="text" id="${status.expression}" name="${status.expression}" value="$!{status.value}" class="email inp" />
+    					<span class="error">$!{status.errorMessage}</span>
+    				</td>
+                </tr>
+
+				<tr>
+					<th>用户类型：</th>
+					<td>
+						#foreach($type in $enumUsersType)
+							#if($!{user.userType}==$!{type.code})$!{type.msg} #end
+						#end
+					</td>
+					<!--<th>地址：</th>
+                    <td>
+    					#springBind("userInfo.address")
+    					<input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" />
+						<span class="error">$!{status.errorMessage}</span>
+    				</td>-->
+				</tr>
+
+				 <tr>#springBind("userInfo.realName")
+                	<th>姓名：</th>
+                    <td><input type="text" class="inp required" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/>#requiredTag()<span class="error">$!{status.errorMessage}</span></td>
+					<th>职位：</th>
+					<td>
+            			#springBind("userInfo.position")
+            			<input type="text" id="${status.expression}" name="${status.expression}" value="$!{status.value}" class="inp" maxlength="20"/>
+            			<span class="error">$!{status.errorMessage}</span>
+					</td>
+				 </tr>
+
+                <tr>
+                    <th>生日：</th>
+                    <td>
+    					#springBind("userInfo.birthday")
+    					<input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()"  />
+    				</td>
+					<th>入职时间：</th>
+                    <td>
+    					#springBind("userInfo.availableDate")
+    					<input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" onclick="WdatePicker()"  />
+    				</td>
+    			</tr>
+
+    			 <tr>
+                    <th>QQ：</th>
+    					#springBind("userInfo.qq")
+                    <td><input type="text" class="inp" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/><span class="error">$!{status.errorMessage}</span></td>
+					<th>工作年限：</th>
+                    <td>
+    					#springBind("userInfo.workYear")
+    					<input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90 digits" value="$!{status.value}" />
+						<span class="error">$!{status.errorMessage}</span>
+    				</td>
+				 </tr>
+
+    			 <tr>
+                    <th>MSN：</th>
+    					#springBind("userInfo.msn")
+                    <td><input type="text" class="inp email" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/><span class="error">$!{status.errorMessage}</span></td>
+					<!--
+					<th>是否在职：</th>
+                    <td>
+    					#springBind("userInfo.isActive")
+    					<input type="radio" id="${status.expression}" name="${status.expression}" value="0" #if("$!{status.value}"=="0") checked #end />
+    						离职
+    					<input type="radio" id="${status.expression}" name="${status.expression}" value="1" #if("$!{status.value}"=="1") checked #end />
+    						在职
+    				</td>
+					-->
+					<th>工号</th>
+    				<td>#springBind("userInfo.jobNo")
+    					<input id="jobNo" name="${status.expression}" value="$!{status.value}" class="inp"/>
+    					<font color="red">${status.errorMessage}</font></td>
+    				</tr>
+				 </tr>
+
+    			 <tr>
+                    <th>旺旺：</th>
+    					#springBind("userInfo.wangwang")
+                    <td><input type="text" class="inp" id="${status.expression}" name="${status.expression}" value="$!{status.value}"/><span class="error">$!{status.errorMessage}</span></td>
+					<th>证件类型：</th>
+                    <td>
+    					#springBind("userInfo.idType")
+    					<select id="idType" name="${status.expression}">
+    						<option value="">请选择</option>
+    						#foreach($!idType in $!enumUserInfoIDType)
+    							<option value="$!{idType.code}" #if($!{status.value}==$!{idType.code}) selected #end>$!{idType.msg} </option>
+    						#end
+                        </select>
+    				</td>
+				 </tr>
+
+    			<tr>
+                    <th>办公电话：</th>
+                    <td>
+        			    #springBind("userInfo.officePhone")
+        			    <input type="text" id="${status.expression}" name="${status.expression}" value="$!{status.value}" class="inp phone" />
+    					<span class="error">$!{status.errorMessage}</span>
+    				</td>
+					 <th>证件号：</th>
+                    <td>
+    					#springBind("userInfo.idCard")
+    					<input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}" />
+						<span class="error">$!{status.errorMessage}</span>
+    				</td>
+                </tr>
+
+    			<tr>
+                    <th>住宅电话：</th>
+                    <td>
+        			    #springBind("userInfo.homePhone")
+        			    <input type="text" id="${status.expression}" name="${status.expression}" value="$!{status.value}" class="inp phone" />
+    					<span class="error">$!{status.errorMessage}</span>
+    				</td>
+					 <th>学历：</th>
+                    <td>
+    					#springBind("userInfo.education")
+						<select  name="${status.expression}">
+    						<option value="">请选择</option>
+    						#foreach($!edu in $!enumEducation)
+    							<option value="$!{edu.code}" #if($!{status.value}==$!{edu.code}) selected #end>$!{edu.msg} </option>
+    						#end
+                        </select>
+    				</td>
+                </tr>
+
+        		<tr>
+    				<th>移动电话：</th>
+    				<td>
+    					#springBind("userInfo.mobilePhone")
+    					<input type="text" id="${status.expression}" name="${status.expression}" value="$!{status.value}" class="inp mobile" maxlength="11"/>
+    					<span class="error">$!{status.errorMessage}</span>
+    				</td>
+					<th>学位：</th>
+                    <td>
+    					#springBind("userInfo.degree")
+						<select  name="${status.expression}">
+    						<option value="">请选择</option>
+    						#foreach($!deg in $!enumUsersDegree)
+    							<option value="$!{deg.code}" #if($!{status.value}==$!{deg.code}) selected #end>$!{deg.msg} </option>
+    						#end
+                        </select>
+    				</td>
+                </tr>
+				<tr >
+					<th>性别</th>
+					<td>#springBind("userInfo.gender")
+    					<select id="gender" name="${status.expression}" >
+    						<option value="0" #if($!{status.value}=="0") selected #end>男</option>
+    						<option value="1" #if($!{status.value}=="1") selected #end>女</option>
+                        </select>
+                    </td>
+					<th>默认子系统：</th>
+					<td>
+    					#springBind("user.defaultSubSys")
+    					<select  name="${status.expression}">
+    						<option value="">请选择</option>
+    						#foreach($!sys in $!sysList)
+    							<option value="$!{sys.id}" #if($!{status.value}==$!{sys.id}) selected #end>$!{sys.fullName} </option>
+    						#end
+                        </select>
+    				</td>
+                </tr>
+				##省市区数据
+				$contain.get("/contain/addr_select.htm").put("userInfo",$userInfo).put("provinceList",$provinceList).put("cityList",$cityList).put("districtList",$districtList)
+            </table>
+        </form>
+     </div>
+
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+	  <button type="button" class="button-s4" onclick="doUserModify()">保存</button>
+      <button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/users/users_list.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

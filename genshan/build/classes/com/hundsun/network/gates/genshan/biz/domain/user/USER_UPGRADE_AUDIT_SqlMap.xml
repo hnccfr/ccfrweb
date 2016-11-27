@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_UPGRADE_AUDIT" >
+  <resultMap id="BaseResultMap" class="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="APPLY_LEVEL" property="applyLevel" jdbcType="VARCHAR" />
+    <result column="APPLY_LEVEL_NAME" property="applyLevelName" jdbcType="VARCHAR" />
+    <result column="AUDIT_PROCESS" property="auditProcess" jdbcType="VARCHAR" />
+    <result column="AUDIT_NODE" property="auditNode" jdbcType="VARCHAR" />
+    <result column="AUDIT_NODE_RESULT" property="auditNodeResult" jdbcType="VARCHAR" />
+    <result column="AUDIT_NODE_REMARK" property="auditNodeRemark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERATE_TYPE" property="operateType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="USER_UPGRADE_AUDIT.Base_Column_List" >
+    t_uua.ID, t_uua.USER_ACCOUNT, t_uua.APPLY_LEVEL,t_ur.DESCRIPTION as APPLY_LEVEL_NAME, t_uua.AUDIT_PROCESS, t_uua.AUDIT_NODE, 
+    t_uua.AUDIT_NODE_RESULT,t_uua.AUDIT_NODE_REMARK, t_uua.GMT_CREATE, t_uua.GMT_MODIFY, t_uua.OPERATOR, t_uua.OPERATE_TYPE
+  </sql>
+  
+  <select id="USER_UPGRADE_AUDIT.selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select 
+    <include refid="USER_UPGRADE_AUDIT.Base_Column_List" />
+    from USER_UPGRADE_AUDIT t_uua, USER_ROLE t_ur
+    where t_uua.ID = #id:DECIMAL# and t_uua.APPLY_LEVEL = t_ur.NAME
+  </select>
+  
+  <delete id="USER_UPGRADE_AUDIT.deleteByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    delete from USER_UPGRADE_AUDIT
+    where ID = #id:DECIMAL#
+  </delete>
+  
+  <insert id="USER_UPGRADE_AUDIT.insert" parameterClass="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    insert into USER_UPGRADE_AUDIT (ID, USER_ACCOUNT, APPLY_LEVEL,APPLY_LEVEL_NAME, AUDIT_PROCESS, 
+      AUDIT_NODE, AUDIT_NODE_RESULT, AUDIT_NODE_REMARK, GMT_CREATE, 
+      GMT_MODIFY, OPERATOR, OPERATE_TYPE)
+    values (#id:DECIMAL#, #userAccount:VARCHAR#, #applyLevel:VARCHAR#,#applyLevelName:VARCHAR#, #auditProcess:VARCHAR#, 
+      #auditNode:VARCHAR#, #auditNodeResult:VARCHAR#, #auditNodeRemark:VARCHAR#, #gmtCreate:TIMESTAMP#, 
+      #gmtModify:TIMESTAMP#, #operator:VARCHAR#, #operateType:VARCHAR#)
+  </insert>
+  
+  <insert id="USER_UPGRADE_AUDIT.insertSelective" parameterClass="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    insert into USER_UPGRADE_AUDIT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevel" >
+        APPLY_LEVEL
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevelName">
+      	APPLY_LEVEL_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="auditProcess" >
+        AUDIT_PROCESS
+      </isNotNull>
+      <isNotNull prepend="," property="auditNode" >
+        AUDIT_NODE
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeResult" >
+        AUDIT_NODE_RESULT
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeRemark" >
+        AUDIT_NODE_REMARK
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR
+      </isNotNull>
+      <isNotNull prepend="," property="operateType" >
+        OPERATE_TYPE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="userAccount" >
+        #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevel" >
+        #applyLevel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevelName" >
+        #applyLevelName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditProcess" >
+        #auditProcess:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNode" >
+        #auditNode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeResult" >
+        #auditNodeResult:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeRemark" >
+        #auditNodeRemark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operateType" >
+        #operateType:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="USER_UPGRADE_AUDIT.updateByPrimaryKeySelective" parameterClass="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    update USER_UPGRADE_AUDIT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevel" >
+        APPLY_LEVEL = #applyLevel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="applyLevelName" >
+        #applyLevelName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditProcess" >
+        AUDIT_PROCESS = #auditProcess:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNode" >
+        AUDIT_NODE = #auditNode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeResult" >
+        AUDIT_NODE_RESULT = #auditNodeResult:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auditNodeRemark" >
+        AUDIT_NODE_REMARK = #auditNodeRemark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operateType" >
+        OPERATE_TYPE = #operateType:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <update id="USER_UPGRADE_AUDIT.updateByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.user.UserUpgradeAudit" >
+    update USER_UPGRADE_AUDIT
+    set USER_ACCOUNT = #userAccount:VARCHAR#,
+      APPLY_LEVEL = #applyLevel:VARCHAR#,
+      APPLY_LEVEL_NAME = #applyLevelName:VARCHAR#,
+      AUDIT_PROCESS = #auditProcess:VARCHAR#,
+      AUDIT_NODE = #auditNode:VARCHAR#,
+      AUDIT_NODE_RESULT = #auditNodeResult:VARCHAR#,
+      AUDIT_NODE_REMARK = #auditNodeRemark:VARCHAR#,
+      GMT_CREATE = #gmtCreate:TIMESTAMP#,
+      GMT_MODIFY = #gmtModify:TIMESTAMP#,
+      OPERATOR = #operator:VARCHAR#,
+      OPERATE_TYPE = #operateType:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <!-- 用以存放user_account和user_upgrade_audit两张表部分信息的resultMap -->
+  <resultMap id="AccountAndUpgradeResultMap" class="com.hundsun.network.gates.genshan.biz.domain.user.UserAccountAndUpgradeInfo">
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="APPLY_LEVEL_NAME" property="applyLevelName" jdbcType="VARCHAR" />
+    <result column="APPLY_LEVEL" property="applyLevel" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 查询用户的条件 -->
+  <sql id="Where_Clause">
+  	<isNotEmpty prepend="and" property="account">
+  		t_ua.account = #account#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="name">
+  		t_ua.name = #name#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="beginTime">
+		<![CDATA[ TRUNC(t_uua.gmt_create) >= TRUNC(#beginTime#) ]]>
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="endTime">
+		<![CDATA[ TRUNC(t_uua.GMT_CREATE) <= TRUNC(#endTime#) ]]>
+  	</isNotEmpty>
+  </sql>
+  
+  <!-- 获取当前处于后台审核的所有的用户 -->
+  <select id="selectUserUpgradeInfoByNode" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.AccountAndUpgradeInfoQuery" resultMap="AccountAndUpgradeResultMap">
+	<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+		  	select t_ua.account,t_ua.type,t_ua.name,t_ua.mobile,t_uua.gmt_create,t_uua.id,t_ur.description as apply_level_name,
+		  		t_uua.apply_level from user_account t_ua,user_role t_ur,user_upgrade_audit t_uua
+		  	where t_uua.audit_node = #auditNode:VARCHAER# and t_ua.account = t_uua.user_account and t_uua.apply_level = t_ur.name and t_ua.status in ('N','U')
+		  	]]>
+  			<include refid="Where_Clause"/>
+			<![CDATA[
+				order by t_uua.gmt_create desc
+			]]>
+	<![CDATA[
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+	]]>
+  </select>
+    
+  <!-- 获取待审核用户的数量 -->
+  <select id="selectNumberOfAudit" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.AccountAndUpgradeInfoQuery" resultClass="java.lang.Integer">
+  	select count(t_uua.user_account) from user_account t_ua,user_upgrade_audit t_uua 
+  	where t_uua.audit_node = #auditNode:VARCHAER# and t_ua.account = t_uua.user_account and t_ua.status in ('N','U')
+  	<include refid="Where_Clause"/>
+  </select>
+</sqlMap>

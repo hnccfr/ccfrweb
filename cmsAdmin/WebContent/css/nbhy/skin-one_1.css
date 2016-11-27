@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */
+.ifram_top{ background:url(../../images/admin/skin-one/top.png) repeat-x; }
+.admin-top { background-image:url(../../images/admin/skin-one/frame_bg1.gif);background-color:transparent;}
+.admin-top p span { color:#000;}
+.admin-top p span a{ color:#000;}
+.admin-top p a.out{ background-image:url(../../images/admin/skin-one/out.gif)}
+.toptab ul li{background-image:url(../../images/admin/skin-one/tab_bg2.png)}
+.toptab ul li span{background-image:url(../../images/admin/skin-one/tab_bg2.png)}
+.toptab ul li.c{background-image:url(../../images/admin/skin-one/tab_bg1.png)}
+.toptab ul li.c span{background-image:url(../../images/admin/skin-one/tab_bg1.png)}
+.menu-tree { background:#EEF2FB; padding-left:3px;}
+.menu-tree h3 {font-size: 12px; margin-bottom:2px; cursor:pointer; height:27px;line-height: 20px;	}
+.menu-tree h3 a {display: block; color: #000; height:27px; line-height:27px; text-align: left; padding-left:20px; background: url("../../images/admin/skin-one/h4_bg.gif") no-repeat scroll 0 0 transparent;}
+.menu-tree h3 a:hover{ text-decoration:none; color:#060;}
+.menu-tree .content{  margin-bottom:3px; background:none; height:auto;}
+.menu-tree .content ul {display: block; padding-top:5px; padding-bottom:3px; margin: 0px;left: 0px;top: 0px;right: 0px;bottom: 0px;clip: rect(0px,0px,0px,0px);background:none; }
+.menu-tree .content ul li {line-height: 24px;color: #333;display: block;height: 24px;padding-left: 0px;background:none;}
+.menu-tree .content ul li.hover{ background:none;}
+.menu-tree .content ul li a{line-height: 26px;color: #333;background: url("../../images/admin/skin-one/icon_li_bg3.gif") no-repeat 20px center;height: 26px;display: block; padding-left:30px; text-align:left;}
+.menu-tree .content ul li a:hover {font-weight: bold;color: #2F4F62;background: url("../../images/admin/skin-one/icon_li_bg3.gif") no-repeat 20px center;}
+.menu-tree .content ul li.hover a {font-weight: bold;color: #2F4F62;background: url("../../images/admin/skin-one/icon_li_bg3.gif") no-repeat 20px center;}
+.main{ margin:0;}
+.listBox h5{background-image:url(../../images/admin/skin-one/inp_bg.png); display:none;}
+.formBox{border: 1px solid #6FA0CB; background-color:#f1f6fc;}
+.formBox h3{background:none; height:19px; width:auto;}
+.formBox h3 span{ display:none;}
+.formBox h3 i{ display:none;}
+.formBox .content{ border:none; background:none; overflow:hidden; padding:0; width:auto;}
+.form-but{background:none; border:none; border-top:1px solid #6FA0CB; height:42px;  margin:0; padding:15px 0 0; width:auto;}
+.form-but button{background: url("../../images/admin/skin-one/but_bg.png") no-repeat scroll 0 -21px transparent;border: 0 none;color: #4783A5;cursor: pointer;font-weight: 600;height: 30px;line-height: 30px;margin-left: 20px;margin-right: 20px;text-align: center;width: 66px;}
+.form-but button:hover{ background-position:0 -21px;}
+.preservation, .searchBox{background: url(../../images/admin/skin-one/search_bg.png) repeat-x scroll left bottom transparent; border:none; margin-bottom:0; clear:both; padding-bottom:25px;}
+.preservation h5, .searchBox h5{ display:none;}
+.searchBox table th{ line-height:32px; padding-right:5px; font-weight:300;}
+.searchBox table td{ line-height:32px; padding-right: 30px;}
+.searchBox table td button.btn{background: url(../../images/admin/skin-one/but_bg.gif) no-repeat scroll 0 0 transparent;border: 0 none;color: #006996;cursor: pointer;height: 21px;line-height: 21px;overflow: hidden;text-indent: 20px;width: 61px; padding:0;}
+.searchBox table td button.btn2{background: url(../../images/admin/skin-one/but_bg.gif) no-repeat scroll  0 -190px transparent;border: 0 none;color: #006996;cursor: pointer;height: 21px;line-height: 21px;overflow: hidden;text-indent: 20px;width: 61px; padding:0;}
+.searchBox table td button.btn:hover {background: url(../../images/admin/skin-one/but_bg.gif) no-repeat scroll -61px 0 transparent;color: #FF6600;}
+.tool{text-align:right;}
+.tool span{ padding:0;}
+.tool span a, .tool span a.bt_add, .tool span a.bt_del, .tool span a.bt_par, .tool span a.bt_edit, .tool span a.bt_ren, .tool span a.bt_all, .tool span a.bt_no{ padding-bottom:0;}
+.listBox{ margin-left:10px;}
+.listBox table th{color: #596F7D; font-weight:300; border:1px solid #ccc; border-width: 0 1px 0 0; background: url("../../images/admin/skin-one/bg4.png") repeat-x scroll 0 bottom transparent;}
+.listBox table td a.btn3{ display:inline-block; border:1px solid #D5E5F2; padding:0 10px; height:19px; line-height:19px; background:url("../../images/admin/skin-one/bg2.gif") 0 -70px repeat-x; cursor:pointer;color: #0261A1;}
+.admin-foot{color:#333; background: url(../../images/admin/skin-one/frame_bg1.gif) 0 -41px repeat-x;}
+.tishi{ background:url("../../images/admin/skin-one/tishibg1.png") no-repeat; padding:65px 55px; width:500px;}
+.r-error, .r-success, .r-waring{background: url("../../images/admin/skin-one/apply.gif") no-repeat scroll 20px 20px transparent; margin:0; border:none; height:auto;}
+.r-error{ background-image:url(../../images/admin/skin-one/cancel.gif);}
+.r-success h3, .r-error h3{ margin-left:100px; font-size:14px; padding:15px 10px 0; font-weight:300;}
+.r-error .button-s9, .r-success .button-s10, .r-waring .button-s12{ background: none;border: 1px solid #ACE0F5;color: #3470AE;height: auto;line-height: normal; width:auto;margin-right: 6px;padding: 2px 10px;margin-left: 110px;}
+.r-success p, .r-error p{ display:none;}
+.inp{ border:1px solid #BAC4CD; width:80px; background:none; background-color:#fff;}
+

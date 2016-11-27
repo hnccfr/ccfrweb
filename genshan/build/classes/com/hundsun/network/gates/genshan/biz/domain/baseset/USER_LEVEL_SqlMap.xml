@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="USER_LEVEL" >
+  <resultMap id="userLevelResult" class="com.hundsun.network.gates.genshan.biz.domain.baseset.UserLevel" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="MEMBER_LEVEL" property="memberLevel" jdbcType="VARCHAR" />
+    <result column="INTEGRAL" property="integral" jdbcType="DECIMAL" />
+  </resultMap>
+	
+	<sql id="Where_Clause" >
+		<isNotEmpty prepend="and" property="userAccount" >
+			USER_ACCOUNT  like '%'||#userAccount:VARCHAR#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="memberLevel" >
+			MEMBER_LEVEL = #memberLevel:VARCHAR#
+		</isNotEmpty>
+	</sql>
+
+	<!-- 查询分页条数 -->
+	<select id="selectPageList-count" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.UserLevelQuery"
+			resultClass="java.lang.Integer" >
+		select count(*) from USER_LEVEL
+		where 1=1 
+		<include refid="USER_LEVEL.Where_Clause" />
+	</select>
+	
+	<!-- 查询分页结果集 -->
+	<select id="selectPageList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.UserLevelQuery"
+			resultMap="userLevelResult">
+		<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+			select ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL
+				from USER_LEVEL
+			where 1=1 
+		]]>
+		<include refid="USER_LEVEL.Where_Clause" />
+		<![CDATA[
+			order by INTEGRAL desc
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+		]]>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.UserLevel" >
+	<selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT seq_USER_LEVEL.Nextval AS VALUE FROM DUAL   
+    </selectKey>
+	insert into USER_LEVEL (ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL)
+	values (#id:DECIMAL# , #userAccount:VARCHAR#, #memberLevel:VARCHAR#, #integral:DECIMAL#)
+	</insert>
+	
+	<!-- 根据ID更新 -->
+	<update id="updateByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.UserLevel" >
+    update USER_LEVEL
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="memberLevel" >
+        MEMBER_LEVEL = #memberLevel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="integral" >
+        INTEGRAL = #integral:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+	</update>
+	
+	<!-- 根据Id查询 -->
+	<select id="selectByPrimaryKey" resultMap="userLevelResult" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.UserLevel" >
+	select ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL
+	from USER_LEVEL
+	where ID = #id:DECIMAL#
+	</select>
+	
+	<!-- 根据UserAccount查询 -->
+	<select id="selectByUserAccount" resultMap="userLevelResult" parameterClass="string" >
+	select ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL
+	from USER_LEVEL
+	where USER_ACCOUNT = #value#
+	</select>
+	
+	
+	<!-- 根据Id删除 -->
+	<delete id="deleteByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.UserLevel" >
+	delete from USER_LEVEL
+	where ID = #id:DECIMAL#
+	</delete>
+	
+</sqlMap>

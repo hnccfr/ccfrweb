@@ -1,0 +1,146 @@
+#set($layout = 'layout/default.vm')
+#set($title = '拍卖师管理')
+
+<style>
+span{color:red}
+td span.err{ color:#F00;}
+.formBox .c2{ width:900px;}
+</style>
+<script src="$!{imageServer}/scripts/user/register.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/area.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+    var area = new Area("$!{appServer}/ajax","$!{userAccount.province}","$!{userAccount.city}","$!{userAccount.area}",'pe_province','pe_city','pe_area');
+	});
+
+    function go(){
+    	window.location.href=appServer+"/user/list.htm";
+    }
+</script>
+
+<div class="main">
+	<h2>添加拍卖师</h2>
+	<form action="${appServer}/user/auctioneer.htm" method="post" onsubmit="return validate();">
+ 	<div class="formBox">
+		<div class="content">
+			
+			<h3>基本资料</h3>
+			<table class="c3">
+				#springBind("userAccount.type")
+				<input type="hidden" name="${status.expression}" value="P">
+    			<tr>
+    				<th><span>*</span>登入账号:</th>
+    				<td>
+    				#springBind("userAccount.account")
+    				<input type="text" name="${status.expression}" value="$!{status.value}" id="pe_account" title="2~10位的长度">
+    					<span id="err_pe_account" class="err"></span>
+    					<span class="err">${status.errorMessage}</span>
+    				</td>
+    				 <th><span>*</span>注册邮箱:</th>
+    				 <td>
+    				 #springBind("userAccount.email")
+    				<input type="text" name="${status.expression}" value="$!{status.value}" id="pe_email" title="请填写活跃使用的邮箱" >
+    				<span id="err_pe_email" class="err"></span>
+    				<span class="err">${status.errorMessage}</span>
+    				</td>
+                </tr>
+    			<tr>
+    				<th><span>*</span>登入密码:</th>
+    				<td>
+    				#springBind("userAccount.password")
+    				<input type="text" name="${status.expression}" value="" id="pe_password" title="登录密码由6~32位小、大写字母或数字组成">
+    				<span id="err_pe_password" class="err"></span>
+        			<span class="err">${status.errorMessage}</span>	
+    				</td>
+    				 <th><span>*</span>确认登入密码:</th>
+    				 <td>
+    				<input type="text" name="passwordConfirm" value="" id="pe_passwordConfirm">
+    				<span id="err_pe_passwordConfirm" class="err"></span>
+    				</td>
+                </tr>
+			</table>
+			
+			
+			<h3>个人信息</h3>
+			<table class="c3">
+			<tr>
+				<th><span>*</span>会员姓名:</th>
+				<td>
+				#springBind("userAccount.name")
+				<input type="text" id="pe_name" name="${status.expression}" value="$!{status.value}" title="真实的姓名">
+				<span id="err_pe_name" class="err"></span>
+    			<span class="err">${status.errorMessage}</span>
+				</td>
+				<th><span>*</span>联系电话:</th>
+				<td>
+				#springBind("userAccount.mobile")
+				<input type="text" id="pe_mobile" name="${status.expression}" value="$!{status.value}" title="确保能够及时联系的">
+				<span id="err_pe_mobile" class="err"></span>
+    			<span class="err">${status.errorMessage}</span>
+				</td>
+            </tr>
+			<tr>
+				<th><span>*</span>个人证件:</th>
+				<td>
+				#springBind("userAccount.certificateType")
+				<select id="pe_certificateType" name="${status.expression}" style="width:100px;">
+					<option value="">请选择</option>
+					 #foreach($item in $!{peCertificateTypes})
+					   	<option value="$!{item.value}"  #if($item.value == $!{status.value}) selected #end >$!{item.name}</option>
+    				 #end
+                    </select>
+					<span id="err_pe_certificateType" class="err"></span>
+					<span class="err">${status.errorMessage}</span>
+				</td>
+				<th><span>*</span>证件号码:</th>
+				<td>
+				#springBind("userAccount.certificateNum")
+				<input type="text" id="pe_certificateNum" name="${status.expression}" value="$!{status.value}" title="请填写合法的证件号码">
+				<span id="err_pe_certificateNum" class="err"></span>
+    			<span class="err">${status.errorMessage}</span>
+				</td>
+            </tr>
+			<tr id="pe_area_select">
+				<th><span>*</span>所在地域</th>
+				<td colspan="3">
+                    <select id="pe_province" name="province" style="width:120px;"></select>
+    				<select id="pe_city" name="city" style="width:120px;"></select>
+                    <select id="pe_area" name="area" style="width:120px;"></select>
+					 #springBind("userAccount.area")
+					<span class="err">${status.errorMessage}</span>
+					<span id="err_pe_area" class="err"></span>
+				</td>
+            </tr>
+			<tr>
+				<th>详细地址:</th>
+				<td>
+				#springBind("userAccount.address")
+				<input type="text" name="${status.expression}" value="$!{status.value}"/>
+				<span class="err">${status.errorMessage}</span>
+                </td>
+				<th>邮编:</th>
+				<td>
+				#springBind("userAccount.zipCode")
+				<input type="text" name="${status.expression}" value="$!{status.value}"/>
+				<span class="err">${status.errorMessage}</span>
+				</td>
+            </tr>
+		   </table>
+		   </div>
+		</div>
+		
+		<div class="form-but">
+			<tr>
+			<td>
+			<input class="button-s4" type="submit" value="提交"> 
+			</td>
+			<td>
+			<input class="button-s4" type="reset" value="重置"> 
+			</td>
+			<td>
+			<input class="button-s4" type="button" value="返回" onclick="go();"> 
+			</td>
+			</tr>
+		</div>
+	</form>
+</div>

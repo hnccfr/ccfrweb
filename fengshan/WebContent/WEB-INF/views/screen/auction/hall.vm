@@ -1,0 +1,79 @@
+#set($title = '拍卖大厅')
+#set($layout = 'layout/hall.vm')
+<script>
+    var hallJson;
+	var latestBidData;
+	var prevLatestBidData;
+	var isAuctioneer = false;
+	var isPriority = false;
+	var isBidder = false;
+	var hallStatus = "normal";
+	
+	#if($!{hall})
+	   hallJson= #direct($!{hall});
+	   latestBidData = hallJson.auctionLatestBidDTO;
+	   if ("auctioneer" == hallJson.hallUserType){
+	   		isAuctioneer = true;
+	   }
+	   if ("bidder" == hallJson.hallUserType){
+	   		isBidder = true;
+	   }
+	   if ("Y" == hallJson.isPriority && isBidder){
+	   		isPriority = true;
+	   }
+	#end
+	var projectId=$!{projectId};
+</script>
+
+<div class="hall-main">
+    <div class="hall-left">
+        <h3>
+            <span>拍卖现场</span>
+        </h3>
+        <div class="left_con">
+            #parse("screen/auction/hallleft.vm")
+        </div>
+        <h2></h2>
+    </div>
+    <div class="hall-center">
+        <div class="flash" id="flash">
+            <p style=" display:none;"></p>
+        </div>
+        <div class="bj">
+            <dl>
+                <dt class="zc">
+                    <img id="cz" src="$!{imageServer}/images/auction/cz.png" />
+                </dt>
+                <dd>
+                    <p class="title" id="projectTitle"></p>
+					<p class="title" id="hallStatus" style="color: #FF5151;font-size: 18px;font-weight:bold;height: 50px; line-height: 50px;"></p>
+					<p class="price" id="lastBidPrice"></p>
+                    <p class="time" id="p_time"><strong id="countDown"></strong>
+					</p>
+					<p class="control"></p>
+                </dd>
+            </dl>
+        </div>
+        <div class="clear"></div>
+        <div class="message" style="border: 0px; height: 34px;overflow:hidden;">
+           <iframe id="announcementFrame" name="announcementFrame"  scrolling="no" frameborder="0" style="width:100%;height:34px;border:0" marginheight="0" marginwidth="0" src="$!{fengshanAppServer}/home/announcement/auctionAnnouncement.htm?projectId=$!{projectId}">
+		   </iframe> 
+        </div>
+        <div class="clear"></div>
+        <div class="jp_btn" style="margin-top:30px;padding-bottom:20px;">
+			<ul id="baojia" class="jupai" style="height:200px;">
+			</ul>
+        </div>
+    </div>
+    <div class="hall-right">
+        <h3>
+            <span class="mr10 fr mark">
+            </span>
+				报价信息
+		</h3>
+		<div class="right_con">
+			#parse("screen/auction/hallright.vm")
+		</div>
+		<h2></h2>
+    </div>
+</div>

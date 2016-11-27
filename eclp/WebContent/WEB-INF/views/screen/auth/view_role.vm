@@ -1,0 +1,81 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+
+$iDemand.addCss('jquery.ui.all')
+
+$iDemand.addJs("jquery.ui.core")
+$iDemand.addJs("jquery.ui.widget")
+
+$iDemand.addJs("jquery.ui.mouse")
+$iDemand.addJs("jquery.ui.draggable")
+$iDemand.addJs("jquery.ui.position")
+$iDemand.addJs("jquery.ui.resizable")
+$iDemand.addJs("jquery.ui.dialog")
+
+<script>
+	
+</script>
+<body>
+<div class="main">
+  <div class="tool">
+	#if($!adminAccess.has("AUTH_ROLE"))
+		<span><a href="$appServer/auth/authRole/excel.htm?authId=$!id" hidefocus="true" class="bt_wu">导出角色</a></span>
+	#end
+	<span><a href="$appServer/auth/view.htm?id=$!id" hidefocus="true" class="bt_wu">权限信息</a></span>
+  </div>
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>#if($!auth)$!auth.name权限的角色列表#else 角色列表 #end</span></h5>
+    <table width="100%">
+      <tr>
+        <th>角色代码</th>
+        <th>角色名称</th>
+		<th>角色类型</th>
+		<th>状态</th>
+        <th>排序</th>
+		<th>备注</th>
+		
+      </tr>
+      #foreach($role in $!page.items)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+        <td>$!{role.code}</td>
+        <td>$!{role.displayName}</td>
+		<td>
+			#foreach($type in $enumRoleIsCore)
+              #if($!{role.isCore} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+		<td>
+			#foreach($type in $enumRoleStatus)
+              #if($!{role.status} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+		<td>$!{role.sort}</td>
+		<td>$!{role.remark}</td>				
+      </tr>
+      #end
+    </table>
+	#if($page.items)
+      $contain.get('/contain/form_page_slider.htm').put('slider_query',$query).put('slider_target',"/auth/view_role.htm").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end
+  </div>
+  <!-- 列表模块 END -->
+</div>
+
+<div id="dialog" title="商品列表">
+	## $contain.get("/role/assign_auth.htm")
+</div>
+
+</body>

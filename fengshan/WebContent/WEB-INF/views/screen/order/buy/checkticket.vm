@@ -1,0 +1,188 @@
+#set($layout = 'layout/blank.vm')
+<div class="main w700">
+    <div class="order_con mt10">
+		#if($errorInfo)
+    		<div id="fail" class="mag-t1">
+    			$errorInfo
+    		</div>
+		#else
+			<form id="checkTicketForm" action="$!{appServer}/order/buy/checkticket.htm" method="POST" onsubmit="return false;">
+				<input type="hidden" id="orderNo" name="orderNo" value="$!{tradeOrder.orderNo}" />
+				<span>
+					注意事项。<br>
+					1、请在收到票据并确认之后操作。<br>
+					2、剩余的货款会打给卖家
+				</span>
+                <h6>
+                    <span class="fl">
+                        <strong class="mr10">订单号：</strong>
+                        $!tradeOrder.orderNo
+                    </span>
+                </h6>
+                <div class="clear"></div>
+                <table width="100%" class="tb2">
+                    <tr>
+                        <th class="w20" rowspan="2">卖方</th>
+                        <th class="w100">会员名称：</th>
+                        <td class="w170">$!tradeOrderDetail.sellerName</td>
+                        <th class="w100">会员账户：</th>
+                        <td class="w170">$!tradeOrder.sellerAccount</td>
+                    </tr>
+                    <tr>
+                        <th>联 系 人：</th>
+                        <td>$!tradeOrderDetail.sellerLinkMan</td>
+                        <th>联系电话：</th>
+                        <td>$!tradeOrderDetail.sellerPhone</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="2" class="w20">买方</th>
+                        <th>会员名称：</th>
+                        <td>$!tradeOrderDetail.buyerName</td>
+                        <th>会员账户：</th>
+                        <td>$!tradeOrder.buyerAccount</td>
+                    </tr>
+                    <tr>
+                        <th>联 系 人：</th>
+                        <td>$!tradeOrderDetail.buyerLinkMan</td>
+                        <th>联系电话：</th>
+                        <td>$!tradeOrderDetail.buyerPhone</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="12" class="w20">
+                            <p>订单详情</p>
+                        </th>
+                        <th>项目名称：</th>
+                        <td>
+                            $!tradeOrder.projectName
+                        </td>
+                        <th>单价：</th>
+                        <td>
+                            $!commonUtils.getValuationUnitDesc($!tradeOrder.bidPrice,$!tradeOrder.getValuationUnit())
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>下单数量：</th>
+                        <td>
+                            $!tradeOrder.quantity
+                        </td>
+                        <th>数量单位：</th>
+                        <td>
+                            $!tradeOrder.measureUnitDesc
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>总价：</th>
+                        <td>
+                            $!commonUtils.getValuationUnitDesc($!tradeOrder.orderAmount,$!tradeOrder.getValuationUnit())
+                        </td>
+                        <th>需要发票：</th>
+                        <td>
+                            #if("$!tradeOrder.hasInvoice"=="Y")是#else否#end
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>支付方式：</th>
+                        <td>
+                            $!enumPaymentTypeMap.get($!tradeOrder.paymentType)
+                        </td>
+                        <th>订单状态：</th>
+                        <td>
+                            $!orderStatusMap.get($!tradeOrder.status)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>交易方式：</th>
+                        <td>
+                            $!tradingTypeMap.get($!tradeOrder.tradingType)
+                        </td>
+                        <th>下单日期：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.gmtCreate})
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>期望交收时间：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.expectTime})
+                        </td>
+                        <th>订单确认时限：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.endDateConfirm})
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>订单付款时限：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.endDatePay})
+                        </td>
+                        <th>订单交割时限：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.endDateSendGoods})
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>订单确认交割时限：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.endDateGoods})
+                        </td>
+                        <th>订单验票时限：</th>
+                        <td>
+                            $!dateTool.format("yyyy-MM-dd",$!{tradeOrder.endDateBill})
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>交割备注：</th>
+                        <td colspan=3>$!tradeOrderDetail.remark</td>
+                    </tr>
+                    #if("$!tradeOrder.deliveryType"=="buyerSelf")
+                        <tr>
+							#*
+                            <th>交收方式：</th>
+                            <td>$!enumDeliveryTypeMap.get($!tradeOrder.deliveryType)</td>
+                            <th>交货仓库：</th>
+                            <td>$!tradeOrderDetail.storehouse</td>
+							*#
+                        </tr>
+                        <tr>
+                            <th>地址：</th>
+                            <td colspan=3>
+                                $!areaTool.getAreaFullName($!tradeOrderDetail.sellerArea)
+                                $!tradeOrderDetail.sellerAddress
+                                #if($tradeOrderDetail.sellerZipCode)邮编：$!tradeOrderDetail.sellerZipCode#end
+                            </td>
+                        </tr>
+                    #end
+                    #if("$!tradeOrder.deliveryType"=="sellerSend")
+                        #* 
+						<tr>
+                            <th>交收方式：</th>
+                            <td colspan=3>$!enumDeliveryTypeMap.get($!tradeOrder.deliveryType)</td>
+                        </tr>
+						*#
+                        <tr>
+                            <th>交割地址：</th>
+                            <td colspan="3">
+                                $!areaTool.getAreaFullName($!tradeOrderDetail.buyerArea)
+                                $!tradeOrderDetail.buyerAddress
+                                #if($tradeOrderDetail.buyerZipCode)邮编：$!tradeOrderDetail.buyerZipCode#end
+                            </td>
+                        </tr>
+					#end
+					#if($otherOrderAmount)
+					<tr>
+    					<th>支付卖家款：</th>
+    					<td>$!otherOrderAmount</td>
+    					<th>支付密码：</th>
+    					<td><input type="password" id="payPwd" name="payPwd" class="inp" /></td>					
+                    </tr>
+					#else
+					<tr>
+    					<th>支付密码：</th>
+    					<td colspan=3><input type="password" id="payPwd" name="payPwd" class="inp" /></td>					
+                    </tr>
+					#end
+                </table>
+			</form>
+		#end
+	</div>
+</div>

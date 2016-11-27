@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<!-- 验证共通配置，可以在此配置段内配置通用验证、function等 -->
+	<bean id="valangValidator" abstract="true">
+		<!-- 验证通用function -->
+		<!--
+		<property name="customFunctions">
+			<map>
+				<entry key="" value="" />
+			</map>
+		</property>
+		-->
+	</bean>
+	
+</beans>

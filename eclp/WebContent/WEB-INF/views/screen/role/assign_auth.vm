@@ -1,0 +1,149 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addCss('jquery.ui.all')
+
+$iDemand.addJs("jquery.ui.core")
+$iDemand.addJs("jquery.ui.widget")
+
+$iDemand.addJs("jquery.ui.mouse")
+$iDemand.addJs("jquery.ui.draggable")
+$iDemand.addJs("jquery.ui.position")
+$iDemand.addJs("jquery.ui.resizable")
+$iDemand.addJs("jquery.ui.dialog")
+$iDemand.addJs("jquery.ui.button")
+$iDemand.addJs("jquery.effects.core")
+
+$iDemand.addJs("funcCheck")
+
+<script>
+  function assaign(){
+     jQuery("#form1").submit();
+  }
+  function doSubmit(){
+     jQuery("#form1").submit();
+  }  
+  $(document).ready(function(){
+       jQuery("#add").click(function(){
+        	 var treeNode = zTree1.getCheckedNodes(true);
+        	 if(treeNode==null || treeNode.length==0){
+                alert('请选择权限');
+        		return ;
+        	 }
+        	 var idStr='';
+             for(var i=0;i<treeNode.length;i++){
+        	    if(idStr!=''){
+        		  idStr = idStr+";"+treeNode[i].id;
+        		}else{
+        		  idStr = treeNode[i].id;
+        		}
+        	 }
+			 jQuery("#authIds").val(idStr);
+			 jQuery("#form1").attr("action","$!appServer/role/assignAuth.htm");
+			 //jQuery("#form1").submit();
+			  funcCheck('$!appServer','assignAuth',"doSubmit");
+       })
+  })
+
+   $("document").ready(function(){
+       $("#all").click(function(){
+            $("[name='authIds']").attr("checked",this.checked);//全选
+        });
+		$("#del").click(function(){
+		   var flag = false;
+		   $("[name='authIds']").each(function(){
+		       if(jQuery(this).attr("checked")){
+			      flag =true;
+			   }
+		   })
+		   if(!flag){
+		     alert("请选择需要删除的权限关系");
+			 return false;
+		   }
+		   if(confirm("确定要删除所选择的权限关系？")){
+    	      funcCheck('$!appServer','assignAuth',"doDel");
+		   }
+		});
+
+	})
+	
+	function doDel(){
+	   jQuery("#form2").submit();
+	}
+
+
+</script>
+<style>
+  *{
+  padding:0px;
+  margin:0px;
+  }
+  #left{      
+      width:100px;
+  }
+  #center{
+      padding-left:212px;                  
+  }
+  </style>
+
+<div class="main">
+	#if("Y"=="$!addMsg")
+		<div class="mag-t2"> 添加成功！ </div>
+	#end
+	#if("N"=="$!addMsg")
+		<div class="mag-t1"> 添加失败！ </div>
+	#end
+	#if("Y"=="$!delMsg")
+		<div class="mag-t2"> 删除成功！ </div>
+	#end
+	#if("N"=="$!delMsg")
+		<div class="mag-t1"> 删除失败！ </div>
+	#end
+
+	<div class="listBox mb10">
+    <h5><span>角色</span></h5>
+    <table width="100%">
+      <tr>
+        <th>角色CODE</th>
+        <th>角色名称</th>
+		<th>角色类型</th>
+      </tr>
+      <tr>
+	   <td>$!{role.code}</td>
+        <td>$!{role.displayName}</td>
+        <td>
+			#if($!{role.roleType}==0)
+				超级管理员角色 
+			#else
+				普通角色
+			#end
+		</td>
+	  </tr>
+    </table>
+     </div>
+  <!-- 表单模块 -->
+  
+		   <div id="left" style="width:200px; margin-right:10px; height:480px; overflow-y:auto; float:left; border:1px solid #A7B9D1;">
+			    $contain.get("/role/tree.htm")
+			</div>
+			<div id="center">
+    			<div class="tool">
+					#if($!adminAccess.has("ROLE_AUTHORIZATION"))
+            		    <span><a href="#" hidefocus="true" class="bt_add" id="add">保存设置</a></span>
+            			<span><a href="#" hidefocus="true" class="bt_del" id="del">删除</a></span>
+					#end
+        			<form action="$appServer.get('/role/assignAuth.htm')" id="form1"  method="post">
+        			   <input type="hidden" name="authIds" id="authIds" />
+        			   <input type="hidden" name="roleId" value="$roleId"/>
+        			</form>
+                </div>
+				##<div id="assignBody">
+				##	 $contain.get("/role/assign_auth_body.htm")
+                ##</div>
+			</div>
+    
+  <!-- 表单模块 END -->
+</div>
+<!-- 复核功能弹出层-->
+$contain.get('/common/func_check.htm')

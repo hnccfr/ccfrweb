@@ -1,0 +1,64 @@
+<div class="main">
+	<h2>交易分中心查询</h2>
+	<div class="clear"></div>
+	<form id="substationListFrom" action="$!{appServer}/substation/list.htm"  method="post">
+        <div class="searchBox">
+    		<h5><span>搜索交易分中心</span></h5>
+    		<table>
+    			<tr>
+    				<th class="w110 fn tr">分中心ID：</th>
+    				<td>
+						#springBind("query.id")
+    					<input type="text" id="id" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th class="w110 fn tr">分中心名称：</th>
+    				<td>
+						#springBind("query.name")
+    					<input type="text" id="name" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th class="w110 fn tr">&nbsp;</th>
+    				<td>
+    					<button type="submit" class="btn">搜 索</button>
+
+    				</td>
+    			</tr>
+    		</table>
+    	</div>
+    </form>
+		<div class="tool">
+            <span><a href="$!{appServer}/substation/add.htm" hidefocus="true" class="bt_add">新增分中心</a></span>
+        </div>
+	<div class="listBox">
+		<h5><span>分中心列表</span></h5>
+		<table width="100%">
+			<tr>
+				<th>分中心ID</th>
+				<th>分中心名称</th>
+				<th>创建时间</th>
+				<th>修改时间</th>
+				<th>操作者</th>
+				<th>操作</th>
+            </tr>
+			#if($query && $query.getData().size() > 0)
+				#foreach($!list in $!query.getData())
+					<tr>
+                        <td>$!{list.id}</td>
+                        <td>$!{list.name}</td>
+                        <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{list.gmtCreate})</td>
+						<td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{list.gmtModify})</td>
+						<td>$!{list.operator}</td>
+                        <td>
+                            <a href="$!{appServer}/substation/edit.htm?id=$!{list.id}">修改</a>|
+                            <a href="#" onclick="javascript:if(window.confirm('确定删除该分中心？')){window.location.href='$!{appServer}/substation/del.htm?id=$!{list.id}';}">删除</a>
+						</td>
+                    </tr>
+				#end
+			#end
+        </table>
+		<div class="pages-box" >
+			<div class="pages">
+				#pager($query,"substationListFrom")
+            </div> 
+        </div>
+    </div>
+</div>

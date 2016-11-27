@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ECLP_SYS_CONFIG" >
+  <resultMap id="sysConfigResult" class="com.hundsun.eclp.biz.domain.sys.SysConfig" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="VALUE" property="value" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="CODE_DESC" property="codeDesc" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="number" />
+  </resultMap>
+
+  <select id="selectById" resultMap="sysConfigResult" parameterClass="java.lang.Long" >
+    select ID, CODE, VALUE, GMT_CREATE, GMT_MODIFY,TYPE,CODE_DESC,STATUS
+    from ECLP_SYS_CONFIG
+    where ID = #value#
+  </select>
+
+  <delete id="delete" parameterClass="java.lang.Long" >
+    delete from ECLP_SYS_CONFIG
+    where ID = #value#
+  </delete>
+
+  <insert id="insert" parameterClass="com.hundsun.eclp.biz.domain.sys.SysConfig" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="id">
+		select seq_sys_config.nextval from dual
+	</selectKey>
+    insert into ECLP_SYS_CONFIG (ID, CODE, VALUE, GMT_CREATE, GMT_MODIFY)
+    values (#id:DECIMAL#, #code:VARCHAR#, #value:VARCHAR#, SYSDATE, SYSDATE)
+  </insert>
+
+  <update id="update" parameterClass="com.hundsun.eclp.biz.domain.sys.SysConfig" >
+    update ECLP_SYS_CONFIG set GMT_MODIFY = SYSDATE
+      <isNotEmpty prepend="," property="code" >
+        CODE = #code:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="value" >
+        VALUE = #value:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+        STATUS = #status#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="codeDesc" >
+        CODE_DESC = #codeDesc#
+      </isNotEmpty>
+    where ID = #id:DECIMAL#
+  </update>
+
+	<select id="selectSysConfigByCode" parameterClass="java.lang.String" resultMap="sysConfigResult">
+		 select ID, CODE, VALUE, GMT_CREATE, GMT_MODIFY,TYPE,CODE_DESC,STATUS
+	     from ECLP_SYS_CONFIG
+	     where CODE = #value# and STATUS = 1
+	</select>
+	<select id="selectAllSysConfig"  resultMap="sysConfigResult">
+		 select ID, CODE, VALUE, GMT_CREATE, GMT_MODIFY,TYPE,CODE_DESC,STATUS
+	     from ECLP_SYS_CONFIG
+	</select>
+</sqlMap>

@@ -1,0 +1,5 @@
+<div class="modules">
+    <h5>中部林业产权(<label id="biderNumber"></label>人)</h5>
+    <ul id="biders" style="display:none;">
+    </ul>
+</div>

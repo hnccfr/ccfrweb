@@ -1,0 +1,93 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+
+<script>
+  function assaign(){
+     jQuery("#form1").submit();
+  }
+  $(document).ready(function(){
+       jQuery("#add").click(function(){
+        	 var treeNode = zTree1.getCheckedNodes(true);
+        	 if(treeNode==null || treeNode.length==0){
+                alert('请选择机构');
+        		return ;
+        	 }
+        	 if(treeNode.length > 1)
+        	 {
+        	   alert('只能选择一个机构');
+        	   return ;
+        	 }
+        	 var idStr= treeNode[0].id;
+			 jQuery("#deptId").val(idStr);
+			 jQuery("#form1").attr("action","${appServer}/userinfo/assign_dept.htm");
+			 jQuery("#form1").submit();
+		//	 window.partent.formSubmit();
+			 window.close();
+			 
+       })
+
+  })
+
+   $("document").ready(function(){
+		$("#del").click(function(){
+		   if(confirm("确定要删除已选择的组织机构关系？")){
+		       jQuery("#form1").attr("action","${appServer}/userinfo/remove_dept.htm");
+    	       jQuery("#form1").submit();
+    	//       window.partent.form1.submit();
+    	       window.close();
+		   }
+		});
+
+	})
+
+
+</script>
+<style>
+  *{
+  padding:0px;
+  margin:0px;
+  }
+  #left{
+      position:absolute;
+      top:40px;
+      left:0px;
+      width:100px;
+      height:93%;
+  }
+  #center{
+      float:left;
+      padding-left:200px;
+      padding-right:100px;
+      width:80%;
+      height:100%;
+  }
+  </style>
+
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>分配机构</span></h3>
+    <div  style="overflow: hidden;">
+		   <div id="left" style="width:200px; margin-right:10px; overflow: scroll;float:left; border:1px solid #000;">
+		        <!-- contain tree-->
+			    $contain.get('/userinfo/assign_dept_tree.htm').put('deptId',$deptId)
+			</div>
+			<div id="center" style=" float:left">
+    			<div class="tool">
+            		    <span><a href="#" hidefocus="true" class="bt_add" id="add">保存设置</a></span>
+            			##<span><a href="#" hidefocus="true" class="bt_del" id="del">删除</a></span>
+        			<form  id="form1"  method="post">
+        			   <input type="hidden" name="deptId" id="deptId" value="$!{deptId}"/>
+        			   <input type="hidden" name="uid" value="$!{uid}"/>
+        			</form>
+                </div>
+				<div id="assignBody">
+                </div>
+			</div>
+     </div>
+
+  </div>
+  <!-- 表单模块 END -->
+</div>

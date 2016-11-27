@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 静态化任务 定时开始 -->
+	<bean id="cms2JobExe"  class="com.hundsun.network.hseccms.admin.timetask.Cms2JobExcuse"></bean>
+	<bean id="cms2JobTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay" value="${job.delay}" />
+		<property name="period" value="${job.period}" />
+		<property name="timerTask" ref ="cms2JobExe" />
+	</bean>
+	<!-- 定时任务 -->
+	<bean id="staticTaskTimer" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="cms2JobTask" />
+			</list>
+		</property>
+	</bean>
+     <bean id="cms2JobTiming"  class="com.hundsun.network.hseccms.admin.timetask.CmsJob2TimingExcuse"></bean>
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<ref bean="JobTimingCronTrigger" />
+		</property>
+	</bean>
+	
+	<bean id="JobTimingAdJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>com.hundsun.network.hseccms.admin.timetask.CmsJob2TimingExcuse</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="cms2JobTimingService">
+					<ref bean="cms2JobTimingService" />
+				</entry>
+				<entry key="cms2JobService">
+					<ref bean="cms2JobService" />
+				</entry>
+				<entry key="cms2ContService">
+					<ref bean="cms2ContService" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="JobTimingCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="JobTimingAdJob" />
+		</property>
+		<property name="cronExpression">
+			 <!-- 每十秒执行一次 
+			   <value>0/10 * * * * ?</value> -->
+			
+			 <!-- 每天零时触发-->
+			 <value>0 0 0 * * ?</value> 
+		</property>
+	</bean>
+    
+</beans>

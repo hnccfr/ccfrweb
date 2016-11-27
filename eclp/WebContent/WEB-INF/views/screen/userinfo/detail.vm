@@ -1,0 +1,148 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs('checkIdCard')
+<script type="text/javascript" src="$appServer.get('scripts/jquery.validate.min.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/messages_cn.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/jquery.metadata.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/hundsun.validate.js')"></script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>查看人员</span></h3>
+    <div class="content">
+		<form action="$appServer.get('/userinfo/oadd.htm')" id="uinfoAdd" name="uinfoAdd" method="post">
+		     <h4><i></i><span>关联帐户信息</span></h4>
+			 <table class="c4">              
+                   <tr>
+                    <th>用户帐号：</th>
+    				<td>
+    				    #if($!uinfo.userId =='')
+    				             没有关联用户 ${!uinfo.userId}
+    				    #end
+                        #foreach($u in $userList)
+						 #if($!{u.id}==$!{uinfo.userId}) $!{u.name} #end
+						#end
+    				</td>
+                </tr>
+           </table>
+			<h4><i></i><span>人员信息 </span></h4>
+			<table class="c4">
+			  <tr>
+					<th>组织机构：</th>
+    				<td>
+				        #foreach($t in $tree)
+						 #if($!{t.id}==$!{uinfo.deptId}) $!{t.name} #end
+				        #end                       
+    				</td>
+                </tr>
+                <tr>
+					<th>Email：</th>
+    				<td>$!{uinfo.emall}</td>
+					<th>性别</th>
+					<td> #if($!{uinfo.gender} =="1")女 #elseif($!{uinfo.gender}=="0")男 #end </td>
+                </tr>
+				 <!--<tr>
+					<th>地址：</th>
+					<td>$!{uinfo.address}</td>
+				 </tr>-->
+
+				<tr>
+					<th>职位：</th>
+					<td>$!{uinfo.position}</td>
+					<th>工号</th>
+    				<td>$!{uinfo.jobNo}</td>
+    				</tr>
+				</tr>
+
+				<tr>
+                    <th>生日：</th>
+                    <td>						
+    				    $dateUtil.convertDateToString("yyyy-MM-dd", $!{uinfo.birthday}) 
+					</td>
+					<th>入职时间：</th>
+                    <td>
+						$dateUtil.convertDateToString("yyyy-MM-dd", $!{uinfo.availableDate}) 
+    				</td>
+    			</tr>
+
+    			 <tr>
+                    <th>QQ：</th>
+                    <td>$!{uinfo.qq}</td>
+					<th>工作年限：</th>
+                    <td>$!{uinfo.workYear}</td>
+				 </tr>
+
+    			 <tr>
+                    <th>MSN：</th>
+                    <td>$!{uinfo.msn}</td>
+					<th>是否在职：</th>
+                    <td>
+						#if($!{uinfo.isActive}=="0") 离职 #elseif($!{uinfo.isActive}=="1")在职 #end
+    				</td>
+				 </tr>
+
+    			 <tr>
+                    <th>旺旺：</th>
+                    <td>$!{uinfo.wangwang}</td>
+					<th>证件类型：</th>
+                    <td>
+    						#foreach($!idType in $!enumUserInfoIDType)
+    							 #if($!{uinfo.idType}==$!{idType.code}) $!{idType.msg} #end
+    						#end
+                   
+    				</td>
+				 </tr>
+
+    			<tr>
+                    <th>办公电话：</th>
+                    <td>$!{uinfo.officePhone}</td>
+					 <th>证件号：</th>
+                    <td>$!{uinfo.idCard}</td>
+                </tr>
+
+    			<tr>
+                    <th>住宅电话：</th>
+                    <td>$!{uinfo.homePhone}</td>
+					 <th>学历：</th>
+                    <td>
+    						#foreach($!edu in $!enumEducation)
+    							#if($!{uinfo.education}==$!{edu.code}) $!{edu.msg} #end
+    						#end
+                      
+    				</td>
+                </tr>
+
+        		<tr>
+    				<th>移动电话：</th>
+    				<td>$!{uinfo.mobilePhone}</td>
+					<th>学位：</th>
+                    <td>
+    						#foreach($!deg in $!enumUsersDegree)
+    							 #if($!{uinfo.degree}==$!{deg.code}) $!{deg.msg} #end
+    						#end
+                       
+    				</td>
+                </tr>
+				<tr>
+					<th>所属地址：</th>
+					 <td colspan="3">
+    					$!{uinfo.regFullAddr}
+    				</td>
+				</tr>
+            </table>
+        </form>
+     </div>
+
+     <div class="form-but">
+      <!-- 表单按钮区 -->
+		<button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/userinfo/main.htm'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

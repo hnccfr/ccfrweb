@@ -1,0 +1,62 @@
+#set($layout = 'layout/default.vm')
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/kindeditor-min-unupload.js"></script>
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+$(function(){
+	##var editor = KindEditor.create('textarea[id="content"]');
+	var editor = KindEditor.create('#content',{items : []});
+});
+</script>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>查看公告详细</span></h3>
+    <div class="content">
+      <table class="c4">
+        <tr>
+          <th>公告标题：</th>
+          <td>$!{announcement.title}</td>
+        </tr>
+		<tr>
+          <th>公告类型：</th>
+          <td>$!{announcement.typeDesc}</td>
+        </tr>
+		<tr>
+          <th>关联的项目：</th>
+          <td>
+			#if($!{announcement.joinProject})
+				<a href="$!{appServer}/project/info.htm?projectListingId=$!{announcement.projectId}" target="_blank">
+					$!{announcement.projectTitle}
+					##$!{announcement.projectId}
+				</a>
+			#else
+				未关联
+			#end
+		  </td>
+        </tr>
+		<tr>
+          <th>创建人类型：</th>
+          <td>$!{announcement.creatorType}</td>
+        </tr>
+		<tr>
+          <th>创建人：</th>
+          <td>$!{announcement.creator}</td>
+        </tr>
+		<tr>
+          <th>创建时间：</th>
+          <td>$!{dateTool.format($!{announcement.gmtCreate})}</td>
+        </tr>
+		<tr>
+          <th>公告内容：</th>
+          <td><textarea style="width:400px;height:350px" id="content">$!{announcement.content}</textarea></td>
+        </tr>
+      </table>
+    </div>
+    <!-- 表单按钮区 -->
+    <div class="form-but">
+      <button type="button" class="button-s4" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}'#else history.go(-1)#end">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>

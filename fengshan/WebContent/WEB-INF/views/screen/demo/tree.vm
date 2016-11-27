@@ -1,0 +1,30 @@
+	
+	<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+    <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+	<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+    <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+	<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+    <script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+	
+	<form action="$!{appServer}/project/type/attri/submit.htm" method="post">
+  
+	<input type="text" id="prjTypeName" readonly 
+		value="" style="width:130px;" 
+		name="parentProjectType.name" class="prjTypeName" 
+		onclick="showPrjTypeSel(this); return false;"/>
+		
+	Öµ£º<input type="text" id="prjTypeCode" class="prjTypeCode" readonly />
+	
+	<table>
+		<tbody id="prjTypeMetaBox">
+        </tbody>
+    </table>
+		<input type="submit" value="Ìá½»" />
+	  </form>
+		
+	  #if($!{bo} && $!{bo.metas.size()} > 0)
+			#foreach($item in $!{bo.metas})
+				$!{item.metaKey} ==> $!{item.metaValue}<p>
+			#end
+	  #end

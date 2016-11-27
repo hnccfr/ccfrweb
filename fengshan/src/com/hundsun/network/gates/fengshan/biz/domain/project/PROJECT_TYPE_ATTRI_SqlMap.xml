@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ProjectTypeAttri" >
+ <typeAlias alias="ProjectTypeAttri" type="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri"/>
+  <resultMap id="BaseResultMap" class="ProjectTypeAttri" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PRO_TYPE_CODE" property="proTypeCode" jdbcType="VARCHAR" />
+    <result column="KEY_NAME" property="keyName" jdbcType="VARCHAR" />
+    <result column="KEY_TITLE" property="keyTitle" jdbcType="VARCHAR" />
+    <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+    <result column="TEXT" property="text" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ENABLE" property="enable" jdbcType="DECIMAL" />
+    <result column="RANK" property="rank" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="IS_REQUIRED" property="isRequired" jdbcType="DECIMAL" />
+    <result column="VALUE_VALIDATE" property="valueValidate" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, PRO_TYPE_CODE, KEY_NAME, KEY_TITLE, INPUT_TYPE, TEXT, REMARK, ENABLE, RANK, GMT_CREATE, 
+    GMT_MODIFY, OPERATOR, IS_REQUIRED, VALUE_VALIDATE
+  </sql>
+   
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    select 
+    <include refid="Base_Column_List" />
+    from PROJECT_TYPE_ATTRI
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    delete from GATES.PROJECT_TYPE_ATTRI
+    where ID = #id:DECIMAL#
+  </delete>
+ 
+  <insert id="insert" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    insert into PROJECT_TYPE_ATTRI (ID, PRO_TYPE_CODE, KEY_NAME, KEY_TITLE, 
+      INPUT_TYPE, TEXT, REMARK, ENABLE, RANK, 
+      GMT_CREATE, GMT_MODIFY, OPERATOR, IS_REQUIRED, 
+      VALUE_VALIDATE)
+    values (#id:DECIMAL#, #proTypeCode:VARCHAR#, #keyName:VARCHAR#, #keyTitle:VARCHAR#, 
+      #inputType:VARCHAR#, #text:VARCHAR#, #remark:VARCHAR#, #enable:DECIMAL#, #rank:DECIMAL#, 
+      #gmtCreate:TIMESTAMP#, #gmtModify:TIMESTAMP#, #operator:VARCHAR#, #isRequired:DECIMAL#, 
+      #valueValidate:VARCHAR#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    insert into PROJECT_TYPE_ATTRI
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="proTypeCode" >
+        PRO_TYPE_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="keyName" >
+        KEY_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="keyTitle" >
+        KEY_TITLE
+      </isNotNull>
+      <isNotNull prepend="," property="inputType" >
+        INPUT_TYPE
+      </isNotNull>
+      <isNotNull prepend="," property="text" >
+        TEXT
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+      <isNotNull prepend="," property="enable" >
+        ENABLE
+      </isNotNull>
+      <isNotNull prepend="," property="rank" >
+        RANK
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR
+      </isNotNull>
+      <isNotNull prepend="," property="isRequired" >
+        IS_REQUIRED
+      </isNotNull>
+      <isNotNull prepend="," property="valueValidate" >
+        VALUE_VALIDATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="proTypeCode" >
+        #proTypeCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="keyName" >
+        #keyName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="keyTitle" >
+        #keyTitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="inputType" >
+        #inputType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="text" >
+        #text:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="enable" >
+        #enable:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="rank" >
+        #rank:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isRequired" >
+        #isRequired:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="valueValidate" >
+        #valueValidate:VARCHAR#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    update PROJECT_TYPE_ATTRI
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="proTypeCode" >
+        PRO_TYPE_CODE = #proTypeCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="keyName" >
+        KEY_NAME = #keyName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="keyTitle" >
+        KEY_TITLE = #keyTitle:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="inputType" >
+        INPUT_TYPE = #inputType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="text" >
+        TEXT = #text:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="enable" >
+        ENABLE = #enable:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="rank" >
+        RANK = #rank:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isRequired" >
+        IS_REQUIRED = #isRequired:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="valueValidate" >
+        VALUE_VALIDATE = #valueValidate:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectTypeAttri" >
+    update PROJECT_TYPE_ATTRI
+    set PRO_TYPE_CODE = #proTypeCode:VARCHAR#,
+      KEY_NAME = #keyName:VARCHAR#,
+      KEY_TITLE = #keyTitle:VARCHAR#,
+      INPUT_TYPE = #inputType:VARCHAR#,
+      TEXT = #text:VARCHAR#,
+      REMARK = #remark:VARCHAR#,
+      ENABLE = #enable:DECIMAL#,
+      RANK = #rank:DECIMAL#,
+      GMT_CREATE = #gmtCreate:TIMESTAMP#,
+      GMT_MODIFY = #gmtModify:TIMESTAMP#,
+      OPERATOR = #operator:VARCHAR#,
+      IS_REQUIRED = #isRequired:DECIMAL#,
+      VALUE_VALIDATE = #valueValidate:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+	
+	
+	<!-- ******************************* -->
+	
+	  <!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+	         	]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+        		]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+  <sql id="queryProjectTypeAttri_where">
+    <dynamic prepend="where">
+		<isNotEmpty prepend="and" property="PRO_TYPE_CODE">
+			<![CDATA[  t_pta.PRO_TYPE_CODE = #proTypeCode#]]>
+		</isNotEmpty>
+		<!-- 
+		<isNotEmpty prepend="and" property="code">
+			<![CDATA[ t_pta.CODE = #code# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="userAccount">
+			<![CDATA[ t_pta.USER_ACCOUNT = #userAccount# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="status">
+			<![CDATA[ t_pta.STATUS = #status# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="listingStartTimeFrom">
+			<![CDATA[ t_pta.LISTING_START_TIME >= #listingStartTimeFrom# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="listingStartTimeTo">
+			<![CDATA[ t_pta.LISTING_START_TIME <= #listingStartTimeTo# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="listingEndTimeFrom">
+			<![CDATA[ t_pta.LISTING_END_TIME >= #listingEndTimeFrom# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="listingEndTimeTo">
+			<![CDATA[ t_pta.LISTING_END_TIME >= #listingEndTimeTo# ]]>
+		</isNotEmpty> 
+		 -->
+	</dynamic>
+</sql>
+	
+	<select id="queryProjectTypeAttriListCount" parameterClass="ProjectTypeAttri" resultClass="int">
+		select  count(*) from 
+			 project_type_attri t_pta
+		<include refid="queryProjectTypeAttri_where"/>
+	</select>
+
+	<select id="queryProjectTypeAttriList" parameterClass="ProjectTypeAttri" resultMap="BaseResultMap">
+		<include refid="pageSQLHead"/>
+		 select  
+		 <include refid="Base_Column_List" />
+		 from project_type_attri t_pta
+		<include refid="queryProjectTypeAttri_where"/> 
+		<!-- <include refid="queryFundFreezeLog_order"/> -->
+		<include refid="pageSQLFoot"/>
+	</select>
+	<!-- ********************************** -->
+	
+	<!-- ################################## -->
+	<select id="queryProjectTypeAttriByTypeCodeList"
+		resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from project_type_attri t_pta
+		where PRO_TYPE_CODE  in (
+            <iterate property="codeList" conjunction=",">
+                #codeList[]#
+            </iterate>)
+		
+		order by RANK desc
+	</select>
+	<!--  -->
+</sqlMap>

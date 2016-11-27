@@ -1,0 +1,23 @@
+#set($layout = 'layout/default.vm')
+<div class="main">
+<h2>定时器任务列表</h2>
+
+<div class="clear"></div>
+    <!-- 列表模块 -->
+    <div class="listBox"> 
+      <h5><span>定时器任务列表</span></h5> 
+        <table width="100%"> 
+            <tr>
+                <th width="50%">任务名称</th> 
+				<th width="50%">操作</th>
+            </tr>
+            <tr >
+              	<td>激活交易大厅数据</td>
+                <td>
+					<a href="$!{appServer}/timerTask/auctionActive.htm">执行激活任务</a>
+				</td>
+            </tr>
+        </table> 
+    </div> <!-- 列表模块 END -->   
+  </div>
+</div>

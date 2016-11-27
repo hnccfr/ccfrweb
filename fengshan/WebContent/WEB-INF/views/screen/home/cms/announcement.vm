@@ -1,0 +1,68 @@
+#set($layout = 'layout/blank.vm') 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+	<style>
+		li {
+            display: list-item;
+			list-style-type: none;
+			background:url("$!{imageServer}/images/cms/ico-1.gif") 0px 10px no-repeat;
+			text-indent:10px;
+            text-align: -webkit-match-parent;
+			font-size: 12px;
+            ##font-family: "宋体",Arial, Helvetica, sans-serif;
+            ##color: #3D3D3D;
+			margin: 0;
+			padding: 0;
+        }
+		li a {
+			color:#333;
+			line-height:24px;
+			text-decoration:none;
+        }
+        a:hover {
+            color:red;
+            text-decoration:none;
+        }
+		a:-webkit-any-link {
+            cursor:auto;
+        }
+		more2{
+			float:right;
+        }
+		more2 a {
+			color:#E60000;
+        }
+		time{ 
+			float:right; 
+			color:#7d7d7d;
+		}
+	</style>
+</head>
+<body >
+#if($!{announcementList} && ${announcementList.size()} > 0)
+	#foreach($announcement in $announcementList)
+		<li >
+			<span class="time" style="float:right;color:#7d7d7d;">$!{dateTool.format($!{announcement.gmtModify})}</span>
+			<a href="$!{appServer}/home/announcement/info.htm?id=$!{announcement.id}" target="_blank" title="$!{announcement.title}">
+                #if($!{announcement.title.length()}>20)
+					$!{announcement.title.substring(0,18)}...
+				#else
+					$!{announcement.title}	
+				#end
+			</a>
+			#*
+			#if($velocityCount < 4)
+				<i class="up" style="background:url($!{imageServer}/images/home/gif-0316.gif) 0 0px no-repeat; display:inline-block; width:9px; height:15px;margin-left:3px;"></i>
+				<i class="new" style="background:url($!{imageServer}/images/home/gif-0314.gif) 0 0 no-repeat; display:inline-block; width:30px; height:11px; margin-left:3px;"></i>
+			#end
+			*#
+		</li>
+	#end
+	<span class="more2" style="float:right;"><a target="_blank" href="$!{appServer}/home/announcement/list.htm" style="color:#E60000;font-size:12px;text-decoration:none;">更多 >></a></span>
+#else
+    <li>暂无数据</li>
+#end
+</body>
+</html>

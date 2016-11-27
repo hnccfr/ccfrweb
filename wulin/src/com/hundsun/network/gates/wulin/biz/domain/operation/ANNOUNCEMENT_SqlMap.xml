@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Announcement" >
+  <typeAlias alias="Announcement" type="com.hundsun.network.gates.wulin.biz.domain.operation.Announcement"/>
+  <typeAlias alias="AnnouncementQuery" type="com.hundsun.network.gates.wulin.biz.domain.query.AnnouncementQuery" />
+  <resultMap id="SimplResultMap" class="Announcement" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATOR_TYPE" property="creatorType" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERATOR_TYPE" property="operatorType" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap" class="Announcement" extends="SimplResultMap">
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Simpl_Column_List" >
+    ID, TITLE, TYPE, PROJECT_ID, STATUS, CREATOR_TYPE, CREATOR, GMT_CREATE, 
+    GMT_MODIFY, OPERATOR, OPERATOR_TYPE
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, TITLE, CONTENT, TYPE, PROJECT_ID, STATUS, CREATOR_TYPE, CREATOR, GMT_CREATE, 
+    GMT_MODIFY, OPERATOR, OPERATOR_TYPE
+  </sql>
+  
+  <select id="getTotalCount" resultClass="java.lang.Integer" parameterClass="AnnouncementQuery">
+		select
+			count(*)
+		from ANNOUNCEMENT 
+		where STATUS = 2
+		   <isNotEmpty prepend="and" property="title">
+					<![CDATA[TITLE LIKE '%$title$%' ]]>
+		   </isNotEmpty>
+		   <isNotEmpty prepend="and" property="type">
+					TYPE = #type#
+		   </isNotEmpty>
+		   <isNotEmpty prepend="and" property="projectId">
+					PROJECT_ID = #projectId#
+		   </isNotEmpty>
+		   order by GMT_MODIFY desc
+	</select>
+	
+	<select id="getPaginated" parameterClass="AnnouncementQuery" resultMap="SimplResultMap">
+		select *
+		  from (select t1.*, rownum linenum
+		          from (select 
+		          		<include refid="Simpl_Column_List" />
+		                  from ANNOUNCEMENT 
+		                  where STATUS = 2
+							   <isNotEmpty prepend="and" property="title">
+										<![CDATA[TITLE LIKE '%$title$%' ]]>
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="type">
+										TYPE = #type#
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="projectId">
+										PROJECT_ID = #projectId#
+							   </isNotEmpty>
+							   order by GMT_MODIFY desc
+					      ) t1
+		         where rownum &lt;= #endIndex#) t2
+		 where t2.linenum &gt;= #beginIndex#
+	</select>
+	
+	<select id="queryAnnouncementList" parameterClass="AnnouncementQuery" resultMap="SimplResultMap">
+		select 
+			<include refid="Simpl_Column_List" />
+		    	from ANNOUNCEMENT 
+		        where STATUS = 2
+				<isNotEmpty prepend="and" property="title">
+					<![CDATA[TITLE LIKE '%$title$%' ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="type">
+					TYPE = #type#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="projectId">
+					PROJECT_ID = #projectId#
+				</isNotEmpty>
+				order by GMT_MODIFY desc
+	</select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ANNOUNCEMENT
+    where ID = #id:DECIMAL#
+  </select>
+  
+  <update id="removeByPrimaryKey" parameterClass="long" >
+    update ANNOUNCEMENT
+    set STATUS = 0, GMT_MODIFY = sysdate
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <update id="leaveProjectByPrimaryKey" parameterClass="Announcement" >
+    update ANNOUNCEMENT
+    set GMT_MODIFY = sysdate, 
+    	PROJECT_ID = null,
+        OPERATOR = #operator:VARCHAR#, 
+        OPERATOR_TYPE = #operatorType:VARCHAR#
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="long" >
+    delete from ANNOUNCEMENT
+    where ID = #id:DECIMAL#
+  </delete>
+  <insert id="insert" parameterClass="Announcement" >
+  	<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_project_listing.nextval as id from dual
+	</selectKey>
+    insert into ANNOUNCEMENT (ID, TITLE, CONTENT, TYPE, PROJECT_ID, 
+      STATUS, CREATOR_TYPE, CREATOR, GMT_CREATE, 
+      GMT_MODIFY, OPERATOR, OPERATOR_TYPE)
+    values (#id:DECIMAL#, #title:VARCHAR#, #content:VARCHAR#, #type:VARCHAR#, #projectId:DECIMAL#, 
+      #status:DECIMAL#, #creatorType:VARCHAR#, #creator:VARCHAR#, sysdate, sysdate, #operator:VARCHAR#, #operatorType:VARCHAR#)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="Announcement" >
+    update ANNOUNCEMENT
+    set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="title" >
+        TITLE = #title:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="content" >
+        CONTENT = #content:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE = #type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="projectId" >
+        PROJECT_ID = #projectId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="status" >
+        STATUS = #status:DECIMAL#
+      </isNotNull>
+       <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:DECIMAL#
+      </isNotNull>
+       <isNotNull prepend="," property="operatorType" >
+        OPERATOR_TYPE = #operatorType:DECIMAL#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="Announcement" >
+    update ANNOUNCEMENT
+    set TITLE = #title:VARCHAR#,
+      CONTENT = #content:VARCHAR#,
+      TYPE = #type:VARCHAR#,
+      PROJECT_ID = #projectId:DECIMAL#,
+      STATUS = #status:DECIMAL#,
+      GMT_MODIFY = sysdate,
+      OPERATOR = #operator:DECIMAL#,
+      OPERATOR_TYPE = #operatorType:DECIMAL#
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <select id="selectNewestAnnouncement" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from ANNOUNCEMENT
+    where TYPE = 'system' and STATUS = 2 
+    	and GMT_CREATE = (select max(GMT_MODIFY) from ANNOUNCEMENT)
+  </select>
+  
+</sqlMap>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="area">
+  <typeAlias alias="Area"
+		type="com.hundsun.network.gates.fengshan.biz.domain.common.Area" />
+  <resultMap class="com.hundsun.network.gates.fengshan.biz.domain.common.Area" id="BaseResultMap">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_path" jdbcType="VARCHAR" property="parentPath" />
+    <result column="ranking" jdbcType="INTEGER" property="ranking" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="active" jdbcType="CHAR" property="active" />
+  </resultMap>
+
+  <sql id="area.Base_Column_List">
+    id, name, value, parent_path, ranking, gmt_create, gmt_modify, operator, active
+  </sql>
+
+  <select id="queryByPrimaryKey" parameterClass="int" resultMap="BaseResultMap">
+    select
+    <include refid="area.Base_Column_List" />
+    from area
+    where id = #id#
+  </select>
+
+ <select id="queryAll" resultMap="BaseResultMap" >
+    select
+    <include refid="area.Base_Column_List" />
+    from area
+    where active = 'Y'
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterClass="int">
+    delete from area
+    where id = #id:INTEGER#
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterClass="Area">
+    update area
+    set gmt_modify = sysdate
+      <isNotEmpty prepend="," property="name">
+		     NAME = #name#
+	  </isNotEmpty>
+	  <isNotEmpty prepend="," property="value">
+		     VALUE = #value#
+	  </isNotEmpty>
+	  <isNotEmpty prepend="," property="parentPath">
+		     parent_path = #parentPath#
+	  </isNotEmpty>
+	  <isNotEmpty prepend="," property="ranking">
+		     ranking = #ranking#
+	  </isNotEmpty>
+	  <isNotEmpty prepend="," property="operator">
+		     operator = #operator#
+	  </isNotEmpty>
+	  <isNotEmpty prepend="," property="active">
+		     active = #active#
+	  </isNotEmpty>
+    where id = #id:INTEGER#
+  </update>
+
+</sqlMap>

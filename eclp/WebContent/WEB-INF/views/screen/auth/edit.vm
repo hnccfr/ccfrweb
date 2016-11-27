@@ -1,0 +1,165 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+<script type="text/javascript" src="$!{appServer}/scripts/auth.js"></script>
+<body>
+<div class="main">
+  <!-- 表单模块 -->
+		#if("$isSuccess" == "true")
+			<div class="mag-t2">
+				操作成功！
+			</div>
+		#elseif("$isSuccess" == "false")
+            <div class="mag-t1">
+    			$!{errorMsg}
+            </div>
+		#end
+  <div class="formBox">
+    <h3><i></i><span>#if($!{authority.id})修改#else新增#end权限</span></h3>
+	<form id="editForm" action="$!{appServer}/auth/save.htm" method="post">
+	<input type="hidden" id="id" name="id" value="$!{authority.id}"/>
+	<input type="hidden" id="subSystemId" name="subSystemId" value="$!{authority.subSystemId}"/>
+    <div class="content">
+      <table class="c2">
+		#if( $eclpUserAgent.userType == 2 )
+			<input type="hidden" id="isCore" name="isCore" value="$!{authority.isCore}"/>
+		#else
+        <tr>
+          <th>数据权限：</th>
+          <td>
+			#springBind("authority.isCore")
+			<input type="radio" id="isCore" name="isCore" value="1" #if( ${status.value} == "1" )checked#end/>核心数据
+            <input type="radio" id="isCore" name="isCore" value="2" #if( ${status.value} == "2" )checked#end/>应用数据
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+			<span>核心数据普通用户无法修改</span>
+		  </td>
+        </tr>
+		#end
+        <tr>
+          <th>编码：</th>
+          <td>
+			#springBind("authority.code")
+			<input type="text" id="code" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>名称：</th>
+          <td>
+			#springBind("authority.name")
+			<input type="text" id="name" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>类型：</th>
+          <td>
+			#springBind("authority.type")
+			<select id="type" name="$!{status.expression}" class="select" style="width:205px;">
+			  #foreach( $authorityType in $!{authorityTypeList} )
+				<option value="$!{authorityType.code}" #if( ${authorityType.code} == ${status.value} )selected#end>$!{authorityType.desc}</option>
+			  #end
+            </select>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>父权限：</th>
+          <td>
+			#springBind("authority.parentId")
+			<input type="hidden" id="parentId" name="$!{status.expression}" value="$!{status.value}"/>
+			<input type="text" id="parentAllName" name="parentAllName" 
+				#if( !$!{authority.parentAllName} || $!{authority.parentAllName}=='')
+					value="$!{authority.getParentNameByLevel('')}"
+				#else
+					value="$!{authority.parentAllName}"
+				#end 
+				readonly="true" class="inp" style="width:300px;"/>
+				<button type="button" class="button-s4" onclick="getParent()">左树中选</button>
+			<input type="text" id="parentAllNameExt" name="parentAllNameExt" class="inp" style="display:none;"
+				#if( !$!{authority.parentAllName} || $!{authority.parentAllName}=='')
+					value="$!{authority.getParentNameByLevel('')}"
+				#else
+					value="$!{authority.parentAllName}"
+				#end
+				/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr id="trOpenType">
+          <th>打开方式：</th>
+          <td>
+			#springBind("authority.openType")
+			<select id="openType" name="$!{status.expression}" class="select" style="width:205px;">
+			  #foreach( $authorityOpenType in $!{authorityOpenTypeList} )
+				<option value="$!{authorityOpenType.code}" #if( ${authorityOpenType.code} == ${status.value} )selected#end>$!{authorityOpenType.desc}</option>
+			  #end
+            </select>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr id="trUrl">
+          <th>URL：</th>
+          <td>
+			<select id="urlPrefix" name="urlPrefix" class="inp" style="width:90px;">
+			  #foreach( $authorityUrlPrefix in $!{authorityUrlPrefixList} )
+				<option value="$!{authorityUrlPrefix.code}" #if( ${authorityUrlPrefix.code} == ${status.value} )selected#end>$!{authorityUrlPrefix.desc}</option>
+			  #end
+            </select>
+			#springBind("authority.url")
+			<input type="text" id="url" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>排序号：</th>
+          <td>
+			#springBind("authority.sort")
+			<input type="text" id="sort" name="$!{status.expression}" value="$!{status.value}" class="inp" size="10"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+        <tr>
+          <th>状态：</th>
+          <td>
+			#springBind("authority.status")
+			<input type="radio" id="status" name="status" value="1" #if( ${status.value} == "1" )checked#end/>启用
+            <input type="radio" id="status" name="status" value="2" #if( ${status.value} == "2" )checked#end/>禁用
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+			<span class="red">*</span>
+		  </td>
+        </tr>
+		<tr>
+          <th>是否可分配：</th>
+          <td>
+			#springBind("authority.isAssign")
+			<input type="radio" id="$!{status.expression}" name="$!{status.expression}" value="1" #if( ${status.value} == "1" )checked#end checked/>是
+            <input type="radio" id="$!{status.expression}" name="$!{status.expression}" value="2" #if( ${status.value} == "2" )checked#end/>否
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+		  </td>
+        </tr>
+      </table>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+#if( ( !$!{authority.id} && $!adminAccess.has("AUTH_ADD") ) || ( $!{authority.id} && $!adminAccess.has("AUTH_EDIT") ) )
+      <button type="submit" class="button-s4">保存</button>
+#end
+      <button type="button" onclick="location.href='$!appServer/auth/list.htm'" class="button-s4 cancel">取消</button>
+    </div>
+	</form>
+    <!-- 表单按钮区 END -->
+  </div>
+  <!-- 表单模块 END -->
+</div>
+</body>

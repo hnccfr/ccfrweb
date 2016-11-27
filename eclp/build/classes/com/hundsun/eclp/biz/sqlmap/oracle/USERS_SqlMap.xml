@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ECLP_USERS" >
+<typeAlias alias="usersQuery" type="com.hundsun.eclp.biz.query.UsersQuery"/>
+  <resultMap id="ECLP_USERS_RM" class="com.hundsun.eclp.biz.domain.user.Users" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="USER_TYPE" property="userType" jdbcType="DECIMAL" />
+    <result column="LAST_LOGIN_IP" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="LOGIN_NUM" property="loginNum" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="DEFAULT_SUB_SYS" property="defaultSubSys" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <select id="ECLP_USERS.SELECT_BY_ID" resultMap="ECLP_USERS_RM" >
+     select ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, LAST_LOGIN_IP, LAST_LOGIN_TIME,
+      LOGIN_NUM, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS
+    from ECLP_USERS 
+    where <![CDATA[ STATUS <>2 AND ID = #id:DECIMAL# ]]>
+  </select>
+  
+  <!-- 查询没有关联的用户 -->
+  <select id="ECLP_USERS.SELECTNOTRELE" resultMap="ECLP_USERS_RM">
+     select ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, LAST_LOGIN_IP, LAST_LOGIN_TIME,
+      LOGIN_NUM, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS
+      from ECLP_USERS 
+      WHERE <![CDATA[ ECLP_USERS.STATUS <>2 AND ECLP_USERS.id not in (select uinfo.user_id
+                      from eclp_user_info uinfo
+                     where uinfo.status<>2 and uinfo.is_deleted='N' AND uinfo.user_id is not null)
+                     ]]>
+                     
+  </select>
+  
+  <select id="ECLP_USERS.SELECT" resultMap="ECLP_USERS_RM" parameterClass="com.hundsun.eclp.biz.domain.user.Users" >
+     select ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, LAST_LOGIN_IP, LAST_LOGIN_TIME,
+      LOGIN_NUM, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS
+      from ECLP_USERS 
+      <dynamic prepend="WHERE" >
+      	<isNotEmpty prepend="AND" property="id" >
+	        id = #id:DECIMAL#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="account" >
+	        ACCOUNT = #account:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="password" >
+	        PASSWORD = #password:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="name" >
+	        NAME = #name:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="status" >
+	        STATUS = #status:DECIMAL#
+	      </isNotEmpty>
+	      <isEmpty prepend="AND" property="status" >
+	         <![CDATA[ STATUS <> '2']]>
+	      </isEmpty>
+	      <isNotEmpty prepend="AND" property="userType" >
+	        USER_TYPE = #userType:DECIMAL#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="lastLoginIp" >
+	        LAST_LOGIN_IP = #lastLoginIp:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="lastLoginTime" >
+	        LAST_LOGIN_TIME = #lastLoginTime:TIMESTAMP#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="loginNum" >
+	        LOGIN_NUM = #loginNum:DECIMAL#
+	      </isNotEmpty>
+      </dynamic>
+  </select>
+  <delete id="ECLP_USERS.DELETE">
+    delete from ECLP_USERS
+    where ID = #id:DECIMAL#
+  </delete>
+  
+  <insert id="ECLP_USERS.INSERT" parameterClass="com.hundsun.eclp.biz.domain.user.Users" >
+      <selectKey keyProperty="id" resultClass="long" type="pre">
+		 SELECT SEQ_USERS.NEXTVAL AS id FROM DUAL
+	  </selectKey>
+      insert into ECLP_USERS (ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS)
+    values (#id:DECIMAL#, #account:VARCHAR#, #password:VARCHAR#, #name:VARCHAR#, #status:DECIMAL#,
+      #userType:DECIMAL#, sysdate, sysdate,#defaultSubSys:DECIMAL#)
+  </insert>
+  
+  <update id="ECLP_USERS.UPDATE" parameterClass="com.hundsun.eclp.biz.domain.user.Users" >  
+    update ECLP_USERS SET  GMT_MODIFY = sysdate
+    <dynamic prepend="," >
+      <isNotEmpty prepend="," property="account" >
+        ACCOUNT = #account:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="password" >
+        PASSWORD = #password:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+        STATUS = #status:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="userType" >
+        USER_TYPE = #userType:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="lastLoginIp" >
+        LAST_LOGIN_IP = #lastLoginIp:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="lastLoginTime" >
+        LAST_LOGIN_TIME = #lastLoginTime:TIMESTAMP#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="loginNum" >
+        LOGIN_NUM = #loginNum:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="defaultSubSys">
+      	DEFAULT_SUB_SYS = #defaultSubSys:DECIMAL#
+      </isNotEmpty>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <!--查询符合要求的会员数目-->
+	<select id="usersCountAll" parameterClass="usersQuery"
+		resultClass="java.lang.Integer">
+		select count(1) from ECLP_USERS where STATUS in(0,1)
+		<isNotEmpty prepend="AND" property="account">
+			ACCOUNT like
+			concat(concat('%',#account#),'%')
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="realName">
+			NAME like
+			concat(concat('%',#realName#),'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userType">
+			USER_TYPE = #userType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ gmt_create >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ gmt_create <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+		</isNotEmpty>
+		<isEqual prepend="and" property="agentUserType" compareValue="2">
+			USER_TYPE in (1,2)
+		</isEqual>
+		<isNotEmpty prepend="AND" property="deptId">			
+                  exists(select user_id from eclp_user_info where dept_id=#deptId# and status=1 and user_id is not null and ECLP_USERS.id=user_id)
+		</isNotEmpty>
+	</select>
+	<!--分页查询会员-->
+	<select id="usersSelectAll" parameterClass="usersQuery"
+		resultMap="ECLP_USERS_RM">
+		<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+  			  <![CDATA[SELECT * FROM (SELECT ROWNUM AS NUMROW, c.* from   ( ]]>
+			</isNotEmpty>
+		</isNotEmpty>
+		select *
+		from ECLP_USERS where  STATUS in(0,1)
+		<isNotEmpty prepend="AND" property="account">
+			ACCOUNT like
+			concat(concat('%',#account#),'%')
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="realName">
+			NAME like
+			concat(concat('%',#realName#),'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="userType">
+			USER_TYPE = #userType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			STATUS = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ gmt_create >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ gmt_create <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+		</isNotEmpty>
+		<isEqual prepend="and" property="agentUserType" compareValue="2">
+			USER_TYPE in (1,2)
+		</isEqual>
+		<isNotEmpty prepend="AND" property="deptId">			
+               exists(select user_id from eclp_user_info where dept_id=#deptId# and status=1 and user_id is not null and ECLP_USERS.id=user_id)
+		</isNotEmpty>
+		order by GMT_MODIFY desc
+		<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+    			<![CDATA[ ) c  where rownum<=#pageLastItem#) WHERE NUMROW >= #pageFristItem#
+    			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<select id="selectByAuthIdCount" parameterClass="usersQuery" resultClass="java.lang.Integer">
+  		select count(distinct(u.id))
+			  from 
+			       ECLP_USER_ROLE      ur,
+			       ECLP_USERS          u,
+			       ECLP_ROLE           r
+			 where
+			   ur.role_id = r.id
+			   and ur.user_id = u.id
+			   and r.IS_DELETED = 'N'
+			   and r.status=1
+               and ur.Is_Deleted='N'
+			   and u.status &lt;&gt; 2
+			<isNotEmpty prepend="AND" property="account">
+				ACCOUNT like concat(concat('%',#account#),'%')
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="realName">
+				NAME like concat(concat('%',#realName#),'%')
+			</isNotEmpty>	
+			<isNotEmpty prepend="AND" property="status">
+				u.STATUS = #status:DECIMAL#
+			</isNotEmpty>   
+        	 <isNotEmpty prepend="AND" property="roleList">
+				R.ID IN
+			    <iterate conjunction="," open="(" close=")" property="roleList">
+				   #roleList[]#
+				</iterate>
+			 </isNotEmpty>
+  		</select>
+  
+  		<select id="selectByAuthId" parameterClass="usersQuery" resultMap="ECLP_USERS_RM">
+	  		<isNotEmpty property="pageFristItem">
+				<isNotEmpty property="pageLastItem">
+	  			  <![CDATA[SELECT * FROM (SELECT ROWNUM AS NUMROW, c.* from   ( ]]>
+				</isNotEmpty>
+			</isNotEmpty>
+  			select distinct U.ID,
+                U.ACCOUNT,
+                U.PASSWORD,
+                U.NAME,
+                U.STATUS,
+                U.USER_TYPE,
+                U.LAST_LOGIN_IP,
+                U.LAST_LOGIN_TIME,
+                U.LOGIN_NUM,
+                U.GMT_CREATE,
+                U.GMT_MODIFY,
+                U.DEFAULT_SUB_SYS
+				  from 
+			       ECLP_USER_ROLE      ur,
+			       ECLP_USERS          u,
+			       ECLP_ROLE           r
+					 where
+					   ur.role_id = r.id
+					   and ur.user_id = u.id
+					   and r.IS_DELETED = 'N'
+					   and r.status=1
+					   and ur.Is_Deleted='N'					    
+					   and u.status &lt;&gt; 2
+				   <isNotEmpty prepend="AND" property="account">
+					  ACCOUNT like concat(concat('%',#account#),'%')
+			        </isNotEmpty>
+					<isNotEmpty prepend="AND" property="realName">
+						NAME like concat(concat('%',#realName#),'%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="status">
+						u.STATUS = #status:DECIMAL#
+					</isNotEmpty>  		
+       				<isNotEmpty prepend="AND" property="roleList">
+						R.ID IN
+			    		<iterate conjunction="," open="(" close=")" property="roleList">
+				   			#roleList[]#
+						</iterate>
+			       </isNotEmpty>
+        	<isNotEmpty property="pageLastItem">
+    			<![CDATA[ ) c  where rownum<=#pageLastItem#) WHERE NUMROW >= #pageFristItem#
+    			]]>
+			</isNotEmpty>		
+			  order by  GMT_CREATE desc			
+  </select>
+  
+  	<select id="selectListByRoleList" parameterClass="usersQuery" resultMap="ECLP_USERS_RM">	  	
+  			select distinct U.ID,
+                U.ACCOUNT,
+                U.PASSWORD,
+                U.NAME,
+                U.STATUS,
+                U.USER_TYPE,
+                U.LAST_LOGIN_IP,
+                U.LAST_LOGIN_TIME,
+                U.LOGIN_NUM,
+                U.GMT_CREATE,
+                U.GMT_MODIFY,
+                U.DEFAULT_SUB_SYS
+				  from 
+			       ECLP_USER_ROLE      ur,
+			       ECLP_USERS          u,
+			       ECLP_ROLE           r
+					 where
+					   ur.role_id = r.id
+					   and ur.user_id = u.id
+					   and r.IS_DELETED = 'N'
+					   and r.status=1
+					   and ur.Is_Deleted='N'
+					   and u.status &lt;&gt; 2
+				   <isNotEmpty prepend="AND" property="account">
+					  ACCOUNT like concat(concat('%',#account#),'%')
+			        </isNotEmpty>
+					<isNotEmpty prepend="AND" property="realName">
+						NAME like concat(concat('%',#realName#),'%')
+					</isNotEmpty>
+					<isNotEmpty prepend="AND" property="status">
+						u.STATUS = #status:DECIMAL#
+					</isNotEmpty>		
+       				<isNotEmpty prepend="AND" property="roleList">
+						R.ID IN
+			    		<iterate conjunction="," open="(" close=")" property="roleList">
+				   			#roleList[]#
+						</iterate>
+			       </isNotEmpty>       
+			       order by U.GMT_CREATE desc
+  </select>
+  
+  
+  <select id="selectByRoleIdCount" parameterClass="usersQuery" resultClass="java.lang.Integer">
+  		select count(1) from  eclp_users u
+         where  exists (select 1 from eclp_user_role ur where u.id= ur.user_id and ur.is_deleted='N' and ur.role_id=#roleId#)
+        and  u.status=1  
+        <isNotEmpty prepend="AND" property="userType">
+			USER_TYPE = #userType#
+		</isNotEmpty>          
+ </select>
+ <select id="selectByRoleId" parameterClass="usersQuery" resultMap="ECLP_USERS_RM">
+  		<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+  			  <![CDATA[SELECT * FROM (SELECT ROWNUM AS NUMROW, c.* from   ( ]]>
+			</isNotEmpty>
+		</isNotEmpty>
+ 			select  ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, LAST_LOGIN_IP, LAST_LOGIN_TIME,
+            LOGIN_NUM, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS
+            from  eclp_users u
+         where  exists (select 1 from eclp_user_role ur where u.id= ur.user_id and ur.is_deleted='N' and ur.role_id=#roleId#)
+        and  u.status=1  
+        <isNotEmpty prepend="AND" property="userType">
+			USER_TYPE = #userType#
+		</isNotEmpty>   
+		 order by GMT_CREATE 
+       	<isNotEmpty property="pageLastItem">
+   			<![CDATA[ ) c  where rownum<=#pageLastItem#) WHERE NUMROW >= #pageFristItem#
+   			]]>
+		</isNotEmpty>				
+  </select>
+  
+   <select id="selectUserListByRoleId" resultMap="ECLP_USERS_RM">
+ 		select  ID, ACCOUNT, PASSWORD, NAME, STATUS, USER_TYPE, LAST_LOGIN_IP, LAST_LOGIN_TIME,
+            LOGIN_NUM, GMT_CREATE, GMT_MODIFY,DEFAULT_SUB_SYS
+            from  eclp_users u
+         where  exists (select 1 from eclp_user_role ur where u.id= ur.user_id and ur.is_deleted='N' and ur.role_id=#roleId#)
+        and  u.status=1  
+        order by GMT_CREATE
+      			
+  </select>
+  
+</sqlMap>

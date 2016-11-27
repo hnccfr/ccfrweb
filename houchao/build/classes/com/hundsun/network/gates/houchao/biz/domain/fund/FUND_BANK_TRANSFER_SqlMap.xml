@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FUND_BANK_TRANSFER">
+
+	<typeAlias alias="FundBankTransfer"
+		type="com.hundsun.network.gates.houchao.biz.domain.fund.FundBankTransfer" />
+
+	<!--
+		作者：guoyb
+		功能：记录指定账户的资金信息
+	-->
+	<insert id="insert"
+		parameterClass="FundBankTransfer">
+		<selectKey resultClass="long" keyProperty="id">
+			SELECT SEQ_FUND_BANK_TRANSFER.NEXTVAL AS ID FROM DUAL
+		</selectKey>
+		INSERT INTO FUND_BANK_TRANSFER
+		  (ID,
+		   BANK_NO,
+		   MONEY_TYPE,
+		   FUND_ACCOUNT,
+		   STOCK_ACCOUNT,
+		   TRANS_DATE,
+		   BANK_DATE,
+		   SOURCE_FLAG,
+		   TRANS_STATUS,
+		   TRANS_TYPE,
+		   BANK_ACCOUNT,
+		   TRANS_AMOUNT,
+		   BANK_BILL_NO,
+		   BANK_BAT_NO,
+		   INNER_BILL_NO,
+		   REPEAT_TIMES,
+		   BANK_ERROR_INFO,
+		   GMT_CREATE,
+		   GMT_MODIFY,
+		   BANK_ERROR_MSG)
+		VALUES
+		  (#id#,
+		   #bankNo#,
+		   #moneyType#,
+		   #fundAccount#,
+		   #stockAccount#,
+		   #transDate#,
+		   #bankDate#,
+		   #sourceFlag#,
+		   #transStatus#,
+		   #transType#,
+		   #bankAccount#,
+		   #transAmount#,
+		   #bankBillNo#,
+		   #bankBatNo#,
+		   #repeatTimes#,
+		   #innerBillNo#,
+		   #bankErrorInfo#,
+		   sysdate,
+		   sysdate,
+		   #bankErrorMsg#)
+	</insert>
+
+</sqlMap>

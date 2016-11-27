@@ -1,0 +1,86 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/projecttype/attriList.htm?tCode=$!{projectTypeAttri.proTypeCode}";
+}
+</script>
+<div class="main">
+  <h2>查看属性</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2">
+        <tr>
+          <th>属性key：</th>
+          <td>
+			$!{projectTypeAttri.keyName}
+		  </td>
+        </tr>
+		<tr>
+          <th>属性title：</th>
+          <td>
+			$!{projectTypeAttri.keyTitle}
+		  </td>
+        </tr>
+		<tr>
+          <th>属性类型：</th><!--html控件类型-->
+          <td>
+			$!{projectTypeAttri.inputTypeName}
+		  </td>
+        </tr>
+		<tr>
+          <th>预设值：</th>
+          <td>
+			$!{projectTypeAttri.text}
+		  </td>
+        </tr>
+		<tr>
+          <th>属性描述 ：</th>
+          <td>
+			$!{projectTypeAttri.remark}
+		  </td>
+        </tr>
+		<tr>
+          <th>是否必填：</th>
+          <td>
+			#if($!{projectTypeAttri.isRequired} == 0)
+				非必填
+			#else
+				必填
+			#end
+		  </td>
+        </tr>
+		<tr>
+          <th>验证规则：</th>
+          <td>
+			$!{projectTypeAttri.valueValidate}
+		  </td>
+        </tr>
+		<tr>
+          <th>状态：</th>
+          <td>
+			#if($!{projectTypeAttri.enable} == 0)
+				启用
+			#else
+				禁用
+			#end
+		  </td>
+        </tr>
+        <tr>
+          <th>排序号：</th>
+          <td>
+			$!{projectTypeAttri.rank}
+		  </td>
+        </tr>
+		
+        
+      </table>
+    </div>
+    </div>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>

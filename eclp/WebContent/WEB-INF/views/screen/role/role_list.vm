@@ -1,0 +1,170 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+
+$iDemand.addCss('jquery.ui.all')
+
+$iDemand.addJs("jquery.ui.core")
+$iDemand.addJs("jquery.ui.widget")
+
+$iDemand.addJs("jquery.ui.mouse")
+$iDemand.addJs("jquery.ui.draggable")
+$iDemand.addJs("jquery.ui.position")
+$iDemand.addJs("jquery.ui.resizable")
+$iDemand.addJs("jquery.ui.dialog")
+
+<script>
+	function deleteRole(roleId){
+		if(!confirm("确定删除?")){
+			return;
+		}
+		jQuery.ajax({
+			type: "POST",
+			url: "delete_role_check.htm",
+			data: "roleId=" + roleId,
+			async: false,
+			success: function(returnVal){
+				if(returnVal > 0){
+					alert("该角色已绑定用户,无法删除!");
+					return;
+				}
+				jQuery("#roleId").val(roleId);
+				jQuery("#submitForm").attr("action","$appServer/role/delete_role.htm");
+				jQuery("#submitForm").submit();
+			}
+		});
+	}
+
+	function changeRoleStatus(roleId, status){
+		jQuery("#roleId").val(roleId);
+		jQuery("#status").val(status);
+		jQuery("#submitForm").attr("action","$appServer/role/role_status_modify.htm");
+		jQuery("#submitForm").submit();
+	}
+	function assignAuth(roleId){
+
+	    var url='$!appServer/role/assign_auth.htm?roleId='+roleId ;
+
+	  　//　 window.showModalDialog(url,  '',' dialogWidth=850px, dialogHeight=600px,dialogTop=50px, dialogLeft=200px')
+	  　 window.open(url,  '',' width=850px, height=600px,top=50px, left=200px')
+	    // jQuery( "#dialog" ).dialog( "open" );
+
+		//return false;
+	}
+	$(function() {
+    	jQuery( "#dialog" ).dialog({
+    			autoOpen: false,
+    			width: 500,
+    			height: 240,
+    			modal: true,
+    			show: "blind",
+    			hide: "explode"
+    		});
+		})
+</script>
+<body>
+<div class="main">
+  <div class="tool">
+	#if($!adminAccess.has("ROLE_ADD"))
+		<span><a href="$appServer/role/role_add.htm" hidefocus="true" class="bt_add">新增角色</a></span>
+	#end
+  </div>
+
+  <form id="submitForm" action="" method="post">
+	<input type="hidden" name="roleId" id="roleId" value="">
+	<input type="hidden" name="status" id="status" value="">
+  </form>
+
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>角色列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>角色代码</th>
+        <th>角色名称</th>
+        <th>是否核心</th>
+		<th>角色类型</th>
+        <th>排序</th>
+		<th>备注</th>
+		<th>状态</th>
+        <th>操作</th>
+      </tr>
+      #foreach($role in $roleList)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+        <td>$!{role.code}</td>
+        <td>$!{role.displayName}</td>
+		<td>
+			#foreach($type in $enumRoleIsCore)
+              #if($!{role.isCore} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+        <td>
+			#if($!{role.roleType}==0)
+				超级管理员角色 
+			#else
+				普通角色
+			#end
+		</td>
+		<td>$!{role.sort}</td>
+		<td>$!{role.remark}</td>
+		<td>
+			#foreach($type in $enumRoleStatus)
+              #if($!{role.status} == $!{type.code})
+    			$!{type.desc}
+              #end
+			#end
+		</td>
+		<td>
+			#foreach($userRole in $userRoleList)
+				#if($!{userRole.roleId} == $!{role.id})
+					#set($userWithRole = 1)
+				#end
+			#end
+
+			#if($!userAgent.userType == 0 && $!role.isCore == 0)
+				<!-- 当前登录的用户类型为基础级,不显示基础数据的操作 -->
+			#elseif($!userAgent.userType == 1 && $!role.isCore == 0)
+				<!-- 当前登录的用户类型为开发级,不显示基础角色的操作 -->
+			#elseif($!userAgent.userType == 2 && $!role.isCore == 1)
+				<!-- 当前登录的用户类型为应用级,不显示核心角色的操作 -->
+			#elseif($!userWithRole != 1 && $!{role.roleType}==1)
+				#if($!adminAccess.has("ROLE_EDIT"))
+					<a href="$appServer/role/role_edit.htm?roleId=$!{role.id}">修改</a>
+				#end
+    			#if($!{role.status} == 2 && $!adminAccess.has("ROLE_ENABLE"))
+        			<a href="#" onclick="javascript:changeRoleStatus($!{role.id},1);">启用</a>
+    			#elseif($!{role.status} == 1 && $!adminAccess.has("ROLE_DISABLE"))
+    				<a href="#" onclick="javascript:changeRoleStatus($!{role.id},2);">禁用</a>
+    			#end
+				#if($!adminAccess.has("ROLE_DEL"))
+					<a href="#" onclick="javascript:deleteRole($!{role.id});">删除</a>
+    			#end
+
+				#if($!adminAccess.has("ROLE_AUTHORIZATION"))
+					<a href="#" onclick="javascript:assignAuth($!{role.id});">授权</a>
+				#end
+				#if($!adminAccess.has("ROLE_VIEW_USER"))
+					<a  href="$appServer/role/role_user.htm?roleId=$!{role.id}">查看用户</a>
+    			#end
+
+			#end
+			#set($userWithRole = 0)
+
+		</td>
+      </tr>
+      #end
+    </table>
+  </div>
+  <!-- 列表模块 END -->
+</div>
+
+<div id="dialog" title="商品列表">
+	## $contain.get("/role/assign_auth.htm")
+</div>
+
+</body>

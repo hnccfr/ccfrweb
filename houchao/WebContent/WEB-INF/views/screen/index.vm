@@ -1,0 +1,13 @@
+<br/><br/><br/><br/><br/>
+
+#*
+<li></li>
+<li><a href="$appServer.get('fund/open_account_page.htm')">开户销户</a></li>
+<li></li>
+<li><a href="$appServer.get('fund/bank_fund_out.htm')">银行转交易所</a></li>
+<li></li>
+<li><a href="$appServer.get('fund/bank_fund_in.htm')">交易所转银行</a></li>
+<li></li>
+<li><a href="$appServer.get('/fund/current_trade_day.htm')">当前交易日</a></li>
+<li></li>
+<br/><br/><br/><br/><br/><br/> *#

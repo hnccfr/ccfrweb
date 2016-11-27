@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_ORDER_CC" >
+<typeAlias alias="TradeOrderCc" type="com.hundsun.network.gates.genshan.biz.domain.order.TradeOrderCc"/>
+<typeAlias alias="TradeOrderCcQuery" type="com.hundsun.network.gates.genshan.biz.domain.query.TradeOrderCcQuery"/>
+  <resultMap id="TradeOrderCcResult" class="TradeOrderCc" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORDER_CC_NUM" property="orderCcNum" jdbcType="VARCHAR" />
+    <result column="CC_STARTOR" property="ccStartor" jdbcType="VARCHAR" />
+    <result column="CC_TYPE" property="ccType" jdbcType="CHAR" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="SELLER_ACCOUNT" property="sellerAccount" jdbcType="VARCHAR" />
+    <result column="BUYER_ACCOUNT" property="buyerAccount" jdbcType="VARCHAR" />
+   
+    <result column="ATTACTMENT" property="attactment" jdbcType="VARCHAR" />
+    <result column="SELLER_AMOUNT" property="sellerAmount" jdbcType="DECIMAL" />
+    <result column="SELLER_CREDIT" property="sellerCredit" jdbcType="DECIMAL" />
+    <result column="BUYER_AMOUNT" property="buyerAmount" jdbcType="DECIMAL" />
+    <result column="BUYER_CREDIT" property="buyerCredit" jdbcType="DECIMAL" />
+    
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="GMT_CREATOR" property="gmtCreator" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="AUDITOR" property="auditor" jdbcType="VARCHAR" />
+    <result column="AUDIT_DATE" property="auditDate" jdbcType="TIMESTAMP" />
+    <result column="COMPLAINED_TYPE" property="complainedType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="extendsTradeOrderCcResult" class="TradeOrderCc" extends="TradeOrderCcResult" >
+   	<result column="DESCRIPT" property="descript" jdbcType="VARCHAR" />
+  	<result column="REASON" property="reason" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="CLOB" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, ORDER_CC_NUM, CC_STARTOR, CC_TYPE, ORDER_NO, 
+    SELLER_ACCOUNT, BUYER_ACCOUNT,ATTACTMENT, SELLER_AMOUNT, SELLER_CREDIT, 
+    BUYER_AMOUNT, BUYER_CREDIT, STATUS, GMT_CREATOR, GMT_MODIFY, 
+    CREATOR, OPERATOR, AUDITOR, AUDIT_DATE,COMPLAINED_TYPE
+  </sql>
+  
+  <sql id="Extends_Column_List" >
+    ID, ORDER_CC_NUM, CC_STARTOR, CC_TYPE, ORDER_NO, 
+    SELLER_ACCOUNT, BUYER_ACCOUNT, DESCRIPT, ATTACTMENT, SELLER_AMOUNT,
+     SELLER_CREDIT, BUYER_AMOUNT, BUYER_CREDIT,  REASON, STATUS, 
+     GMT_CREATOR, GMT_MODIFY, CREATOR, OPERATOR, AUDITOR, 
+     AUDIT_DATE,COMPLAINED_TYPE,REMARK
+  </sql>
+   
+  <!-- 根据投诉单编号查询 -->
+  <select id="selectedByOrderCcNum" resultMap="extendsTradeOrderCcResult" parameterClass="string" >
+    select 
+    <include refid="Extends_Column_List" />
+    from TRADE_ORDER_CC
+    where ORDER_CC_NUM = #num:VARCHAR#
+  </select>
+  
+  <!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+	         	]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+				<![CDATA[
+					) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+        		]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="queryTradeOrderCc_where">
+	   <dynamic prepend="where">
+	   		<isNotEmpty prepend="and" property="creator">
+				<![CDATA[  CREATOR = #creator#]]>
+			</isNotEmpty>
+	   		<isNotEmpty prepend="and" property="ccStartor">
+				<![CDATA[  CC_STARTOR = #ccStartor#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="ccType">
+				<![CDATA[  CC_TYPE = #ccType#]]>
+			</isNotEmpty>
+	   
+	  		 <isNotEmpty prepend="and" property="orderCcNum">
+				<![CDATA[ ORDER_CC_NUM like '%'||#orderCcNum#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderNo">
+				<![CDATA[  ORDER_NO like '%'||#orderNo#||'%']]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="gmtCreateFrom">
+				<![CDATA[ TRUNC(GMT_CREATOR) >= TRUNC(#gmtCreateFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="gmtCreateTo">
+				<![CDATA[ TRUNC(GMT_CREATOR) <= TRUNC(#gmtCreateTo#) ]]>
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="and" property="complainedType">
+				<![CDATA[  COMPLAINED_TYPE = #complainedType#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sellerAccount">
+				<![CDATA[  SELLER_ACCOUNT = #sellerAccount#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="buyerAccount">
+				<![CDATA[  BUYER_ACCOUNT = #buyerAccount#]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="status">
+				<![CDATA[  STATUS = #status#]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryTradeOrderCcCount" parameterClass="TradeOrderCcQuery" resultClass="int">
+		select  count(1) from 
+			 TRADE_ORDER_CC
+		<include refid="queryTradeOrderCc_where"/>
+	</select>
+
+	<select id="queryTradeOrderCc" parameterClass="TradeOrderCcQuery" resultMap="TradeOrderCcResult">
+		<include refid="pageSQLHead"/>
+		 select  
+		 <include refid="Base_Column_List" />
+		 from TRADE_ORDER_CC
+		<include refid="queryTradeOrderCc_where"/> 
+		order by STATUS desc,GMT_CREATOR Desc
+		<include refid="pageSQLFoot"/>
+	</select>
+  
+</sqlMap>

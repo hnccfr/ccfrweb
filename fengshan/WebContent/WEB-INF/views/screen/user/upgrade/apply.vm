@@ -1,0 +1,107 @@
+#set($title = '交易权限申请')
+#set($layout = 'layout/default.vm')
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/upgrade.css" />
+<script src="$!{imageServer}/scripts/user/upgrade.js" type="text/javascript"></script>
+
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+		<ul>
+			<li><a class="cursor" href="#">交易权限</a></li>
+        </ul>
+    </div>
+	<div class="right-body">
+        <div id="success" class="mag-t2" style="display:none">
+        	成功信息
+        </div>
+        <div id="fail" class="mag-t1" style="display:none"> 
+        	失败信息
+        </div>
+		<div class="formBox">
+			<div class="content">
+				##<h4><span>当前交易权限信息</span></h4>
+				<table class="c2">
+                    <tr>
+                        <th>当前交易权限：</th>
+                        <td>$!{userRole.description}#if($!{userRole.description} != $!{userAgent.roleName}) <span class="red">尊敬的用户，您的交易权限已经发生变化，请退出后重新登录获取最新信息 </span> #end</td>
+                    </tr>
+                </table>
+				#if(${fundInfo.fundAccount})
+					<table class="upgrade_table">
+                        <tr>
+							<td colspan="2">
+                                <span class="red">尊敬的用户，由于你的资金账户尚未激活，您的交易权限申请将不会通过审核。以下是您的资金账号信息，请联系管理员激活</span>
+								</br>
+                                <span class="red">在激活前请确认您的开户银行及银行账号是否准确，可在资料管理里修改以便资金账户的激活</span>
+							</td>
+						</tr>
+                        <tr>
+                            <th>资金账号：</th>
+                            <td>$!{fundInfo.fundAccount}</td>
+						</tr>
+                        <tr>
+                            <th>开户银行：</th>
+                            <td>$!{fundInfo.bankDesc}</td>
+						</tr>
+                        <tr>
+                            <th>银行账号：</th>
+                            <td>$!{fundInfo.bankCard}</td>
+						</tr>
+                    </table>
+				#end
+                <h4><span>当前审核结果</span></h4>
+				<table class="c2">
+					#if(!$!{userAuditInfo.applyLevel})
+						<tr>
+                            <th></th>
+                            <td>您没有提交交易权限申请，因此没有交易权限审核结果</td>
+                        </tr>
+					#else
+    					<tr>
+                            <th>申请交易权限：</th>
+                            <td>$!{userAuditInfo.applyLevel}</td>
+                        </tr>
+						#if(!$!{userAuditInfo.auditNodeRemark})
+        					<tr>
+        						<th>审核结果：</th>
+                                <td>您的交易权限申请正在审核中，请耐心等待</td>
+                            </tr>
+						#else
+        					<tr>
+        						<th>审核结果：</th>
+                                <td>#direct($!{userAuditInfo.auditNodeRemark})</td>
+                            </tr>							
+        					<tr>
+        						<th>下一步审核：</th>
+                                <td>#if($!{userAuditInfo.auditNode} == 'Z') 无 #else $!{userAuditInfo.auditNodeDesc} #end</td>
+        					</tr>
+						#end
+					#end					
+                </table>
+				<h4><span>可申请交易权限信息</span></h4>
+				<div id="list" class="listBox">
+        			<table>
+        				<tr>
+                            <th width="20%">交易权限</th>
+                            <th width="70%">权限描述</th>
+                            <th width="10%">操作</th>
+                        </tr>
+        				#foreach($!{list} in $!{userRoleList})
+        					<tr>
+                                <td>$!{list.description}</td>
+                                <td>&nbsp;$!{list.remark}</td>
+                                <td><a href="JavaScript:upGrade('$!{list.name}')">申请</a></td>
+                            </tr>
+							
+						#end
+						#if($userRoleList.size() == 0)
+							<tr>
+                                <td colspan="3">没有可申请的角色</td>
+                            </tr>
+						#end
+					</table>			  
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="b"></div>
+</div>

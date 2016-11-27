@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ProjectTypeAttri" >
+ <typeAlias alias="ProjectTypeAttri" type="com.hundsun.network.gates.wulin.biz.domain.project.ProjectTypeAttri"/>
+  <resultMap id="BaseResultMap" class="ProjectTypeAttri" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PRO_TYPE_CODE" property="proTypeCode" jdbcType="VARCHAR" />
+    <result column="KEY_NAME" property="keyName" jdbcType="VARCHAR" />
+    <result column="KEY_TITLE" property="keyTitle" jdbcType="VARCHAR" />
+    <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+    <result column="TEXT" property="text" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ENABLE" property="enable" jdbcType="DECIMAL" />
+    <result column="RANK" property="rank" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="IS_REQUIRED" property="isRequired" jdbcType="DECIMAL" />
+    <result column="VALUE_VALIDATE" property="valueValidate" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, PRO_TYPE_CODE, KEY_NAME, KEY_TITLE, INPUT_TYPE, TEXT, REMARK, ENABLE, RANK, GMT_CREATE, 
+    GMT_MODIFY, OPERATOR, IS_REQUIRED, VALUE_VALIDATE
+  </sql>
+	
+	<!-- ################################## -->
+	<select id="queryProjectTypeAttriByTypeCodeList"
+		resultMap="BaseResultMap" parameterClass="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from project_type_attri t_pta
+		where ENABLE=0 and PRO_TYPE_CODE  in (
+            <iterate property="codeList" conjunction=",">
+                #codeList[]#
+            </iterate>)
+		
+		order by RANK desc
+	</select>
+	<!--  -->
+</sqlMap>

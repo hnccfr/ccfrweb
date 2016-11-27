@@ -1,0 +1,334 @@
+#set($layout = '')
+#if(${userAgent})
+#set($qiantangServer = $qiantangServer)
+#set($fengshanServer = $appServer)
+<script src="$!{imageServer}/scripts/user/menu_cookie.js" type="text/javascript"></script>
+<div class="wrapperLeft">
+  <div class="t"> </div>
+  <div class="c">
+	#if($!userAgent.haveFunction("BIZ_U_USER_PASSWORD_RESET")
+            ||$!userAgent.haveFunction("BIZ_U_USER_INFO_EDIT") || $!userAgent.haveFunction("BIZ_U_USER_UPGRADE")
+            ||$!userAgent.haveFunction("BIZ_R_USER_MESSAGE")||$!userAgent.haveFunction("BIZ_R_USER_MNG"))
+    <div>
+      <h3 class="t2">个人管理</h3>
+      <ul  class="menum default" id="tag1">
+        #*
+		#if($!userAgent.haveFunction("BIZ_U_USER_ADDRESS"))
+        <li #if($!{systemAgent.menuId}==1001)class="currently"#end>
+		<a href="$!{fengshanServer}/user/address/operate.htm?_m_=1001&type=P">地址管理</a>
+        </li>
+        #end 
+		*#
+        #if($!userAgent.haveFunction("BIZ_U_USER_PASSWORD_RESET"))
+        <li #if($!{systemAgent.menuId}==1002)class="currently"#end>
+        <a href="$!{fengshanServer}/user/passwordreset.htm?_m_=1002">密码管理</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_USER_INFO_EDIT"))
+        <li #if($!{systemAgent.menuId}==1004)class="currently"#end>
+        <a href="$!{fengshanServer}/user/edit.htm?_m_=1004">资料管理</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_USER_UPGRADE"))
+        <li #if($!{systemAgent.menuId}==1005)class="currently"#end>
+        <a href="$!{fengshanServer}/user/upgrade/apply.htm?_m_=1005">交易权限申请</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_R_USER_MESSAGE"))
+        <li #if($!{systemAgent.menuId}==1007)class="currently"#end>
+        <a href="$!{fengshanServer}/user/message/list.htm?_m_=1007">站内信查看</a>
+        </li>
+        #end
+        <li class="currently"><a href="$!{fengshanServer}/home/announcement/list.htm" target="_blank">公告列表</a></li>
+		#*
+		#if($!userAgent.haveFunction("BIZ_R_ACCOUNT_INFO"))
+        <li class="currently"><a href="$!{qiantangServer}/merchant/account/info.htm">融资账户信息</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_AGGREEMENT"))
+		<li class="currently"><a href="$!{qiantangServer}/merchant/aggreement/info.htm">融资协议信息</a></li>
+		#end
+		*#
+		#if($!userAgent.haveFunction("BIZ_R_USER_MNG") && $!userAgent.haveFunction("BIZ_R_RESET_PASSWORD") && !$!userAgent.haveFunction("BIZ_U_USER_PASSWORD_RESET"))
+        <li class="currently"><a href="$!{qiantangServer}/user/res_password.htm">密码修改</a></li>
+		#end
+		##if($!userAgent.haveFunction("BIZ_R_PLAT_NOTICE"))
+        ##<li class="currently"><a href="$!{qiantangServer}/user/res_password.htm">平台通知</a></li>
+		##end
+      </ul>
+    </div>
+	#end
+    #if($!userAgent.haveFunction("BIZ_U_FUND_IN") || $!userAgent.haveFunction("BIZ_U_FUND_OUT")
+    ||$!userAgent.haveFunction("BIZ_U_FUND_INFO") ||$!userAgent.haveFunction("BIZ_U_FUND_REPORT")
+    ||$!userAgent.haveFunction("BIZ_U_FUND_DETAIL")||$!userAgent.haveFunction("BIZ_U_FUND_PASSWORD_RESET"))
+    <div>
+      <h3 class="t2">资金账户管理</h3>
+      <ul  class="menum" id="tag2">
+		#*
+        #if($!userAgent.haveFunction("BIZ_U_FUND_IN"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/funds/in.htm">入金(银转证)</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_FUND_OUT"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/funds/out.htm">出金(证转银)</a>
+        </li>
+        #end
+		*#
+        #if($!userAgent.haveFunction("BIZ_U_FUND_INFO"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/funds/info.htm">资金账户查询</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_FUND_REPORT"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/funds/report.htm">报表查看</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_FUND_DETAIL"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/funds/detail.htm">资金明细</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_U_FUND_PASSWORD_RESET"))
+        <li #if($!{systemAgent.menuId}==11003)class="currently"#end>
+        <a href="$!{fengshanServer}/funds/passwordreset.htm?_m_=11003">修改资金密码</a>
+        </li>
+        #end
+      </ul>
+    </div>
+    #end
+    #if($!userAgent.haveFunction("BIZ_R_PROJECT_SELLER_LIST") || $!userAgent.haveFunction("BIZ_C_PROJECT_SELLER_ADD_PROJECT")
+    ||$!userAgent.haveFunction("BIZ_R_WISHORDER_SELLER_LIST") || $!userAgent.haveFunction("BIZ_O_SELL_ORDERLIST_LIST")
+    ||$!userAgent.haveFunction("BIZ_R_ORDERCC_SELLER_COMPLAIN_LIST"))
+    <div>
+      <h3 class="t2">我是卖家</h3>
+      <ul class="menum" id="tag3">
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_SELLER_LIST"))
+        <li #if($!{systemAgent.menuId}==2003)class="currently"#end>
+        <a href="$!{fengshanServer}/project/seller/list.htm?_m_=2003">挂牌项目列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_C_PROJECT_SELLER_ADD_PROJECT"))
+        <li #if($!{systemAgent.menuId}==2001)class="currently"#end>
+        <a href="$!{fengshanServer}/project/seller/add.htm?_m_=2001">新增挂牌项目</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_R_WISHORDER_SELLER_LIST"))
+        <li #if($!{systemAgent.menuId}==9001)class="currently"#end>
+        <a href="$!{fengshanServer}/tradeWishOrder/sell.htm?_m_=9001">销售意向单列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_O_SELL_ORDERLIST_LIST"))
+        <li  #if($!{systemAgent.menuId}==6001)class="currently"#end>
+        <a href="$!{fengshanServer}/order/sell/list.htm?_m_=6001">销售订单列表</a>
+        </li>
+		#end
+		#*
+        #if($!userAgent.haveFunction("BIZ_R_ORDERCC_SELLER_COMPLAIN_LIST"))
+        <li #if($!{systemAgent.menuId}==10001)class="currently"#end>
+        <a href="$!{fengshanServer}/complain/sell/complain.htm?_m_=10001">卖家投诉管理</a>
+        </li>
+        #end
+		*#
+        ###if($!userAgent.haveFunction("BIZ_R_ORDERCC_SELLER_COMPLAINED_LIST"))
+        ##	<li #if($!{systemAgent.menuId}==10002)class="currently"#end>
+        ##		<a href="$!{fengshanServer}/complain/sell/complained.htm?_m_=10002">我收到的投诉</a>
+        ##	</li>
+        ###end
+      </ul>
+    </div>
+    #end
+    #if($!userAgent.haveFunction("BIZ_R_PROJECT_BUYER_LIST") ||$!userAgent.haveFunction("BIZ_C_PROJECT_BUYER_ADD_PROJECT")
+    ||$!userAgent.haveFunction("BIZ_R_WISHORDER_BUYER_LIST") ||$!userAgent.haveFunction("BIZ_O_BUY_ORDERLIST_LIST")
+    ||$!userAgent.haveFunction("BIZ_R_ORDERCC_BUYER_COMPLAIN_LIST"))
+    <div>
+      <h3 class="t2">我是买家</h3>
+      <ul class="menum" id="tag4">
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_BUYER_LIST"))
+        <li #if($!{systemAgent.menuId}==2004)class="currently"#end>
+        <a href="$!{fengshanServer}/project/buyer/list.htm?_m_=2004">挂牌项目列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_C_PROJECT_BUYER_ADD_PROJECT"))
+        <li #if($!{systemAgent.menuId}==2002)class="currently"#end>
+        <a href="$!{fengshanServer}/project/buyer/add.htm?_m_=2002">新增挂牌项目</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_R_WISHORDER_BUYER_LIST"))
+        <li #if($!{systemAgent.menuId}==9002)class="currently"#end>
+        <a href="$!{fengshanServer}/tradeWishOrder/buy.htm?_m_=9002">采购意向单列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_O_BUY_ORDERLIST_LIST"))
+        <li #if($!{systemAgent.menuId}==5001)class="currently"#end>
+        <a href="$!{fengshanServer}/order/buy/list.htm?_m_=5001">采购订单列表</a>
+        </li>
+		#end
+		#*
+        #if($!userAgent.haveFunction("BIZ_R_ORDERCC_BUYER_COMPLAIN_LIST"))
+        <li #if($!{systemAgent.menuId}==10004)class="currently"#end>
+        <a href="$!{fengshanServer}/complain/buy/complain.htm?_m_=10004">买家投诉管理</a>
+        </li>
+        #end
+		*#
+        ###if($!userAgent.haveFunction("BIZ_R_ORDERCC_BUYER_COMPLAINED_LIST"))
+        ##<li #if($!{systemAgent.menuId}==10005)class="currently"#end>
+        ##		<a href="$!{fengshanServer}/complain/buy/complained.htm?_m_=10005">我收到的投诉</a>
+        ##</li>
+        ###end
+      </ul>
+    </div>
+	#end
+	#*
+    #if($!userAgent.haveFunction("BIZ_R_EVALUATE_LIST"))
+    <div>
+      <h3 class="t2">评价管理</h3>
+      <ul id="tag5" class="menum">
+        #if($!userAgent.haveFunction("BIZ_R_EVALUATE_LIST"))
+        <li #if($!{systemAgent.menuId}==8001)class="currently"#end>
+			<a href="$!{fengshanServer}/evaluate/list/buyer.htm?_m_=8001">评价管理</a>
+        </li>
+        #end
+      </ul>
+    </div>
+    #end
+	*#
+        #if($!userAgent.haveFunction("BIZ_P_PROJECT_LIST_WAIT") || $!userAgent.haveFunction("BIZ_P_PROJECT_LIST_CLOSE"))
+        <div>
+        <h3 class="t2">拍卖师空间</h3>
+        <ul id="tag2" class="menum">
+        #if($!userAgent.haveFunction("BIZ_P_PROJECT_LIST_WAIT"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/auctioneer/waitprojectlist.htm?_m_=7001">待主持项目列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_P_PROJECT_LIST_CLOSE"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/auctioneer/closeprojectlist.htm?_m_=7002">已结束项目列表</a>
+        </li>
+        #end
+      </ul>
+    </div>
+    #end
+    #if($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_WAIT")
+    || $!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_CLOSE"))
+    <div>
+      <h3 class="t2">评审员空间</h3>
+      <ul id="tag2" class="menum">
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_WAIT"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/reviewer/waitreviewprolist.htm">待评审项目列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_CLOSE"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/reviewer/closereviewprolist.htm">已评审项目列表</a>
+        </li>
+        #end
+      </ul>
+    </div>
+    ##end
+#*
+    #elseif($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_WAITU")
+    || $!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_CLOSEU"))
+    <div>
+      <h3 class="t2">项目评审管理</h3>
+      <ul id="tag6" class="menum">
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_WAITU"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/reviewer/waituserprolist.htm">待评审项目列表</a>
+        </li>
+        #end
+        #if($!userAgent.haveFunction("BIZ_R_PROJECT_REVIEWER_LIST_CLOSEU"))
+        <li class="currently">
+        <a href="$!{fengshanServer}/auction/reviewer/closeuserprolist.htm">已评审项目列表</a>
+        </li>
+        #end
+      </ul>
+    </div>
+*#
+	#end
+	#if($!userAgent.haveFunction("BIZ_R_INFO_LIST") || $!userAgent.haveFunction("BIZ_C_INFO_ADD"))
+    <div>
+	<h3 class="t2">供求信息</h3>
+		<ul id="tag7" class="menum">
+			#if($!userAgent.haveFunction("BIZ_R_INFO_LIST"))
+			<li #if($!{systemAgent.menuId}==20001)class="currently"#end>
+				<a href="$!{appServer}/supplydemand/list.htm?_m_=20001">供求信息列表</a>
+			</li>
+			#end
+			#if($!userAgent.haveFunction("BIZ_C_INFO_ADD"))
+			<li #if($!{systemAgent.menuId}==20002)class="currently"#end>
+				<a href="$!{appServer}/supplydemand/add.htm?_m_=20002">发布供求信息</a>
+			</li>
+			#end
+		</ul>			
+     </div>
+	#end
+	#* 
+	#if($!userAgent.haveFunction("BIZ_R_FINANCING_MNG"))
+    <div>
+      <h3 class="t2">融资管理</h3>
+      <ul id="tag8" class="menum">
+		#if($!userAgent.haveFunction("BIZ_R_WAREHOUSE_INFO"))
+        <li class="currently"><a href="$!{qiantangServer}/warehouse/info_list.htm">电子仓单信息</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_OUT_DEPOSI_APP"))
+		<li class="currently"><a href="$!{qiantangServer}/warehouse/out_depository/list_self.htm">出库申请信息</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_APPLICATION"))
+        <li class="currently"><a href="$!{qiantangServer}/merchant/application/app_list.htm">融资申请列表</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_WAREHOUSE_AUDIT"))
+		<li class="currently"><a href="$!{qiantangServer}/warehouse/audit/audit_list.htm">电子仓单审核</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_DAILY_PRICE"))
+		<li class="currently"><a href="$!{qiantangServer}/warehouse/price/list.htm">货物每日价格</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_INSPECT_GOODS"))
+		<li class="currently"><a href="$!{qiantangServer}/coll/list.htm">待抽检质押物列表</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_INSPECT_LIST"))
+		<li class="currently"><a href="$!{qiantangServer}/inspect/list.htm">货物抽检记录</a></li>
+		#end
+        #if($!userAgent.haveFunction("BIZ_R_APPLICATION_AUDIT"))
+		<li class="currently"><a href="$!{qiantangServer}/merchant/application/app_chk_list.htm">融资申请审核</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_WAREHOUSE_CHANGE"))
+		<li class="currently"><a href="$!{qiantangServer}/warehouse/change/list.htm">货权转移确认</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_OUT_DEPOSITORY"))
+		<li class="currently"><a href="$!{qiantangServer}/warehouse/out_depository/list.htm">出库单审核</a></li>
+		#end
+		#if($!userAgent.haveFunction("BIZ_R_COLL_ACK"))
+		<li class="currently"><a href="$!{qiantangServer}/merchant/application/coll_ack_list.htm">质押物信息确认</a></li>
+		#end
+	  </ul>
+    </div>
+	#end
+	#if($!userAgent.haveFunction("BIZ_R_LOAN_MNG"))
+    <div>
+      <h3 class="t2">贷款管理</h3>
+      <ul  id="tag9" class="menum">
+		#if($!userAgent.haveFunction("BIZ_R_LOAN_INFO"))
+        <li class="currently"><a href="$!{qiantangServer}/merchant/loan/loan_list.htm">贷款信息</a></li>
+		#end
+	  </ul>
+    </div>
+	#end
+	*#
+	#if($!userAgent.haveFunction("BIZ_R_BLACKLIST_MNG"))
+	<div >
+		<h3 class="t2">黑名单管理</h3>
+		<ul id="tag10" class="menum">
+			#if($!userAgent.haveFunction("BIZ_R_BLACKLIST"))
+			<li class="currently"><a href="$!qiantangServer.get('/blacklist/list.htm')">黑名单</a></li>
+			#end
+        </ul>
+    </div>
+	#end
+  </div>
+  <div class="b"></div>
+</div>
+#end

@@ -1,0 +1,243 @@
+#set($layout = 'layout/blank.vm')
+
+$iDemand.addCss('ztree')
+$iDemand.addJs("ztree")
+$iDemand.addJs("jquery.form")
+<script type="text/javascript">
+  <!--
+	var zTree1;
+	var setting;
+	var zNodes =[];
+	setting = {
+			rootPID : -1,
+			checkable: true,
+			checkType : { "Y": "ps", "N": "ps" },
+			async: true,
+			asyncUrl: "$!{appServer}/role/treeContent.htm",  //获取节点数据的URL地址
+			asyncParam: ["pId","id"],  //获取节点数据时，必须的数据名称，例如：id、name
+			callback:{
+				//beforeRename: zTreeBeforeRename,
+				beforeAsync: zTreeBeforeAsync,
+				asyncSuccess: zTreeOnAsyncSuccess,
+				asyncError: zTreeOnAsyncError,
+				beforeClick: zTreeBeforeClick
+
+			},
+			iconTypes: [
+            	{ type:"1", icon:"$!{appServer}/images/icon/pic1.gif", 
+            				iconOpen:"$!{appServer}/images/icon/pic1.gif", 
+            				iconClose:"$!{appServer}/images/icon/pic1.gif" },
+            	{ type:"2", icon:"$!{appServer}/images/zTree/folder_Close.gif", 
+            				iconOpen:"$!{appServer}/images/zTree/folder_Close.gif", 
+            				iconClose:"$!{appServer}/images/zTree/folder_Close.gif" },
+            	{ type:"3", icon:"$!{appServer}/images/icon/set.gif", 
+            				iconOpen:"$!{appServer}/images/icon/set.gif", 
+            				iconClose:"$!{appServer}/images/icon/set.gif" },
+            	{ type:"4", icon:"$!{appServer}/images/icon/set2.gif", 
+            				iconOpen:"$!{appServer}/images/icon/set2.gif", 
+            				iconClose:"$!{appServer}/images/icon/set2.gif" }
+            ]
+	};
+	var opreatePool = [];
+	var lastNode = null;
+	var poolCursor = -1;
+	var poolMax = 20;
+	
+	
+	
+	$(document).ready(function(){
+		refreshTree();
+	});
+	
+	function zTreeBeforeClick(treeId, treeNode){	
+	var roleId = jQuery("#roleId").val();
+	  var options = {
+        target:     '#assignBody',
+        url:        '/role/assign_auth_body.htm?authId='+treeNode.id,
+		beforeSubmit:showRequest,		
+        success: showResponse  	
+	  };
+	  jQuery('#form2').ajaxForm(options);
+	  jQuery('#form2').submit();
+	}
+	function showRequest(formData, jqForm, options) { 
+	   return true; 
+    }
+	function showResponse(responseText, statusText)  { 
+	}
+
+	function zTreeBeforeAsync(treeId, treeNode) {
+		var hasParent = isParent( treeNode );
+		if( !hasParent ){
+			return false;
+		}
+		
+		treeNode.isParent = hasParent;
+	}
+	function isParent( treeNode ){
+		if( treeNode.type == "4" ){
+			return false;
+		}
+		result = true;
+		jQuery.ajax({
+			async: false,
+			type: "POST",
+			url: "$!{appServer}/role/isParent.htm",
+			data: { subSystemId:treeNode.pId, id:treeNode.id },
+			success: function( data ) {
+				try {
+					result = data;
+				} catch(err) {
+					result = false;
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				result = false;
+			}
+		});
+		return result;
+	}
+	
+	function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+		if (treeNode) {
+			$("#onAsyncSuccessNode").html( "[" + getTime() + "]  treeId=" + treeId + ";<br/>&nbsp;tId=" + treeNode.tId + "; Name=" + treeNode.name );
+		} else {
+			$("#onAsyncSuccessNode").html( "[" + getTime() + "]  treeNode is Root!");
+		}
+	}
+
+	function zTreeOnAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
+		if (treeNode) {
+			$("#onAsyncErrorNode").html( "[" + getTime() + "]  treeId=" + treeId + ";<br/>&nbsp;tId=" + treeNode.tId + "; Name=" + treeNode.name );
+		} else {
+			$("#onAsyncErrorNode").html( "[" + getTime() + "]  treeNode is Root!");
+		}
+	}
+
+	function refreshTree(asyncUrl) {
+		$("#getUrl").html("");
+		$("#onAsyncSuccessNode").html("<br/>");
+		$("#onAsyncErrorNode").html("<br/>");
+		zNodes =[
+    		#direct($!{subSysList})
+			];
+			
+		zTree1 = $("#treeDemo").zTree(setting, zNodes);
+	}
+	
+	function setRenameBtn(treeNode) {
+		if( treeNode.pId == -1 ){
+			return false;
+		}
+		return true;
+	}
+
+	function reloadAsync() {
+//		alert( "in reloadAsync!!!" );
+		var treeNode = zTree1.getSelectedNode();
+		if (!treeNode) {
+			alert("请先选中一个节点");
+			return;
+		}
+		var parent = isParent( treeNode );;
+		if( !parent ){
+			return false;
+		}
+		treeNode.isParent = parent;
+		zTree1.reAsyncChildNodes(treeNode, "add");
+	}
+	function getTime() {
+		var now= new Date();
+		var hour=now.getHours();
+		var minute=now.getMinutes();
+		var second=now.getSeconds();
+		return (hour+":"+minute+":"+second);	
+	}
+	function expandAll(expandSign) {
+		zTree1.expandAll(expandSign);
+	}
+	function moveTreeNode(move) {
+		var srcNode = zTree1.getSelectedNode();
+		if (!srcNode) {
+			alert("请先选中一个节点");
+			return;
+		}
+		var moveType = "inner";
+		var targetNode = "";
+		if (move == "up") {
+			moveType = "before";
+			targetNode = getPreTreeNode(srcNode);
+		} else if (move == "down") {
+			moveType = "after";
+			targetNode = getNextTreeNode(srcNode);
+		}
+		if (srcNode && targetNode) {
+			setOperatePool();
+			zTree1.moveNode(targetNode, srcNode, moveType);
+		}	
+		getNodes();
+		zTree1.selectNode(srcNode);
+	}
+	function getPreTreeNode(treeNode) {
+		if (treeNode.isFirstNode) return null;
+		var nodes = treeNode.parentNode ? treeNode.parentNode.nodes : zTree1.getNodes();
+		var preNode;
+		for (var i=0; i<nodes.length; i++) {
+			if (nodes[i] == treeNode) {
+				return preNode;
+			}
+			preNode = nodes[i];
+		}
+	}
+	function getNextTreeNode(treeNode) {
+		if (treeNode.isLastNode) return null;
+		var nodes = treeNode.parentNode ? treeNode.parentNode.nodes : zTree1.getNodes();
+		for (var i=0; i<nodes.length; i++) {
+			if (nodes[i] == treeNode) {
+				return nodes[i+1];
+			}
+		}
+	}
+	function setOperatePool(nodes) {
+		var n = nodes ? nodes : clone(zTree1.getNodes());
+		opreatePool.splice(poolCursor+1, (opreatePool.length-poolCursor-1), n);
+		if (opreatePool.length>poolMax) {
+			opreatePool.splice(0,1);
+		}
+		poolCursor = opreatePool.length-1;
+		refreshOperatePool();
+		lastNode = null;
+	}
+	function refreshOperatePool() {
+		if (poolCursor>=0) {
+			$("#jRollback").attr("class","able");
+		} else {
+			$("#jRollback").attr("class","disabled");
+		}
+		if (poolCursor<(opreatePool.length-1)) {
+			$("#jRedo").attr("class","able");
+		} else {
+			$("#jRedo").attr("class","disabled");
+		}
+		$("#jOperatePool").html("操作记录: " + opreatePool.length + ", 游标位置: " + (poolCursor+1));
+	}
+	function getNodes() {
+		var a = zTree1.transformToArray(zTree1.getNodes());
+		$("#allNum").html(a.length);
+		a = zTree1.getCheckedNodes();
+		$("#allCheckNum").html(a.length);
+	}
+	function refresh(){
+		window.location.href = "$!{appServer}/role/tree.htm?showType=" + $("input[name='showType']:checked").val(); ;
+	}
+//-->
+  </SCRIPT>
+<DIV style="padding:1px;overflow:auto;">
+<div class="ctrls">
+  <p class="edit"><img src="$!{appServer}/images/icon/pic10.gif" title="张开已载入" onclick="expandAll(true);" /></p>
+  <p class="edit"><img src="$!{appServer}/images/icon/pic27.gif" title="折叠已载入" onclick="expandAll(false);" /></p>##<p class="addnode"><img src="$!{appServer}/images/admin/up.gif" title="同级向上移动" onclick="moveTreeNode('up');" width="20" height="19" /></p>
+  ##<p class="edit"><img src="$!{appServer}/images/admin/dw.gif" title="同级向下移动" onclick="moveTreeNode('down');" width="20" height="19" /></p>
+ <div style="clear: both;"></div>
+</div>
+	<ul id="treeDemo" class="tree" style="height:100%overflow:auto;"></ul>
+</DIV>

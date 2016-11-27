@@ -1,0 +1,104 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+
+<script>
+	function updateSysConf(id){
+		var values= jQuery("#value_"+id).val();
+		//if(!values){
+		//   alert("请输入系统配置值");
+		//   jQuery("#value_"+id).focus();
+		//   return;
+		//}
+
+		var radioId = "status_"+id;
+	    var status = document.getElementsByName(radioId);
+		var stat
+		if(status){
+		  for(var i=0;i<status.length;i++){
+		    if(status[i].checked){
+			  stat = status[i].value;
+			}
+		  }
+		}
+		jQuery("#value").val(values);
+		jQuery("#status").val(stat);
+		jQuery("#id").val(id);
+		jQuery("#form1").submit();
+	}
+	var message="$!message";
+	if(message){
+	  alert(decodeURI(message));
+	}
+
+</script>
+<body>
+<div class="main">
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>系统配置列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>名称</th>
+        <th>描述</th>
+        <th style="width:300">值</th>
+        <th>开关值</th>
+        <th>操作</th>
+      </tr>
+	  <form action="$appServer/system/sys_conf_update.htm" id="form1" name="form1" method="post" enctype="multipart/form-data">
+      #foreach($syConf in $sysConfigList)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+        <td>$!{syConf.code}</td>
+        <td>$!{syConf.codeDesc}</td>
+        <td style="text-align: left">
+		   #if($!{syConf.type}=='textarea')
+                <textarea rows="3" cols="30" id="value_${syConf.id}" name="value_${syConf.id}" class="w250">$!{syConf.value}</textarea>
+		   #elseif($!{syConf.type}=='file')
+				#if($!{syConf.value}!='')
+                    <image src="$imageServer/$!{syConf.value}" width="100" height="100" maxlength="1000"/><br/>
+				#end
+				<input type="file" name="value_${syConf.id}" id="value_${syConf.id}"/>
+		   #elseif($!{syConf.type}=='select')
+            <select name="value_${syConf.id}" id="value_${syConf.id}">
+               <option value="default" #if($!{syConf.value}=='default') selected #end>样式一</option>
+			   <option value="skin-one" #if($!{syConf.value}=='skin-one') selected #end>样式二</option>
+               </option>
+			</select>
+
+		   #else
+			    <input type="text" id="value_${syConf.id}" name="value_${syConf.id}" value="$!{syConf.value}" class="w250" maxlength="1000"/>
+		   #end
+		</td>
+		<td>
+			<input type="radio" id="status_${syConf.id}" name="status_${syConf.id}" value="1" #if($!{syConf.status}==1) checked #end/>开
+			<input type="radio" id="status_${syConf.id}" name="status_${syConf.id}" value="2" #if($!{syConf.status}==2) checked #end/>关
+		</td>
+		<td>
+			<a href="#" onclick="javascript:updateSysConf($syConf.id)">修改</a>
+		</td>
+      </tr>
+	 #end
+	    #springBind("sysConfig.id")
+		<input type="hidden"  id="${status.expression}" name="${status.expression}"/>
+		#springBind("sysConfig.value")
+		<input type="hidden"   id="${status.expression}" name="${status.expression}"/>
+		#springBind("sysConfig.status")
+		<input type="hidden"   id="${status.expression}" name="${status.expression}"/>
+
+      </form>
+
+    </table>
+  </div>
+  <!-- 列表模块 END -->
+  <br>
+<fieldset style="border:#ccc solid 1px; line-height:25px">
+	<legend>说明</legend>
+	<ul class="pl20">
+		<li >如果输入的值为空时，系统不会对此值进行修改。</li>
+	</ul>
+</fieldset>
+</div>
+</body>

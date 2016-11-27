@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<!-- 验证共通配置，可以在此配置段内配置通用验证、function等 -->
+	<bean id="valangValidator" abstract="true">
+		<!-- 验证通用function -->
+		<!--
+			<property name="customFunctions"> <map> <entry key="" value="" />
+			</map> </property>
+		-->
+	</bean>
+
+
+	<!-- Valang配置和语法示例 -->
+	<!-- 验证段基本语法为：{属性名 : 验证规则 : 默认错误信息 : 错误信息代码 : 错误信息参数} -->
+	<!--
+		具体语法规则请参考如下网址：http://www.chineselinuxuniversity.net/articles/1968.shtml
+		https://springmodules.dev.java.net/docs/reference/0.8/html/validation.html#valang
+		http://www.springbyexample.org/examples/spring-modules-validation-module.html
+	-->
+	<bean id="testValidator" class="org.springmodules.validation.valang.ValangValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{test : ? has text : '' : 'common.error.required'}
+				{test : matches('^(\\d){1,6}$', ?) is true : '' : 'common.error.matches'}
+				{test : length(?) <= 8 : '' : 'common.error.maxlength' : 8}
+				{test : ? is not null : '' : 'common.error.required'}
+				{test : ? is null or ? > [T<d] : '' : 'common.error.matches'}
+				{test.property1 : test is null or ? is null or ? > gmtSaleEnd : '' : 'common.error.matches'}
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<!-- 文章
+	<bean id="contValidator" class="com.hundsun.network.hseccms.admin.validator.ContValidator" parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{title : ? has text : '请填写标题'}
+				{code : ? has no text or length(?) >= 1 : '编码只能为1~6位数值'}
+				{code : ? has no text or length(?) <= 6 : '编码只能为1~6位数值'}
+				{name : ? has text : '请填写名称'}
+				{name : ? has no text or length(?) <= 20 : '名称长度不能大于20字'}
+				{sort : ? has text : '请填写排序号'}
+				{sort : ? has no text or matches('^[0-9]{1,3}$', ?) is true : '排序号由1~3位数值组成'}
+				{parentId : ? has text : '请选择父权限'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	-->
+	
+	<bean id="channelValidate" class="com.hundsun.network.hseccms.admin.validator.ChannelValidate"/>
+	
+	<bean id="siteConfigureValidate" class="com.hundsun.network.hseccms.admin.validator.SiteConfigureValidate"/>
+	
+
+</beans>

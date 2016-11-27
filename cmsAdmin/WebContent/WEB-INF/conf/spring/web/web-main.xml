@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="GB2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean id="ResourceConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>WEB-INF/conf/server.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- freemarker的配置 -->  
+    <bean id="freemarkerConfigurer"  
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">  
+        <property name="templateLoaderPath" value="/WEB-INF/views/" />  
+        <property name="defaultEncoding" value="${file.encoding}" />  
+        <property name="freemarkerSettings">  
+            <props>  
+                <prop key="template_update_delay">10</prop>  
+                <prop key="locale">zh_CN</prop>  
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>  
+                <prop key="date_format">yyyy-MM-dd</prop>  
+                <prop key="number_format">#.##</prop>  
+            </props>  
+        </property>  
+        <property name="freemarkerVariables">
+			<map>
+				<entry key="accessType"  value="${system.accessType}"/>
+				<entry key="useFileSystem"  value="${use.fileUploadSystem}"/>
+			</map>
+		</property>
+    </bean>  
+	
+	<!-- 针对freemarker的视图配置 -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="order" value="50" />
+        <property name="cache" value="true" />
+        <property name="prefix" value="" />
+        <property name="suffix" value=".ftl" />
+        <property name="contentType">
+        	<value>text/html;charset=${web.encoding}</value>
+        </property>
+        <property name="requestContextAttribute" value="request" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="false" />
+    </bean>
+
+<!--  jsp view 支持-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="100" />
+		<property name="prefix" value="/WEB-INF/views/screen/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- interceptors -->
+	<bean id="brokersInterceptor"
+		class="com.hundsun.network.melody.common.web.url.URLBrokerLauncherInterceptor">
+		<property name="brokers">
+			<map>
+				<entry key="appServer" value-ref="appServerBroker"></entry>
+				<entry key="imageServer" value-ref="imageServerBroker"></entry>
+				<entry key="uploadServer" value-ref="uploadServerBroker"></entry>
+				<entry key="bookingServer" value-ref="bookingServerBroker"></entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- adapters -->
+	<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+	<bean
+		class="com.hundsun.network.melody.common.web.adapter.ExtendableAnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+		<property name="customArgumentResolvers">
+			<list>
+				<!-- 只要在method声明Cookyjar对象,则自动注入 -->
+				<bean class="com.hundsun.network.melody.common.web.cookyjar.CookyjarArgumentResolver"></bean>
+				<!-- 只要在method声明SettlerAgent对象,则自动注入 -->
+				<bean class="com.hundsun.network.hseccms.admin.resolver.SettlerAgentArgumentResolver"></bean>
+				<!-- 只要在method声明CheckCode对象,则自动注入  验证码-->
+				<bean class="com.hundsun.network.hseccms.admin.resolver.CheckCodeArgumentResolver"></bean>
+			</list>
+		</property>
+		<property name="methodInvokeInterceptors">
+			<list>
+				<bean class="com.hundsun.network.hseccms.admin.security.SettlerAuthorityHandlerInterceptor"></bean>
+				<bean class="com.hundsun.network.hseccms.interceptor.IpServerInterceptor"></bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- url mapping -->
+	<bean id="defaultHandlerMapping"
+		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+		<property name="order" value="0" />
+		<property name="interceptors">
+			<list>
+				<ref bean="brokersInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="100" />
+		<property name="urlMap">
+			<map>
+			</map>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.hundsun.network.hseccms.admin.action" />
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="200" />
+		<property name="interceptors">
+			<list>
+				<ref bean="brokersInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="lastHandlerMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="999" />
+		<property name="defaultHandler">
+			<bean
+				class="org.springframework.web.servlet.mvc.UrlFilenameViewController"></bean>
+		</property>
+		<property name="interceptors">
+			<list>
+				<ref bean="brokersInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 文件上传解析-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="${web.encoding}" />
+	</bean>
+
+	<!-- exception resolver -->
+	<bean class="com.hundsun.network.hseccms.admin.resolver.SettlerExceptionResolver">
+		<property name="webEncoding" value="${web.encoding}"></property>
+		<property name="errorPage" value="/error"></property>
+		<property name="adminLoginPath" value="/admin/login.htm"></property>
+		<property name="adminDeniedPage" value="/403"></property>
+		<property name="adminLoginReturnParameterName" value="returnurl"></property>
+	</bean>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="cacheSeconds" value="-1"/>
+		<property name="basenames">
+			<list>
+				<value>/WEB-INF/languages/hseccore_admin/messages</value>
+				<value>/WEB-INF/languages/hseccms_admin/messages</value>
+				<value>/WEB-INF/languages/hseccms_tpl/messages</value>
+				<value>/WEB-INF/languages/fck/messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<import resource="web-validation.xml"/>
+	<import resource="web-remoting.xml"/>
+</beans>

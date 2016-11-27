@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserLevel">
+	<typeAlias alias="UserLevel"
+		type="com.hundsun.network.gates.fengshan.biz.domain.user.UserLevel" />
+	<resultMap class="UserLevel" id="BaseResultMap">
+		<result column="ID" jdbcType="DECIMAL" property="id" />
+		<result column="USER_ACCOUNT" jdbcType="VARCHAR" property="userAccount" />
+		<result column="MEMBER_LEVEL" jdbcType="VARCHAR" property="memberLevel" />
+		<result column="INTEGRAL" jdbcType="DECIMAL" property="integral" />
+	</resultMap>
+
+	<resultMap class="UserLevel" id="UserLevelFullMap" extends="BaseResultMap">
+		<result column="LEVEL_NAME" jdbcType="VARCHAR" property="levelName" />
+		<result column="IMG_NAME" jdbcType="VARCHAR" property="imgName" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL
+	</sql>
+
+	<sql id="Full_Colimn_List">
+		t_ul.id, t_ul.USER_ACCOUNT, t_ul.MEMBER_LEVEL,
+		t_ul.INTEGRAL, t_sms.LEVEL_NAME, t_sms.IMG_NAME
+	</sql>
+	
+	<select id="selectByPrimaryKey" parameterClass="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from USER_LEVEL where ID = #id:DECIMAL#
+	</select>
+	
+	<select id="selectByUserAccount" parameterClass="java.lang.String"
+		resultMap="UserLevelFullMap">
+	   select
+		<include refid="Full_Colimn_List" />
+		from USER_LEVEL t_ul, SYSTEM_MEMBERLEVEL_SET t_sms
+		where t_ul.USER_ACCOUNT = #userAccount#
+		and t_ul.MEMBER_LEVEL = t_sms.MEMBER_LEVEL
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterClass="java.lang.Long">
+		delete from
+		USER_LEVEL
+		where ID = #id:DECIMAL#
+	</delete>
+
+	<insert id="insert" parameterClass="UserLevel">
+		<selectKey keyProperty="id" resultClass="long" type="pre">
+			select
+			SEQ_USER_LEVEL.nextval as id from dual
+		</selectKey>
+		insert into USER_LEVEL (ID, USER_ACCOUNT, MEMBER_LEVEL, INTEGRAL)
+		values
+		(#id:DECIMAL#, #userAccount:VARCHAR#,
+		#memberLevel:VARCHAR#,#integral:DECIMAL#)
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterClass="UserLevel">
+		update USER_LEVEL
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="userAccount">
+				USER_ACCOUNT =
+				#userAccount:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="userLevel">
+				MEMBER_LEVEL =
+				#memberLevel:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="integral">
+				INTEGRAL =
+				#integral:DECIMAL#
+			</isNotNull>
+		</dynamic>
+		where ID = #id:DECIMAL#
+	</update>
+</sqlMap>

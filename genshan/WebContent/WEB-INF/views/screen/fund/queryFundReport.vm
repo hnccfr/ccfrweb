@@ -1,0 +1,121 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script src="$!{imageServer}/scripts/project/projectListing.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/project/suspension.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/fund/list.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="$!{imageServer}/scripts/user/userDialog.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	$("#tradeDate").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!initTradeDate)}"});
+});
+</script>
+<style >
+	.print_head_style{font-weight:800;font-size:21px;}
+	.print{font-size:14px;align:left}
+</style>
+
+<div class="main">
+	<h2>会员资金报表</h2>
+
+    <form id="searchForm" action="$!{appServer}/fund/queryFundAccountReport.htm" method="post">
+        <div class="searchBox">
+    		<h5><span>会员资金查询</span></h5>
+    		<table>
+    			<tr>
+    				<th>用户账号：</th>
+                    <td>
+    					<input type="text" id="userAccount" name="userAccount" value="$!{userAccount}" class="inp" />
+    				</td>
+    				<td>&nbsp;&nbsp;</td>
+                    <th>资金账户：</th>
+                    <td>
+    					<input type="text" id="fundAccount" name="fundAccount" value="$!{fundAccount}" class="inp" />
+    				</td>
+    				<td>&nbsp;&nbsp;</td>
+                    <th>日期：</th>
+                    <td>
+    					<input type="text" class="inp" id="tradeDate" name="tradeDate" readonly="readonly" value='$!dateTool.format("yyyy-MM-dd",$!{tradeDate})'/>
+    				</td>
+                    <th></th>
+    				<td style="text-align:right;"><button type="submit" class="btn">查询</button></td>
+    				<td><button type="reset" class="btn" >重置</button></td>
+    			</tr>
+    		</table>
+    	</div>
+		<!-- 查询模块 END -->
+    </form>
+
+	<!-- 搜索模块 END -->
+	<div class="clear"></div>
+
+    <div class="listBox">
+		<h5>
+    		<span>会员资金报表</span>
+    	</h5>
+		<table border="0" class="c2"  style="width:100%;">
+            <tbody>
+    			#if($!{fundAccountReport})
+    				<tr>
+    					<th class="w100 tr f14">日期:</th>
+    					<td class="print" colspan="3">$!{fundAccountReport.tradeDate}</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">用户账户:</th>
+    					<td class="print">$!{fundAccountReport.userAccount}</td>
+    					<th class="w100 tr f14">资金账户:</th>
+    					<td class="print">$!{fundAccountReport.fundAccount}</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">账户余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.amount})}  元</td>
+    					<th class="tr f14">冻结金额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.freezeTotal})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">期初余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.beginAmount})}  元</td>
+    					<th class="tr f14">期末余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.currAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">可用余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.useBalance})}  元</td>
+    					<th class="tr f14">出金:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.fundoutAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">入金:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.fundinAmount})}  元</td>
+    					<th class="tr f14">货款收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.getGoodsAmount()})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">货款支付:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.goodsFundout})}  元</td>
+    					<th class="tr f14">手续费:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.commissionAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="f14 tr">违约金收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.penaltyFundin})}  元</td>
+    					<th class="f14 tr">违约金支出:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundAccountReport.penaltyFundout})}  元</td>
+    				</tr>
+    				<tr height="50">
+    					<td colspan="4" height="33"></td>
+    				</tr>
+    			#else
+    				<tr>
+    					<td><p>没有找到符合条件的结果</p></td>
+    				</tr>
+    			#end
+			</tbody>
+		</table>
+	</div>
+
+</div>

@@ -1,0 +1,120 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+
+##<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/ui.css" />
+##<script src="$!{imageServer}/scripts/jquery.ui.js" type="text/javascript"></script>
+
+<script src="$!{imageServer}/scripts/project/projectListing.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/project/suspension.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function() {
+	$("#tradeDate").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!initTradeDate)}"});
+});
+</script>
+<style >
+	.print_head_style{font-weight:800;font-size:21px;}
+	.print{font-size:14px;align:left}
+</style>
+<div class="main">
+
+	<h2>每日结算报表</h2>
+    <!-- 搜索模块 -->
+    <form id="queryFundSettlementForm" action="$!{appServer}/fund/queryFundSettlement.htm"  method="post">
+		<div class="searchBox">
+			<h5><span>搜索每日结算</span></h5>
+			<table>
+              <tr>
+                <th>结算日期：</th>
+                <td><input class="inp" type="text" id="tradeDate" name="tradeDate"  value='$!dateTool.format("yyyy-MM-dd",$!{tradeDate})' size="10" readonly/></td>
+        		<th></th>
+                <td></td>
+                <th></th>
+                <td>
+                <button type="submit" class="btn">查询</button></td>
+              </tr>
+			</table>
+		</div>
+    </form>
+	<!-- 搜索模块 END -->
+
+	<div class="clear"></div>
+
+    <div class="listBox">
+		<h5>
+    		<span>每日结算报表</span>
+    	</h5>
+		<table border="0" class="c2" style="width:100%;">
+			<tbody>
+				#if($!{fundSettlement})
+    				<tr>
+    					<th class="w100 tr f14">结算日期:</th>
+    					<td class="print" colspan="3">$!{fundSettlement.tradeDate}</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">当日手续费收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundSettlement.feeAmount})}  元</td>
+    					<th class="w100 tr f14">当前手续费余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundSettlement.currFeeAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">当日中间货款收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundSettlement.goodsInAmount})}  元</td>
+    					<th class="tr f14">当日中间货款支出:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundSettlement.goodsOutAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">当前中间货款余额:</th>
+    					<td class="print" colspan="3">$!{commonUtils.getMoneyDesc($!{fundSettlement.goodsAmount})}  元</td>
+    				</tr>
+
+    				<tr height="50">
+    					<td colspan="4" height="33"></td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">期初余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyHisReport.beginAmount})}  元</td>
+    					<th class="tr f14">当日余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyHisReport.amount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">冻结金额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyHisReport.freezeTotal})}  元</td>
+    					<th class="tr f14">可用余额:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyHisReport.getUseAmount()})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">入金:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.fundinAmount})}  元</td>
+    					<th class="tr f14">出金:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.fundoutAmount})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">货款收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.getGoodsAmount()})}  元</td>
+    					<th class="tr f14">货款支付:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.goodsFundout})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">违约金收入:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.penaltyFundin})}  元</td>
+    					<th class="tr f14">违约金支付:</th>
+    					<td class="print">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.penaltyFundout})}  元</td>
+    				</tr>
+    				<tr>
+    					<th class="tr f14">手续费支付:</th>
+    					<td class="print" colspan="3">$!{commonUtils.getMoneyDesc($!{fundMoneyTotalHisReport.commissionFundout})}  元</td>
+    				</tr>
+				#else
+					<tr>
+						<td><p>没有找到符合条件的结果</p></td>
+					</tr>
+    			#end
+			</tbody>
+		</table>
+	</div>
+
+</div>

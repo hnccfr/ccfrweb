@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROJECT_METAS">
+	<typeAlias alias="projectMetasQuery" type="com.hundsun.network.gates.wulin.biz.domain.query.ProjectMetasQuery"/>
+	<resultMap id="BaseResultMap"
+		class="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="META_GROUP" property="metaGroup" jdbcType="VARCHAR" />
+		<result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+		<result column="META_KEY" property="metaKey" jdbcType="VARCHAR" />
+		<result column="META_TITLE" property="metaTitle" jdbcType="VARCHAR" />
+		<result column="META_VALUE" property="metaValue" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, META_GROUP, PROJECT_ID, META_KEY, META_TITLE,
+		META_VALUE, OPERATOR,
+		GMT_CREATE,
+		GMT_MODIFY
+	</sql>
+	<sql id="queryFundFreezeLog_order">
+		<dynamic prepend="order by ">
+			<isNotEmpty property="orderStr">
+				<isEqual property="orderStr" compareValue="metaGroup desc">
+				META_GROUP desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="projectId desc">
+				PROJECT_ID desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="metaKey desc">
+				META_KEY desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="metaTitle desc">
+				META_TITLE desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="metaValue desc">
+				META_VALUE desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="operator desc">
+				OPERATOR desc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="gmtCreate desc">
+				GMT_CREATE desc 
+				</isEqual>
+				<isEqual property="orderStr" compareValue="gmtModify desc">
+				GMT_MODIFY desc 
+				</isEqual>
+			</isNotEmpty>
+			<isEmpty property="orderStr">
+				ID asc
+			</isEmpty>
+		</dynamic>
+	</sql>	
+	<sql id="queryFundFreezeLog_where">
+		<dynamic prepend="where">
+			<isNotNull prepend=" and " property="metaGroup">
+				META_GROUP =
+				#metaGroup:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend=" and " property="projectId">
+				PROJECT_ID =
+				#projectId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend=" and " property="metaKey">
+				META_KEY =
+				#metaKey:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend=" and " property="metaTitle">
+				META_TITLE =
+				#metaTitle:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend=" and " property="metaValue">
+				META_VALUE =
+				#metaValue:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend=" and " property="operator">
+				OPERATOR =
+				#operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend=" and " property="gmtCreate">
+				GMT_CREATE =
+				#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend=" and " property="gmtModify">
+				GMT_MODIFY =
+				#gmtModify:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="and" property="projectCode">
+				EXISTS (SELECT ID
+                 FROM project_listing t_pl
+                WHERE project_id = t_pl.ID AND t_pl.code = #projectCode#)
+			</isNotNull>
+		</dynamic>
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		select
+		<isParameterPresent>
+			<isEqual property="distinct" compareValue="true">
+				distinct
+			</isEqual>
+		</isParameterPresent>
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		<isParameterPresent>
+
+			<isNotNull property="orderByClause">
+				order by $orderByClause$
+			</isNotNull>
+		</isParameterPresent>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where ID = #id:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		delete from PROJECT_METAS
+		where ID = #id:DECIMAL#
+	</delete>
+	<delete id="deleteByExample"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		delete from PROJECT_METAS
+
+	</delete>
+	<insert id="insert"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_project_metas.nextval as id from dual
+		</selectKey>
+		insert into PROJECT_METAS (ID, META_GROUP, PROJECT_ID,
+		META_KEY,
+		META_TITLE, META_VALUE, OPERATOR, GMT_CREATE,
+		GMT_MODIFY)
+		values
+		(#id:DECIMAL#, #metaGroup:VARCHAR#, #projectId:DECIMAL#,
+		#metaKey:VARCHAR#,
+		#metaTitle:VARCHAR#, #metaValue:VARCHAR#,
+		#operator:VARCHAR#, sysdate, sysdate)
+	</insert>
+	<insert id="insertSelective"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		insert into PROJECT_METAS
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="id">
+				ID
+			</isNotNull>
+			<isNotNull prepend="," property="metaGroup">
+				META_GROUP
+			</isNotNull>
+			<isNotNull prepend="," property="projectId">
+				PROJECT_ID
+			</isNotNull>
+			<isNotNull prepend="," property="metaKey">
+				META_KEY
+			</isNotNull>
+			<isNotNull prepend="," property="metaTitle">
+				META_TITLE
+			</isNotNull>
+			<isNotNull prepend="," property="metaValue">
+				META_VALUE
+			</isNotNull>
+			<isNotNull prepend="," property="operator">
+				OPERATOR
+			</isNotNull>
+			<isNotNull prepend="," property="gmtCreate">
+				GMT_CREATE
+			</isNotNull>
+			<isNotNull prepend="," property="gmtModify">
+				GMT_MODIFY
+			</isNotNull>
+			)
+		</dynamic>
+		values
+		<dynamic prepend="(">
+			<isNotNull prepend="," property="id">
+				#id:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="metaGroup">
+				#metaGroup:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="projectId">
+				#projectId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="metaKey">
+				#metaKey:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="metaTitle">
+				#metaTitle:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="metaValue">
+				#metaValue:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="operator">
+				#operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtCreate">
+				#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtModify">
+				#gmtModify:TIMESTAMP#
+			</isNotNull>
+			)
+		</dynamic>
+	</insert>
+	<select id="countByExample"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas"
+		resultClass="java.lang.Integer">
+		select count(*) from PROJECT_METAS
+
+	</select>
+	<update id="updateByExampleSelective">
+		update PROJECT_METAS
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="record.id">
+				ID = #record.id:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="record.metaGroup">
+				META_GROUP =
+				#record.metaGroup:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="record.projectId">
+				PROJECT_ID =
+				#record.projectId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="record.metaKey">
+				META_KEY =
+				#record.metaKey:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="record.metaTitle">
+				META_TITLE =
+				#record.metaTitle:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="record.metaValue">
+				META_VALUE =
+				#record.metaValue:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="record.operator">
+				OPERATOR =
+				#record.operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="record.gmtCreate">
+				GMT_CREATE =
+				#record.gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="record.gmtModify">
+				GMT_MODIFY =
+				#record.gmtModify:TIMESTAMP#
+			</isNotNull>
+		</dynamic>
+		<isParameterPresent>
+
+		</isParameterPresent>
+	</update>
+	<update id="updateByExample">
+		update PROJECT_METAS
+		set ID = #record.id:DECIMAL#,
+		META_GROUP =
+		#record.metaGroup:VARCHAR#,
+		PROJECT_ID = #record.projectId:DECIMAL#,
+		META_KEY = #record.metaKey:VARCHAR#,
+		META_TITLE =
+		#record.metaTitle:VARCHAR#,
+		META_VALUE = #record.metaValue:VARCHAR#,
+		OPERATOR = #record.operator:VARCHAR#,
+		GMT_CREATE =
+		#record.gmtCreate:TIMESTAMP#,
+		GMT_MODIFY = #record.gmtModify:TIMESTAMP#
+		<isParameterPresent>
+
+		</isParameterPresent>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		update PROJECT_METAS
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="metaGroup">
+				META_GROUP =
+				#metaGroup:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="projectId">
+				PROJECT_ID =
+				#projectId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="metaKey">
+				META_KEY =
+				#metaKey:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="metaTitle">
+				META_TITLE =
+				#metaTitle:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="metaValue">
+				META_VALUE =
+				#metaValue:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="operator">
+				OPERATOR =
+				#operator:VARCHAR#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtCreate">
+				GMT_CREATE =
+				#gmtCreate:TIMESTAMP#
+			</isNotNull>
+			<isNotNull prepend="," property="gmtModify">
+				GMT_MODIFY =
+				#gmtModify:TIMESTAMP#
+			</isNotNull>
+		</dynamic>
+		where ID = #id:DECIMAL#
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterClass="com.hundsun.network.gates.wulin.biz.domain.project.ProjectMetas">
+		update PROJECT_METAS
+		set META_GROUP =
+		#metaGroup:VARCHAR#,
+		PROJECT_ID = #projectId:DECIMAL#,
+		META_KEY =
+		#metaKey:VARCHAR#,
+		META_TITLE = #metaTitle:VARCHAR#,
+		META_VALUE =
+		#metaValue:VARCHAR#,
+		OPERATOR = #operator:VARCHAR#,
+		GMT_MODIFY = sysdate
+		where ID =
+		#id:DECIMAL#
+	</update>
+	
+	<select id="getProjectMetasByProIDAndKey" parameterClass="map" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where PROJECT_ID = #projectId# and META_KEY = #metaKey#
+	</select>
+	
+	<select id="selectProjectMetasByObj" resultMap="BaseResultMap"
+		parameterClass="projectMetasQuery">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		<include refid="queryFundFreezeLog_where"/>
+		<include refid="queryFundFreezeLog_order"/>
+	</select>
+</sqlMap>

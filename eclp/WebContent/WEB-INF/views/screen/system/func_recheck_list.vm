@@ -1,0 +1,127 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs("jquery")
+
+<script>
+  function doDel(id){
+    if(confirm('确定要删除该功能复核记录吗？')){
+	    jQuery.ajax({
+		type : 'POST',
+		async : false,
+		url :  '$appServer/sys/do_del.htm',
+		data : {id : id},
+		success : function(msg) {
+		    if("null"==msg){
+			   alert("复核记录不存在");
+			    return ;
+			}
+			if("error"==msg){
+			   alert("删除复核记录失败");
+			    return ;
+			}
+			if("success"==msg){
+			    alert("删除复核记录成功");
+			    window.location.reload();
+			}
+		}
+	});
+	}
+  }
+  function doUpdateStatus(id,flag){
+    var str="启用"
+	if(flag=='N'){
+	   str="禁用"
+	}
+    if(confirm("确定要"+str+"该功能复核记录吗？")){
+	    jQuery.ajax({
+		type : 'POST',
+		async : false,
+		url :  '$appServer/sys/do_up_status.htm',
+		data : {id : id,flag:flag},
+		success : function(msg) {		   
+		    if("null"==msg){
+			   alert("复核记录不存在");
+			   return ;
+			}
+			if("error"==msg){
+			   alert(str+"复核记录失败");
+			    return ;
+			}
+			if("success"==msg){
+			    alert(str+"复核记录成功");
+			    window.location.reload();
+				 return ;
+			}
+		}
+	});
+	}
+  }
+</script>
+<body>
+<div class="main">
+  <div class="tool">
+	#if($!adminAccess.has("FUNC_CHECK_ADD"))
+		<span><a href="$appServer/sys/add_func_recheck.htm" hidefocus="true" class="bt_add">新增</a></span>
+	#end
+  </div>
+
+  <form id="submitForm" action="" method="post">
+	<input type="hidden" name="roleId" id="roleId" value="">
+	<input type="hidden" name="status" id="status" value="">
+  </form>
+
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>功能复核列表</span></h5>
+    <table width="100%">
+      <tr>		
+        <th>功能名称</th>
+        <th>状态</th>
+        <th>复核人</th>
+        <th>修改时间</th>
+        <th>操作</th>
+      </tr>
+      #foreach($func in $funcRecheckList)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end>
+        <td>$!{func.funcName}</td>
+        <td>
+		   #if($!{func.status}==0)禁用
+		   #elseif($!{func.status}==1)启用
+		   #else
+			 $!{func.status}
+		   #end
+		</td>
+        <td>$!{func.funcChecker}</td>
+        <td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{func.gmtModify})</td>		
+		<td>		
+			#if($!adminAccess.has("FUNC_CHECK_EDIT"))
+			   <a href="$appServer/sys/edit_func_recheck.htm?id=$!{func.id}">编辑</a>
+			#end
+			#if($!{func.status} == 0 )
+				#if($!adminAccess.has("FUNC_CHECK_ENABLE"))
+        		<a href="#" onclick="javascript:doUpdateStatus($!{func.id},'Y');">启用</a>
+				#end
+    		#elseif($!{func.status} == 1 )
+				#if($!adminAccess.has("FUNC_CHECK_DISABLE"))
+    			<a href="#" onclick="javascript:doUpdateStatus($!{func.id},'N');">禁用</a>
+				#end
+			#end			
+			#if($!adminAccess.has("FUNC_CHECK_DEL"))
+			   <a href="javascript:doDel($!{func.id})">删除</a>
+			#end
+		</td>
+      </tr>
+      #end
+    </table>
+  </div>
+  <!-- 列表模块 END -->
+</div>
+
+<div id="dialog" title="商品列表">
+	## $contain.get("/role/assign_auth.htm")
+</div>
+
+</body>

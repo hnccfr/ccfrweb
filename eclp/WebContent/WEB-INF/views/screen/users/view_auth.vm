@@ -1,0 +1,79 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+<script>
+    $(function(){
+			var div_a =$(".listBox h3");
+			div_a.click(function(){	
+				$(".listBox table").hide()
+				var index =  div_a.index(this); 
+				$(".listBox table")   	
+						.eq(index).show() 
+			})
+	
+	  var tab1 =$(".quanxian h5 img");
+	  $(".quanxian ul").hide();
+    	tab1.toggle(
+    	function(){
+    		$(this).attr("src","${appServer}/images/admin/ico_admin_jia.gif");
+    		var index =  tab1.index(this); 
+    		$(".quanxian ul").eq(index).show()
+    		},
+    	function(){
+    		$(this).attr("src","${appServer}/images/admin/ico_admin_jian.gif");
+    		var index =  tab1.index(this); 
+    		$(".quanxian ul").eq(index).hide();
+    		}
+    	)
+	  })
+</script>
+<body>
+<div class="main">
+  <div class="formBox">
+    <h3><i></i><span>$!{user.account}已分配的权限</span></h3>
+    <div class="content">
+      <div class="quanxian">
+		 #foreach($auth in $authList)
+          <h5> <img src="${appServer}/images/admin/ico_admin_jian.gif">${auth.name}</h5>
+          <ul style="display: block;">
+			 #foreach($cauth in $auth.getChildList())
+				<li>
+                  <p>$!{cauth.name}</p>
+				  #foreach($cca in $cauth.getChildList())
+						<ol>
+							<span>${cca.name}#if($cca.getChildList().size()>0)：#end</span>
+							<span>
+								#foreach($ccca in $cca.getChildList())
+									#if($velocityCount == $cca.getChildList().size())
+										<a>$!{ccca.name}</a> 
+									#else
+										<a>$!{ccca.name}</a> |
+									#end										
+								#end
+							</span>	
+                  		</ol>
+				  #end	
+                  
+              </li>
+			  #end
+			 </ul> 
+			  #end
+        </div>
+    </div>
+    
+    <div class="clear"></div>
+  </div>
+  <!-- 表单模块 END -->
+  <div class="clear"></div>
+<div class="form-but">
+      <!-- 表单按钮区 -->
+	  #if($!adminAccess.has("USER_VIEW_AUTH"))
+		 <button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/users/auth_down.htm?userId=${user.id}'">导出excel</button>
+		#end
+       <button type="button" class="button-s4" onclick="javascript:location.href= '$!{appServer}/users/users_list.htm?page=$!page'">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+  <!-- 列表模块 END -->
+</div>
+</body>	

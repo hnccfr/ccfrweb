@@ -1,0 +1,102 @@
+#set($title = '个人资金账户信息')
+#set($layout = 'layout/default.vm')
+<script src="$!{imageServer}/scripts/jquery.validate.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/funds/active.js" type="text/javascript"></script>
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+            <li><a id="inCash"class="cursor" href="JavaScript:changeType('inCash');">激活资金账户</a></li>
+        </ul>
+	</div>
+	<div class="right-body">
+		#if($succMsg.length() > 0)
+            <div id="success" class="mag-t2">
+            	操作成功！
+            </div>
+		#end
+		#if($errorMsg.length() > 0)
+            <div id="fail" class="mag-t1">
+            	操作失败！
+            </div>
+		#end
+		<div class="formBox">
+			<div class="content">
+				<h4><span>资金账户激活</span></h4>
+				<form id="activeForm" name="activeForm"  action="$!{appServer}/demo/active.htm" method="POST">
+					<input type="hidden" id="cashType" name="cashType" value="$!{cashType}"/>
+    				<table class="c2">
+    					<tr>
+                            <th id="cashTitle">交易账户：</th>
+                            <td>
+								#springBind("request.tradeAccount")
+                                <input id="${status.expression}" type="text" name="${status.expression}" value="$!{status.value}" class="inp"/><span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">资金账户：</th>
+                            <td>
+								#springBind("request.fundAccount")
+                                <input id="${status.expression}" type="text" name="${status.expression}" value="$!{status.value}" class="inp"/><span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">银行：</th>
+                            <td>
+								#springBind("request.bankNo")
+								<select class="select" name="${status.expression}" value="$!{status.value}" style="width:95px;">
+                        			<option value="">请选择</option>
+                        			#foreach($item in $banks)
+                        				<option value="$!{item.bankNo}" #if($item.bankNo == $!{status.value}) selected #end >$!{item.description}</option>	
+                        			#end
+                    			</select>
+								<span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">银行账户：</th>
+                            <td>
+                                #springBind("request.bankAccount")
+                                <input id="${status.expression}" type="text" name="${status.expression}" value="$!{status.value}" class="inp"/><span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">资金余额：</th>
+                            <td>
+                                #springBind("request.balance")
+                                <input id="${status.expression}" type="text" name="${status.expression}" value="$!{status.value}" class="inp"/><span class="red"></span>分
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">证件类型：</th>  
+                            <td>
+                                #springBind("request.idKind")
+								<select class="select" name="${status.expression}" value="$!{status.value}" style="width:95px;">
+                        			<option value="">请选择</option>
+                        			#foreach($item in $certificateTypeList)
+                        				<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>	
+                        			#end
+                    			</select>
+								<span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+                            <th id="cashTitle">证件号码：</th>
+                            <td>
+                                #springBind("request.idNo")
+                                <input id="${status.expression}" type="text" name="${status.expression}" value="$!{status.value}" class="inp"/><span class="red"></span>
+							</td>
+    					</tr>
+						<tr>
+							<th>
+                            </th>
+							<td>
+    							<button type="submit" class="button-s4">激活</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+			</div>
+		</div>
+		<div class="b"></div>
+    </div>
+</div>

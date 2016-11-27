@@ -1,0 +1,20 @@
+	
+	<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+    <script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+	<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+    <script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+	<script >
+		function chooseProjectType(data){
+			jQuery("#parentProjectTypeCode").val(data.code);
+			jQuery("#parentProjectTypeName").val(data.name);
+		}
+    </script>
+	
+	<input type="text" id="parentProjectTypeName" readonly value="$!{parentProjectType.name}" style="width:130px;" name="parentProjectType.name" class="prjTypeName" onclick="showPrjTypeSel(this,chooseProjectType); return false;"/>
+		
+	Öµ£º<input type="text" id="parentProjectTypeCode" readonly />
+    <table>
+		<tbody id="prjTypeMetaBox">
+        </tbody>
+    </table>

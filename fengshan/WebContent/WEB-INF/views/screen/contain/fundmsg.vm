@@ -1,0 +1,28 @@
+################################################################################
+## 通用获取资金账户vm
+##
+## author: housl
+## date: 2011-12-7
+################################################################################
+#set($layout = 'layout/blank.vm')
+#if($!{message})
+    <font color="red">$!{message}</font>
+#else 
+    <table style="width:100%">
+    	<tr>
+            <th>&nbsp;&nbsp;总资金：</th>
+            <td>$!{allMoney} 元
+    			##&nbsp;&nbsp;<a href="$!{appServer}/funds/in.htm" target="_blank"><font color='#468100'>账户充值</font></a>
+    		</td>
+    		
+        </tr>
+    	<tr>
+            <th>可用资金：</th>
+            <td>$!{freeMoney} 元</td>
+        </tr>
+    	<tr>
+            <th>冻结资金：</th>
+            <td>$!{frozenMoney} 元</td>
+        </tr>
+    </table>
+#end

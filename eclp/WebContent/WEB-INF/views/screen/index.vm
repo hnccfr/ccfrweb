@@ -1,0 +1,4 @@
+#set($layout = '')
+<script>
+window.location="$appServer.get('/system/main.htm')";
+</script>

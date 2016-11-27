@@ -1,0 +1,67 @@
+#set($title = '报价评审')
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/common.css" />
+<script src="$!{imageServer}/scripts/auction/review.js" type="text/javascript"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script>
+    var appServer = "$!{appServer}";
+</script>
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+            <li><a class="cursor" href="#">竞价人列表</a></li>
+        </ul>
+    </div>
+    <div class="right-body">
+	  <form id="searchForm" action="$!{appServer}/auction/reviewer/listerReviewQuery.htm" method="post">
+		<div class="searchBox">
+    		<table>
+                <tr>
+					#springBind("query.projectCode")
+					<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+					#springBind("query.valuationUnit")
+					<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+					#springBind("query.bidderAccount")
+                    <th>竞价人账号：</th>
+                    <td><input type="text" class="inp" name="${status.expression}" 
+            			value="$!{status.value}" style="width:140px"/></td>
+					<td><button type="submit" class="button-t3">查 询</button></td>
+                </tr>
+    		</table>
+		</div> 
+        </form>
+		
+		##项目数据展示
+		<div class="listBox">
+			<div>
+				<table style="width:100%;">
+					<tr>
+						<th class="list-order-field" id="prjCode" >项目编号</th>
+						<th class="list-order-field" id="bidAccount" >竞价人账号</th>
+                        <th class="list-order-field" id="bidMark" >竞价人牌号</th>
+                        <th class="list-order-field" id="lastBidPrice" >最后报价</th>
+						<th class="list-order-field" id="bidStatus" >状态</th>
+						<th>操作</th>
+					</tr>
+					#foreach($item in $!{query.data})
+						<tr  #if($velocityCount%2==1) class="bg"   #end style="text-align:center;">
+                            <td> &nbsp;<a style="color:#0066CC" target="_blank" href="$!{appServer}/home/detail.htm?projectCode=$!{item.projectCode}">$!{item.projectCode}</a></td> 
+							 <td> &nbsp;$!{item.bidderAccount}</td> 
+							<td> &nbsp;$!{item.bidderTrademark}</td>
+							<td> &nbsp;$!commonUtils.getValuationUnitDesc($!{item.lastBidPrice},$!{query.valuationUnit})</td>
+							<td> &nbsp;$!{item.bidStatusDesc}</td>
+							<td>&nbsp;
+							<a style="color:#0066CC" href="javascript:void(0);" onclick="auditBid('$!{item.projectCode}','$!{item.bidderAccount}','listinger');">取消竞拍资格</a>
+							</td>
+						</tr>
+					#end
+				</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{query},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+</div>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ECLP_WORK_LOG" >
+  <resultMap id="workLogResult" class="com.hundsun.eclp.biz.domain.sys.WorkLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="OPERATOR_TYPE" property="operatorType" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="SUBSYSTEM_CODE" property="subSystemCode" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap class="com.hundsun.eclp.biz.domain.sys.WorkLog" id = "workLogJoinUserResult" extends="workLogResult">
+   <result column="NAME" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <typeAlias alias="worklogQuery" type="com.hundsun.eclp.biz.query.WorkLogQuery"/>
+
+  <select id="selectById" resultMap="workLogResult" parameterClass="java.lang.Long" >
+    select ID, USER_ID, ACCOUNT, OPERATOR_TYPE, REMARK, GMT_CREATE, GMT_MODIFY,SUBSYSTEM_CODE
+    from ECLP_WORK_LOG
+    where ID = #value#
+  </select>
+
+  <delete id="delete" parameterClass="java.lang.Long" >
+    delete from ECLP_WORK_LOG
+    where ID = #value#
+  </delete>
+
+  <insert id="insert" parameterClass="com.hundsun.eclp.biz.domain.sys.WorkLog" >
+  	<selectKey resultClass="java.lang.Long" keyProperty="id">
+		select seq_work_log.nextval from dual
+	</selectKey>
+    insert into ECLP_WORK_LOG (ID, USER_ID, ACCOUNT, OPERATOR_TYPE, REMARK, GMT_CREATE,
+      GMT_MODIFY,SUBSYSTEM_CODE)
+    values (#id:DECIMAL#, #userId:DECIMAL#, #account:VARCHAR#, #operatorType:VARCHAR#,
+      #remark:VARCHAR#, SYSDATE, SYSDATE,#subSystemCode:VARCHAR#)
+  </insert>
+
+  <update id="update" parameterClass="com.hundsun.eclp.biz.domain.sys.WorkLog" >
+    update ECLP_WORK_LOG set GMT_MODIFY = SYSDATE
+      <isNotNull prepend="," property="userId" >
+        USER_ID = #userId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="account" >
+        ACCOUNT = #account:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operatorType" >
+        OPERATOR_TYPE = #operatorType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="subSystemCode" >
+        SUBSYSTEM_CODE = #subSystemCode:VARCHAR#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+
+  <select id="selectCountAll" parameterClass="worklogQuery"
+		resultClass="java.lang.Integer">
+		SELECT count(*)
+    from eclp_work_log LOG,ECLP_USERS USERS where LOG.USER_ID=USERS.id
+
+    <isNotEmpty prepend="and" property="account">
+       USERS.ACCOUNT like
+			concat(concat('%',#account#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ LOG.GMT_CREATE >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ LOG.GMT_CREATE <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+     </isNotEmpty>
+	<isNotEmpty prepend="and" property="subSystemCode">
+         SUBSYSTEM_CODE = #subSystemCode#
+     </isNotEmpty>
+	</select>
+
+  <select id="selectAll" resultMap="workLogJoinUserResult" parameterClass="worklogQuery" >
+	<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+  			  <![CDATA[SELECT * FROM (SELECT ROWNUM AS NUMROW, c.* from   ( ]]>
+			</isNotEmpty>
+		</isNotEmpty>
+    SELECT USERS.ACCOUNT as ACCOUNT,USERS.NAME NAME,LOG.ID, LOG.USER_ID, LOG.OPERATOR_TYPE, LOG.REMARK, LOG.GMT_CREATE, LOG.GMT_MODIFY,LOG.SUBSYSTEM_CODE
+    from eclp_work_log LOG,ECLP_USERS USERS where LOG.USER_ID=USERS.id
+
+    <isNotEmpty prepend="and" property="account">
+       USERS.ACCOUNT like
+			concat(concat('%',#account#),'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="startDate">
+          <![CDATA[ LOG.GMT_CREATE >=  to_date(#startDate#,'yyyy-MM-dd') ]]>
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="endDate">
+         <![CDATA[ LOG.GMT_CREATE <   to_date(#endDate#,'yyyy-MM-dd')+1]]>
+     </isNotEmpty>
+     <isNotEmpty prepend="and" property="subSystemCode">
+         SUBSYSTEM_CODE = #subSystemCode#
+     </isNotEmpty>
+
+     ORDER BY LOG.GMT_CREATE desc
+	<isNotEmpty property="pageFristItem">
+			<isNotEmpty property="pageLastItem">
+    			<![CDATA[ ) c  where rownum<=#pageLastItem#) WHERE NUMROW >= #pageFristItem#
+    			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+  </select>
+
+</sqlMap>

@@ -1,0 +1,25 @@
+#set($layout = 'layout/blank.vm')
+<html>
+<head>
+	<title>#if($systemTitle)$systemTitle #else 恒生网络 通用后台管理系统 #end</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<frameset rows="74,*,25"  frameborder="no" border="0" framespacing="0" id="frame1" name="frame1">
+
+	<frame src="$appServer.get('contain/crmheader.htm')" noresize="noresize" frameborder="NO" name="topFrame" scrolling="no" marginwidth="0" marginheight="0" target="main" />
+	
+    <frameset cols="202,*" framespacing="0px" border="0" id="frame2" name="frame2">
+		<frame src="$appServer.get('contain/crmmenu.htm')" name="leftFrame" id="leftFrame"  frameborder="0" scrolling="yes" noresize="noresize" target="main"/>
+		<frame src="$appServer.get('contain/crmbody.htm')" name="main" id="main" frameborder="0" scrolling="yes" target="_self" />
+	</frameset>
+    
+    <frame src="$appServer.get('contain/crmfooter.htm')" noresize="noresize" frameborder="NO" name="footFrame" scrolling="no" marginwidth="0" marginheight="0" target="main" />
+    
+</frameset>
+
+<noframes>
+	<body>您的浏览器无法处理框架</body>
+</noframes>
+
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="userAddress" >
+  <typeAlias alias="UserAddress" type="com.hundsun.network.gates.genshan.biz.domain.user.UserAddress"/>
+  <resultMap id="BaseResultMap" class="UserAddress" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="LINKMAN" property="linkman" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="IS_DEFAULT" property="isDefault" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, USER_ACCOUNT, LINKMAN, PHONE, TYPE, PROVINCE, CITY, AREA, ADDRESS, ZIP_CODE, 
+    IS_DEFAULT, GMT_CREATE, GMT_MODIFY, OPERATOR, STOREHOUSE
+  </sql>
+   
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_ADDRESS
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from USER_ADDRESS
+    where ID = #id:DECIMAL#
+  </delete>
+  
+  <insert id="insert" parameterClass="UserAddress" >
+  	<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_user_address.nextval as id from dual
+	</selectKey>
+    insert into USER_ADDRESS (ID, USER_ACCOUNT, LINKMAN, PHONE, 
+      TYPE, PROVINCE, CITY, AREA, ADDRESS, 
+      ZIP_CODE, IS_DEFAULT, GMT_CREATE, GMT_MODIFY, 
+      OPERATOR, STOREHOUSE)
+    values (#id:DECIMAL#, #userAccount:VARCHAR#, #linkman:VARCHAR#, #phone:VARCHAR#, 
+      #type:VARCHAR#, #province:VARCHAR#, #city:VARCHAR#, #area:VARCHAR#, #address:VARCHAR#, 
+      #zipCode:VARCHAR#, #isDefault:VARCHAR#, sysdate, sysdate, 
+      #operator:VARCHAR#, #storehouse:VARCHAR#)
+  </insert>
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterClass="UserAddress" >
+    update USER_ADDRESS
+     set  GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="linkman" >
+        LINKMAN = #linkman:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="phone" >
+        PHONE = #phone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="type" >
+        TYPE = #type:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="province" >
+        PROVINCE = #province:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="city" >
+        CITY = #city:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="area" >
+        AREA = #area:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="address" >
+        ADDRESS = #address:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="zipCode" >
+        ZIP_CODE = #zipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="isDefault" >
+        IS_DEFAULT = #isDefault:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="storehouse" >
+        STOREHOUSE = #storehouse:VARCHAR#
+      </isNotNull>      
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <select id="selectNumOfUserAddress" resultClass="java.lang.Integer" parameterClass="UserAddress">
+  	select count(*) from USER_ADDRESS where USER_ACCOUNT = #userAccount:VARCHAR# and TYPE = #type:VARCHAR#
+  </select>
+  
+  <select id="selectAllUserAddresses" resultMap="BaseResultMap" parameterClass="UserAddress">
+  	select
+  		<include refid="Base_Column_List" />
+  	from USER_ADDRESS where USER_ACCOUNT = #userAccount:VARCHAR# and TYPE = #type:VARCHAR#
+  </select>
+  
+  <update id="updateIsDefault">
+  	update USER_ADDRESS set IS_DEFAULT = #isDefault:VARCHAR# where IS_DEFAULT = 'Y'
+  </update>
+   
+</sqlMap>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<toolbox>
+  <xhtml>true</xhtml>
+   <tool>
+     <key>stringUtils</key>
+     <scope>application</scope>
+     <class>org.apache.commons.lang.StringUtils</class>    
+   </tool>
+   <tool>
+     <key>contain</key>
+     <scope>request</scope>
+     <class>com.hundsun.network.melody.common.web.contain.Contain</class>
+   </tool>
+   <tool>
+     <key>iDemand</key>
+     <scope>request</scope>
+     <class>com.hundsun.network.melody.common.web.velocity.IDemand</class>
+   </tool>
+	<tool>
+		<key>dateTool</key>
+		<scope>application</scope>
+		<class>org.apache.velocity.tools.generic.DateTool
+		</class>
+		<parameter name="format" value="yyyy-MM-dd" />
+	</tool>
+</toolbox>

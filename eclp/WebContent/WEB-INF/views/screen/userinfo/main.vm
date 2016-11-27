@@ -1,0 +1,248 @@
+﻿#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs("jquery")
+$iDemand.addJs("jquery.validate")
+$iDemand.addCss('jquery.ui.all')
+$iDemand.addJs("jquery.ui.core")
+$iDemand.addJs("jquery.ui.widget")
+$iDemand.addJs("jquery.ui.mouse")
+$iDemand.addJs("jquery.ui.draggable")
+$iDemand.addJs("jquery.ui.position")
+$iDemand.addJs("jquery.ui.resizable")
+$iDemand.addJs("jquery.ui.dialog")
+<script>
+
+$(function(){
+	   var result = $("#result").val();
+	   if(result != undefined)
+	   {
+	    window.opener.alertEditSuccess(result);
+	    window.open('','_self','');
+	   }
+	});
+
+
+function changeStatus(uid,status,page){
+    	var msg = "";
+    	if(status==0){
+    		msg = "确定要启用吗？" ;
+    	}else if(status==1){
+    		msg = "确定要禁用吗？" ;
+    	}
+
+    	if(!confirm(msg)){
+		    return ;
+    	}
+    	jQuery("#page").val(page);
+		var url = '$appServer/userinfo/setStatus.htm';
+		jQuery.ajax ({
+				type		: 'POST',
+				url			: url,
+				data		: {uid: uid},
+				timeout		: 5000,
+				success		: function(data, textStatus, xhr) {
+					if(data) {
+						alert('操作成功！');
+						var myForm=jQuery('#form1');
+						myForm.submit();
+					} else {
+						alert('操作失败！');
+					}
+				},
+				error		: function(xhr, textStatus, errorThrown) {
+					alert('操作失败1！');
+				}
+			});
+	}
+	
+function dele(uid,page){
+		if(!confirm("确认删除吗?")){
+			return;
+		}
+		jQuery("#page").val(page);
+		var  url = '$appServer.get("/userinfo/del.htm")';
+		jQuery.ajax ({
+				type		: 'POST',
+				url			: url,
+				data		: {uid: uid},
+				timeout		: 5000,
+				success		: function(data, textStatus, xhr) {
+					if(data) {
+						alert('删除成功！');
+						var myForm=jQuery('#form1');
+						myForm.submit();
+					} else {
+						alert('删除失败！');
+					}
+				},
+				error		: function(xhr, textStatus, errorThrown) {
+					alert('删除失败1！');
+				}
+			});
+	}
+	
+function changeUinfoPosition(uid,flag,page){
+        jQuery("#uid").val(uid);
+		jQuery("#flag").val(flag);
+		jQuery("#page").val(page);
+		jQuery("#form1").attr("action","$appServer/userinfo/modify_position.htm");
+		jQuery("#form1").submit();
+	}
+
+//弹出框
+function assignDept(uid,deptId,page){
+	   var url='$!appServer/userinfo/assign_dept.htm?uid='+uid+'&deptId='+deptId+'&page='+page;
+	  　 window.open(url,  '',' width=850px, height=600px,top=50px, left=200px');
+	}
+
+function assignDept1(uid,deptId)
+{
+   jQuery( "#dialog" ).dialog({
+    			autoOpen: true,
+    			width: 800,
+    			height: 800,
+    			modal: true,
+    			show: "blind",
+    			hide: "explode",
+    			bgiframe :false
+    		});
+}
+
+function formSubmit()
+{
+  jQuery("#form1").submit();
+}
+
+</script>
+<body>
+    <div class="main">
+       <div class="searchBox">
+    <h5><span>搜索人员</span></h5>
+    <form action="$appServer/userinfo/main.htm" id="form1" name="form1" method="post">
+     #if($!editResult)
+     <input type="hidden" id="result" name="result" value="$!{result}"/>
+     #end
+     <input type="hidden" id="flag" name="flag"/>
+     <input type="hidden" id="uid" name="uid"/>
+	 <input type="hidden" id="page" name="page" value="1"/>
+      <table>
+        <tr> #springBind("query.realName")
+          <th>姓名：</th>
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+          <th>状态：</th>
+          #springBind("query.status")
+          <td><select name="${status.expression}">
+              <option value="">--请选择--</option>
+				#foreach($type in $enumUserInfoStatus)
+					#if($!{type.code}!=2)
+						<option value="$!{type.code}" #if($!{status.value}==$!{type.code}) selected #end>$!{type.desc} </option>
+					#end
+			     #end
+            </select></td>
+          #springBind("query.deptId")
+           <input type="hidden" name="${status.expression}" value="$!{query.deptId}"/>
+             <th>&nbsp;</th>
+          <td><button type="submit" class="btn">搜 索</button></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <!-- 搜索模块 END -->
+    </div>
+    <!-- <div class="tool"> #if($!adminAccess.has("STAFF_ADD"))<span><a href="$appServer/userinfo/add.htm" hidefocus="true" class="bt_add">新增</a></span>#end</div>
+    <div class="clear"></div> -->
+    
+     <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>人员列表</span></h5>
+    <table width="100%">
+      <tr>
+        <th>组织机构</th>
+        <th>真实姓名</th>
+        <th>性别</th>
+        <th>出生日期</th>
+        <th>联系电话</th>
+        <th>状态</th> <!-- 0禁用 1启用 2删除 -->
+		<th>序号</th>
+        <th>操作</th>
+      </tr>
+      #foreach($u in $query.items)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end id="row_user_$!{users.id}">
+        <td name="deptName">$!{u.deptName}</td>
+        <td>
+			<a href="${appServer}/userinfo/detail.htm?uId=${u.id}">$!{u.realName}</a></td>
+        <td>#if($!{u.gender} =="0")  男  #else 女 #end</td>
+        <td>$dateUtil.convertDateToString("yyyy-MM-dd", $!{u.birthday})</td>
+        <td>$!{u.mobilePhone}</td>
+        <td> #foreach($status in $enumUserInfoStatus)
+          #if($!{u.status} == $!{status.code})
+          $!{status.desc}
+          #end
+          #end </td>
+         <td>$!{u.sort}</td>
+        <td width="30%"> 
+           #if($velocityCount==1)
+              #if($velocityCount != $query.items.size())
+				<a href="#" title="上移" onclick="javascript:changeUinfoPosition($!{u.id},'up',$!query.currentPage);" style="visibility: hidden;"><img src="$appServer/images/admin/up.gif" /></a>
+				<a href="#" title="下移" onclick="javascript:changeUinfoPosition($!{u.id},'dw',$!query.currentPage);"><img src="$appServer/images/admin/dw.gif" /></a>	
+              #end
+			#elseif($velocityCount==$query.items.size())
+				<a href="#" title="上移" onclick="javascript:changeUinfoPosition($!{u.id},'up',$!query.currentPage);"><img src="$appServer/images/admin/up.gif" /></a>
+				<a href="#" title="下移" onclick="javascript:changeUinfoPosition($!{u.id},'dw',$!query.currentPage);" style="visibility: hidden;"><img src="$appServer/images/admin/dw.gif" /></a>	
+			#else
+    			<a href="#" title="上移 	" onclick="javascript:changeUinfoPosition($!{u.id},'up',$!query.currentPage);"><img src="$appServer/images/admin/up.gif" /></a>
+    			<a href="#" title="下移"  onclick="javascript:changeUinfoPosition($!{u.id},'dw',$!query.currentPage);"><img src="$appServer/images/admin/dw.gif" /></a>	
+			#end
+			
+		  #if($!adminAccess.has("STAFF_EDIT"))
+              <a href="${appServer}/userinfo/edit.htm?uId=${u.id}&page=$!query.currentPage" title="修改">
+					  <img src="$appServer/images/icon/list/list_edit.gif" />
+			  </a>
+          #end
+                    
+                    
+		  #if($!{eclpUserAgent.id} != $!{u.userId} && $!adminAccess.has("STAFF_DEL"))
+		   <a href="javascript:dele($!{u.id},$!query.currentPage);" title="删除"><img src="$appServer/images/icon/list/list_del.gif" /></a>
+		  #end			
+          #if($!{eclpUserAgent.id} != $!{u.userId} )
+              #if($!adminAccess.has("STAFF_ENABLE") )
+               <a href="javascript:changeStatus('${u.id}','$!{u.status}',$!query.currentPage)">
+                #if($!{u.status}==0)启用 #end
+               </a>
+			  #end
+			  #if( $!adminAccess.has("STAFF_DISABLE"))
+               <a href="javascript:changeStatus('${u.id}','$!{u.status}',$!query.currentPage)">
+                 #if($!{u.status}==1)禁用  #end
+               </a>
+              #end
+             
+              #if($!adminAccess.has("STAFF_ASSIGN_USER"))  <!--分配用户-->
+              ##<a href="${appServer}/userinfo/assign_users.htm?uinfoId=${u.id}&page=$!query.currentPage">分配用户</a>
+              #end
+             
+              #if($!adminAccess.has("STAFF_ASSIGN_ORG"))  <!--分配机构 -->
+              <a href="javascript:assignDept('${u.id}','$!{u.deptId}',$!query.currentPage)">分配机构</a>
+    		  #end
+		 #end
+        </td>
+      </tr>
+      #end
+    </table>
+    #if($query.items)
+    $contain.get('/contain/form_page_slider.htm').put('slider_query',$query).put('slider_target',"/userinfo/main.htm").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end </div>
+  <!-- 列表模块 END -->
+   <div id="dialog" title="分配机构" style="display:none">
+           <input type="hidden" name="uid" id="uid"/>
+           
+           <input type="hidden" name="deptId" id="deptId"/>
+           
+	 ##$contain.get(assign_dept.htm)
+   </div>
+
+</body>

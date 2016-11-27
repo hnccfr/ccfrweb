@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ECLP_DEPARTMENT" >
+  <resultMap id="departmentResult" class="com.hundsun.eclp.biz.domain.dept.Department" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="DECIMAL" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="selectById" resultMap="departmentResult" parameterClass="java.lang.Long" >
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT
+    where ID = #value#
+  </select>
+  
+   <select id="selectByName" resultMap="departmentResult"  parameterClass="com.hundsun.eclp.biz.domain.dept.Department">
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT
+    where NAME = #name#
+    and PARENT_ID = #parentId#
+  </select>
+  
+  <select id="getOrgList" resultMap="departmentResult" parameterClass="java.lang.Long" >
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT
+    where PARENT_ID=-1
+    <isNotEmpty prepend="and" property="value">
+       STATUS = #STATUS#
+    </isNotEmpty>
+  </select>
+  
+  <select id="getOrgListByIds" resultMap="departmentResult"  parameterClass="java.util.List">
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT
+    WHERE ID IN
+    <iterate conjunction="," open="(" close=")" >
+	   #idList[]#
+	</iterate>
+  </select>
+  
+  <select id="getSubOrgList" resultMap="departmentResult" parameterClass="java.lang.Long" >
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT
+    where PARENT_ID=#value#
+  </select>
+  
+    <select id="getUpOrgList" resultMap="departmentResult" parameterClass="java.lang.Long" >
+	     select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+	     from eclp_department t start with id = #value#
+	     connect by prior t.parent_id= t.id
+    </select>
+    
+    <select id="getDownOrgList" resultMap="departmentResult" parameterClass="java.lang.Long" >
+	     select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+	     from eclp_department t start with id = #value#
+	     connect by prior t.id= t.parent_id
+    </select>
+  
+  <select id="getAll" resultMap="departmentResult" parameterClass="java.lang.Long" >
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+    from ECLP_DEPARTMENT    
+    <isNotEmpty prepend="where" property="value">
+       STATUS = #STATUS#
+    </isNotEmpty>
+  </select>
+  
+    <select id="getMaxSort" resultClass="java.lang.Integer" parameterClass="java.lang.Long" >
+      select max(sort)+1 from eclp_department t where t.parent_id=#value#
+    </select>
+  
+  <select id="selectCountByParentGroupByParent" resultClass="java.util.HashMap" remapResults="true" parameterClass="java.util.HashMap">
+	  	SELECT PARENT_ID, count( ID ) AS ID_COUNT
+		  FROM ECLP_DEPARTMENT
+		  <dynamic prepend="WHERE" >
+			  <isNotEmpty prepend="AND" property="parentIdList">
+				PARENT_ID IN
+			    <iterate conjunction="," open="(" close=")" property="parentIdList">
+				   #parentIdList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+			    status = #status#
+			</isNotEmpty>
+		</dynamic>
+		GROUP BY PARENT_ID
+  </select>
+  
+  
+  
+  <select id="getFullListById" resultMap="departmentResult" parameterClass="java.lang.Long" >
+    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+	  from eclp_department 
+		 start with id = #value#
+		  connect by prior parent_id = id
+  </select>
+  
+
+  <delete id="delete" parameterClass="java.lang.Long" >
+    delete from ECLP_DEPARTMENT
+    where ID = #id#
+  </delete>
+
+  <insert id="insert" parameterClass="com.hundsun.eclp.biz.domain.dept.Department" >
+	<selectKey resultClass="java.lang.Long" keyProperty="id">
+		select seq_department.nextval from dual
+	</selectKey>
+    insert into ECLP_DEPARTMENT (ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY)
+    values (#id:DECIMAL#, #name:VARCHAR#, #parentId:DECIMAL#, #sort:DECIMAL#, #status:DECIMAL#, #remark:VARCHAR#,
+    SYSDATE, SYSDATE)
+  </insert>
+
+  <update id="update" parameterClass="com.hundsun.eclp.biz.domain.dept.Department" >
+    update ECLP_DEPARTMENT set GMT_MODIFY = SYSDATE
+      <isNotEmpty prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="parentId" >
+        PARENT_ID = #parentId:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="sort" >
+        SORT = #sort:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="status" >
+        STATUS = #status:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotEmpty>
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <!-- 根据会员id查得部门信息 -->
+  <select id="getUpOrgListByUserId" resultMap="departmentResult" parameterClass="java.lang.Long" >
+	    select ID, NAME, PARENT_ID, SORT, STATUS, REMARK, GMT_CREATE, GMT_MODIFY
+		  from eclp_department d
+		 start with d.id = (select ui.dept_id
+		                      from eclp_user_info ui
+		                     where ui.is_deleted = 'N'
+		                       and ui.user_id = #userId#)
+		connect by prior d.parent_id = d.id
+  </select>
+  
+
+</sqlMap>

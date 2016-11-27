@@ -1,0 +1,406 @@
+#set($layout = 'layout/default.vm')
+#set($title = '买家新增挂牌')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/validate.css" />
+<link rel="stylesheet" type="text/css"  href="$!{imageServer}/styles/fileuploader.css"/>
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<script language="javascript" type="text/javascript" src="$!{imageServer}/scripts/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/common.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/json/jsonUtil.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/money.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/project/prjTypeMeta.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.validate.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/project/add.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/project/soonAdd.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/area.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.ui.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/user/getAddress.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/project/placeOrderSpecial.js" ></script>
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/kindeditor-min-unupload.js"></script>
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+            $(function(){
+            var area = new Area("$!{appServer}/ajax","$!{projectListing.province}","$!{projectListing.city}","$!{projectListing.area}",'pe_province','pe_city','pe_area');
+            });
+            $(function() {
+            var editor = KindEditor.create('textarea[name="description"]');
+            });
+</script>
+
+<input type="hidden" id="metaErrors" name="metaErrors" value="$!{metaErrors}"/>
+<input type="hidden" id="metaSubmitValue" name="metaSubmitValue" value="$!{metaSubmitValue}"/>
+<input type="hidden" id="bsType" value="buy" />
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+		<ul>
+			<li>
+				<a class="cursor" href="#">买家新增挂牌</a>
+			</li>
+		</ul>
+	</div>
+	<div class="right-body">
+		<div class="formBox">
+			<form id="listingFrom" name="listingFrom"  action="$!{appServer}/project/buyer/add.htm" method="post"  enctype="multipart/form-data"  onsubmit="return checkTypeAndStandard();">
+				<div class="content">
+					<fieldset>
+						<legend>项目基本信息</legend>
+						<TABLE class="c2">
+							<tr>
+								<th>
+									<span class="error">*</span>
+									项目名称：</th>
+									<td colspan="3" >
+										#springBind("projectListing.title")
+										<input type="text" id="title" name="${status.expression}" value="$!{status.value}" class="inp-w350" />
+										<input type="hidden" id="btnSign" value="buyer" />
+										##<button type="button" id="easyAddBtn" class="button" onclick="easyAddFn1('buyer');"  >快速挂牌</button>
+										<span class="error">${status.errorMessage}</span>
+									</td>
+							</tr>
+							<tr>
+                                    <th><span class="error">*</span>交易分中心：</th>
+                                    <td colspan="3">
+                                        #springBind("projectListing.substationId")
+                                        <select class="select" id="substationId" name="substationId"  style="width:220px;" >
+                                           <option value="">请选择</option>
+										   #foreach($selectItem in $!{substations})
+												<option value="$!{selectItem.id}" #if($!{status.value}==$!{selectItem.id}) selected #end>  $!{selectItem.name} </option>
+                    						#end
+                                        </select>
+										<span class="error">${status.errorMessage}</span>
+									</td>
+                            </tr>
+							<tr>
+								<th>
+									<span class="error">*</span>
+									项目类型：</th>
+									<td>
+										#springBind("projectListing.projectTypeName")
+										<input type="text" id="projectTypeName" readonly   name="projectTypeCodeDesc" class="inp inp-w160-readonly"  #if($stringUtils.isNotEmpty($!{projectListing.projectTypeCodeDesc}))value="$!{projectListing.projectTypeCodeDesc}" #else value="$!{projectListing.projectTypeName}"  #end  class="inp" />
+												#springBind("projectListing.projectTypeCode")
+												<input type="hidden" id="projectTypeCode"  name="projectTypeCode" value="$!{status.value}" readonly  />
+												<span id="standardAndType" class="error"></span>
+												<span class="error">${status.errorMessage}</span>
+									</td>
+									#*
+									<th>标准规格：</th>
+									<td>
+										#springBind("projectListing.breedStandard")
+										<select class="select" id="breedStandardSelect" name="breedStandardSelect"  style="width:130px;" >
+											<option value="">请选择</option>
+											#foreach($selectItem in $!{breedStandards})
+												<option value="$!{selectItem.id}" #if($!{selectItem.id}==${projectListing.breedStandardId}) selected #end> $!{selectItem.name} </option>
+											#end
+										</select>
+										<span id="standShowId">
+											#if($stringUtils.isNotEmpty('${projectListing.breedStandardId}'))
+												<a href="$!{appServer}/home/standard/show.htm?sid=$!{projectListing.breedStandardId}"  target='_blank'>$!{projectListing.breedStandard}</a>
+											#end
+										</span>
+										<span class="error">${status.errorMessage}</span>
+										<input type="hidden" id="breedStandard"  name="breedStandard"  value="$!{status.value}"  readonly  />
+										#springBind("projectListing.breedStandardId")
+										<input type="hidden" id="breedStandardId"  name="breedStandardId"   value="$!{status.value}" readonly  />
+									</td>
+									*#
+							</tr>
+							<tr>
+								<th>
+									<span class="error">*</span>
+									挂牌数量：
+								</th>
+								<td>
+									#springBind("projectListing.quantity")
+									<input id="quantity" class="inp" type="text" name="${status.expression}" #if("placeOrder" == $!{projectListing.tradingType}) value="$!{status.value}" #else value="1" readonly #end>
+									<span id="quantity_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+								<th>
+									<span class="error">*</span>
+									计量单位：</th>
+									<td>
+										#springBind("projectListing.measureUnit")
+										<select class="select" id="measureUnit" name="measureUnit"  style="width:130px;"  disabled onchange="isLockQuantity(this.value);">
+											#foreach($selectItem in $!{measureUnits})
+												<option value="$!{selectItem.value}">  $!{selectItem.name} </option>
+											#end
+										</select>
+										<input type="hidden" id="measureUnitHidden" name="measureUnit" value="zong" />
+										<span id="measureUnit_remind_show_message" class="error">${status.errorMessage}</span>
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<span class="error">*</span>
+										挂牌参考价：</th>
+										<td>
+											#springBind("projectListing.listingPriceDesc")
+											<input id="listingPrice" class="inp" type="text" value="$!{status.value}"  name="listingPriceDesc">
+											<span id="listingPrice_remind_show_message" class="error">${status.errorMessage}</span>
+										</td>
+										<th>
+											<span class="error">*</span>
+											计价单位：</th>
+											<td>
+												#springBind("projectListing.valuationUnit")
+												<select class="select" id="valuationUnit" name="valuationUnit"  style="width:130px;" >
+													#foreach($selectItem in $!{valuationUnits})
+														<option value="$!{selectItem.value}">  $!{selectItem.name} </option>
+													#end
+												</select>
+												<span id="valuationUnit_remind_show_message" class="error">${status.errorMessage}</span>
+											</td>
+								</tr>
+								<tr>
+									<th>
+										<span class="error">*</span>
+										挂牌有效开始时间：</th>
+										<td>
+											#springBind("projectListing.listingStartTime")
+											<input id="listingStartTime" class="inp" type="text" value="$!{status.value}"    onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"  name="listingStartTime">
+											<span id="listingStartTime_remind_show_message" class="error">${status.errorMessage}</span>
+										</td>
+										<th>
+											<span class="error">*</span>
+											挂牌有效结束时间：</th>
+											<td>
+												#springBind("projectListing.listingEndTime")
+												<input id="listingEndTime" class="inp" type="text"  value="$!{status.value}"   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})"  value="" name="listingEndTime">
+												<span id="listingEndTime_remind_show_message" class="error">${status.errorMessage}</span>
+											</td>
+								</tr>
+									<tr>
+										<th>
+											<span class="error">*</span> 交易方式：</th>
+										<td  colspan="3">
+											#springBind("projectListing.tradingType")
+											#foreach( $item in $!{tradingTypes})
+												<input type="radio" id=$velocityCount name="${status.expression}"  #if($!{status.value} == $item.value) checked=true #elseif($velocityCount == 1) checked=true #elseif($!{curTradeType}!=""&&$!{curTradeType}==$item.value) checked=true #end  value="$!{item.value}" onclick="loadPrjTradeTypeDisByBsType('$!{item.value}', 'prjTradeTypeBoxId','','buy');lockQuantity(this.value);" />
+															$!{item.name}
+											#end
+											#if(!${status.value})
+												<input type="hidden" id="tradeTypeValue"   value="$!{status.value}"  readonly  />
+												#else
+													<input type="hidden" id="tradeTypeValue" value="placeOrder" readonly  />
+											#end
+											<span class="error">${status.errorMessage}</span>
+										</td>
+									</tr>
+									<tr>
+    									<th></th>
+    									<td colspan="3">
+    										<span class="error">*注：林权交易不建议选择下单交易方式</span>
+    									</td>
+    								</tr>
+									<tr>
+		<th><span class="error">*</span>收货地址：</th>
+		<td  colspan="3">
+			#springBind("projectListing.province")
+			<select  class="select" id="pe_province" name="${status.expression}" style="width:120px;"></select>
+			<span class="error">${status.errorMessage}</span>
+			#springBind("projectListing.city")
+			<select class="select"  id="pe_city" name="${status.expression}" style="width:120px;"></select>
+			<span class="error">${status.errorMessage}</span>
+			#springBind("projectListing.area")
+			<select class="select"  id="pe_area" name="${status.expression}" style="width:120px;"></select>
+			<span class="error">${status.errorMessage}</span>
+		</td>
+	 </tr>
+<tr>
+    <th>
+        <span class="error">*</span>
+        详细地址：</th>
+        <td colspan="3">
+            #springBind("projectListing.address")
+            <input type="text" id="address" name="${status.expression}" value="$!{status.value}" class="inp-w400"  />
+            <span class="error">${status.errorMessage}</span>
+        </td>
+</tr>
+						</TABLE>
+					</fieldset>
+<fieldset  id="dynamicMeta">
+    <legend >动态属性<span  class="error">$!{message}</span>
+    </legend>
+    <div id="prjTypeMetaBox"></div>
+</fieldset>
+<fieldset>
+    <legend >交易属性<span  class="error">$!{tradeMessage}</span>
+    </legend>
+    <div id="prjTradeTypeBoxId"></div>
+</fieldset>
+<fieldset>
+    <legend>支付信息</legend>
+    <TABLE class="c2">
+        <tr>
+            <th><span class="error">*</span> 付款方式：</th>
+                <td>
+                    #springBind("projectListing.paymentType")
+                    #foreach( $item in $!{paymentTypes})
+                        <input type="checkbox" id="paymentType$velocityCount"   name="${status.expression}"  checked=true  value="$!{item.value}" />
+                        $!{item.name}
+                    #end
+                    <span class="error">${status.errorMessage}</span>
+                </td>
+				<th>交收时间：</th>
+                <td>#springBind("projectListing.deliveryDate")
+                    <input type="text" id="deliveryDate" name="${status.expression}" value="$!{status.value}" class="inp"   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01'})"   readonly />
+                    <span class="error">${status.errorMessage}</span>
+                </td>
+                ##<th><span class="error">*</span>交收方式：</th>
+                    ##<td>
+                        #springBind("projectListing.deliveryType")
+                        #foreach( $item in $!{deliveryTypes})
+                            <input type="hidden" id="deliveryType$velocityCount"  name="${status.expression}" value="$!{item.value}" />
+                            ##<input type="checkbox" id="deliveryType$velocityCount"   name="${status.expression}" checked=true  value="$!{item.value}" />
+                            ##$!{item.name}
+                        #end
+                        <span class="error">${status.errorMessage}</span>
+                    ##</td>
+        </tr>
+        <tr>
+            <th>
+                <span class="error">*</span> 发票支持：</th>
+                <td>
+                    #springBind("projectListing.invoice")
+                    <input  type="checkbox" id="invoice$velocityCount"  name="${status.expression}" value="Y" checked=true   />
+						提供&nbsp;&nbsp;
+                    <input  type="checkbox" id="invoice$velocityCount"  name="${status.expression}" value="N"  checked=true   />
+						不提供
+                    <span class="error">${status.errorMessage}</span>
+                </td>
+                <input type="hidden" id="deliveryPlace" name="deliveryPlace" value="" />
+        </tr>
+    </TABLE>
+</fieldset>
+<fieldset>
+    <legend>联系信息</legend>
+    <TABLE class="c2">
+		 <tr>
+			<th><span class="error">*</span>联系人：</th>
+            <td colspan="3">
+                #springBind("projectListing.linkMan")
+				 <input type="text" id="linkMan" name="${status.expression}" value="$!{status.value}" class="inp" />
+				<span class="error">${status.errorMessage}</span>
+				##<input type="button"  class="button" onclick="chooseAddress('P','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择"/ >
+            </td>
+        </tr>
+		 <tr>
+            <th><span class="error">*</span>联系电话：</th>
+            <td>
+                #springBind("projectListing.phone")
+				 <input type="text" id="phone" name="${status.expression}" value="$!{status.value}" class="inp" />
+				<span class="error">${status.errorMessage}</span>
+            </td>
+            <td>邮编：</td>
+            <td>
+                #springBind("projectListing.zipCode")
+				 <input type="text" id="zipCode" name="${status.expression}" value="$!{status.value}" class="inp" />
+				<span id="zipCode_remind_show_message" class="error">${status.errorMessage}</span>
+            </td>
+        </tr>
+</TABLE>
+</fieldset>
+<fieldset>
+    <legend>项目图片</legend>
+    <TABLE class="c2">
+        <tr>
+            <th></th>
+            <td>
+                <span class="error" id="fileErrorDiv_remind_show_message"></span>
+            </td>
+        </tr>
+        <tr>
+            <th>主图片：</th>
+            <td>
+                <input id="fileChoose0"   name="uploadFile0" type="file"  value="ssssss"  onkeypress= "return false;"   onpaste= "return false;" />
+                <input type="button" style="width:60px" value="清除" onclick="clearPic();"/>
+            </td>
+        </tr>
+        <tr>
+            <th>图片1：</th>
+            <td>
+                <input id="fileChoose1"   name="uploadFile1" type="file"   value="ssssss"  onkeypress= "return false;"   onpaste= "return false;" />
+                <input type="button" style="width:60px" value="清除" onclick="clearPic1();"/>
+            </td>
+        </tr>
+        <tr>
+            <th>图片2：</th>
+            <td>
+                <input id="fileChoose2"   name="uploadFile2" type="file"   value="ssssss"  onkeypress= "return false;"   onpaste= "return false;" />
+                <input type="button" style="width:60px" value="清除" onclick="clearPic2();"/>
+            </td>
+        </tr>
+        <tr>
+            <th>图片3：</th>
+            <td>
+                <input id="fileChoose3"   name="uploadFile3" type="file"   value="ssssss"  onkeypress= "return false;"   onpaste= "return false;" />
+                <input type="button" style="width:60px" value="清除" onclick="clearPic3();"/>
+            </td>
+        </tr>
+        <tr>
+            <th>图片4：</th>
+            <td>
+                <input id="fileChoose4"   name="uploadFile4" type="file"   value="ssssss"  onkeypress= "return false;"   onpaste= "return false;" />
+                <input type="button" style="width:60px" value="清除" onclick="clearPic4();"/>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <span >*图片支持jpg jpeg gif png格式,每张大小不超过200K</span>
+            </td>
+        </tr>
+    </TABLE>
+    <input type="hidden" id="picturePath"/>
+</fieldset>
+<fieldset>
+    <legend>附件信息</legend>
+    <table class="c2">
+        <tr>
+            <th>附件：</th>
+            <td>
+                <input id="attachedFile" name="attachedFile" type="file" value="" onkeypress="return false;" onpaste="return false;"/>
+                <input type="button" style="width:60px" value="清除" onclick="clearFile();"/>
+                <span id="attachedFile_remind_show_message" class="error"></span>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td>
+                <span>*附件支持doc docx xls xlsx zip rar ppt pptx txt wps csv pdf格式</span>
+				</br>
+				<span >*多个附件请压缩打包后上传,附件大小总共不超过5M</span>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset>
+    <legend>项目描述</legend>
+    <TABLE class="c2">
+        <tr>
+            <td ></td>
+        </tr>
+        <tr>
+            <td>
+                #springBind("projectListing.description")
+                <textarea  id="description" name="${status.expression}" style="width:100%;height:300px;">$!{status.value}</textarea>
+                <p class="red">${status.errorMessage}</p>
+            </td>
+        </tr>
+    </TABLE>
+</fieldset>
+<div class="form-but"><!-- 表单按钮区 -->
+    <button type="submit" class="button-t3">保存</button>
+    <button type="reset" class="button-t3">重置</button>
+</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="b"></div>
+</div>
+<div id="addressList"> </div>
+<div id="easyListingChooseDialog"> </div>

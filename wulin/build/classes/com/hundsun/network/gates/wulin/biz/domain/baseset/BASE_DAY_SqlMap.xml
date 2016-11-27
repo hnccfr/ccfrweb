@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BASE_DAY">
+	<typeAlias alias="BaseDay"
+		type="com.hundsun.network.gates.wulin.biz.domain.baseset.BaseDay" />
+	<resultMap id="BaseResultMap"
+		class="com.hundsun.network.gates.wulin.biz.domain.baseset.BaseDay">
+		<result column="ID" property="id" />
+		<result column="YEAR" property="year" />
+		<result column="MONTH" property="month" />
+		<result column="DAY" property="day" />
+		<result column="GMT_CREATE" property="gmtCreate" />
+		<result column="GMT_MODIFY" property="gmtModify" />
+		<result column="OPERATOR" property="operator" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		t.id,t.year,t.month,trunc(t.day) as day,t.gmt_create,t.gmt_modify,t.operator
+	</sql>
+    
+    <select id="getPrevBaseDay" parameterClass="java.util.Map" resultMap="BaseResultMap">
+        
+        select * from (
+        select v_bd.*, rownum as rn from
+    	(select   
+		<include refid="Base_Column_List"/>
+    	<![CDATA[
+    	from 
+    		base_day t where trunc(day) < trunc(sysdate) order by day desc
+    	]]>
+    	) v_bd )
+    	<dynamic prepend="where">
+    		<isNotNull prepend="and" property="daySum">
+    			 rn = #daySum#
+    		</isNotNull>
+    		<isNull prepend="and" property="daySum">
+    			 rn = 1
+    		</isNull>
+    	</dynamic>
+    </select>
+    
+    <select id="getCurrentBaseDay" resultMap="BaseResultMap">
+        select * from(
+        select v_bd.*, rownum as rn from
+    	(select   
+		<include refid="Base_Column_List"/>
+    	<![CDATA[
+    	from 
+    		base_day t where trunc(day) <= trunc(sysdate) order by day desc
+    	]]>
+    	) v_bd)
+    	 where rn = 1
+    </select>
+	
+	<select id="getNextBaseDay" parameterClass="java.util.Map" resultMap="BaseResultMap">
+        select * from(
+        select v_bd.*, rownum as rn from
+    	(select  
+		<include refid="Base_Column_List"/>
+    	<![CDATA[
+    	from 
+    		base_day t where trunc(day) > trunc(sysdate) order by day asc
+    	]]>
+    	) v_bd) 
+    	<dynamic prepend="where">
+    		<isNotNull prepend="and" property="daySum">
+    			rn = #daySum#
+    		</isNotNull>
+    		<isNull prepend="and" property="daySum">
+    			rn = 1
+    		</isNull>
+    	</dynamic>
+    </select>
+	
+	<select id="getBaseDay" parameterClass="BaseDay" resultMap="BaseResultMap">
+		select 
+		t.id,
+		t.year,
+		t.month,
+		trunc(t.day) as day,
+		t.gmt_create,
+		t.gmt_modify,
+		t.operator
+		from base_day t
+		<dynamic prepend="where">
+			<isNotEmpty property="year" prepend="and">
+				t.year = #year#
+			</isNotEmpty>
+			<isNotEmpty property="month" prepend="and">
+				t.month = #month#
+			</isNotEmpty>
+		</dynamic>
+		order by day asc
+	</select>
+	
+	<delete id="removeBaseDayByYear" parameterClass="BaseDay">
+		delete from base_day where year = #year# 
+		<isNotEmpty property="day" prepend="and">
+				day &gt; #day#
+		</isNotEmpty>
+	</delete>
+	
+</sqlMap>

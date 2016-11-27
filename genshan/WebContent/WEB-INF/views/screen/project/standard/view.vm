@@ -1,0 +1,39 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	//location.href = "$!{appServer}/project/standard/list.htm?dd="+new Date();
+	 history.go(-1);
+}
+</script>
+<style>
+	
+</style>
+<div class="main">
+  <h2>查看标准规格</h2>
+  <div class="formBox">
+    <div id="div-1">
+      <table class="c2" style="width:100%;">
+        <tr>
+          <th style="width:10%;border: 1px solid #9EAEB9;background-color:#F7FAFB;"><b>项目类型：</b></th>
+          <td style="width:20%;border: 1px solid #9EAEB9">&nbsp;$!smls.proTypeName</td>
+		  <th style="width:10%;border: 1px solid #9EAEB9;background-color:#F7FAFB;"><b>名称：</b></th>
+		  <td style="width:20%;border: 1px solid #9EAEB9">&nbsp;$!smls.name</td>
+		  <th style="width:10%;border: 1px solid #9EAEB9;background-color:#F7FAFB;"><b>状态：</b></th>
+		  <td style="border: 1px solid #9EAEB9">&nbsp;#if($!{smls.enable} != "N") 启用
+			#else	禁用     #end</td>
+        </tr>
+        <tr>
+          <th style="border: 1px solid #9EAEB9;background-color:#F7FAFB;"><b>内容：</b></th>
+          <td colspan="5" style="border: 1px solid #9EAEB9;">
+            <div style="margin-left:20px;">#direct($!smls.content)</div>
+		  </td>
+        </tr>
+      </table>
+    </div>
+    </div>
+	
+    <div class="form-but">
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>

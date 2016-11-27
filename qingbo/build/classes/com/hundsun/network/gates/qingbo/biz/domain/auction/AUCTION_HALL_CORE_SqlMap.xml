@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="AUCTION_HALL_CORE" >
+  <typeAlias alias="AuctionHall" type="com.hundsun.network.gates.qingbo.biz.domain.auction.AuctionHall"/>
+  <resultMap id="BaseResultMap" class="AuctionHall" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="HAVE_AUCTIONEER" property="haveAuctioneer" jdbcType="VARCHAR" />
+    <result column="AUCTIONEER_ACCOUNT" property="auctioneerAccount" jdbcType="VARCHAR" />
+    <result column="BID_START_PRICE" property="bidStartPrice" jdbcType="DECIMAL" />
+    <result column="PRICE_DIRECTION" property="priceDirection" jdbcType="DECIMAL" />
+    <result column="SUPPORT_PRIORITY" property="supportPriority" jdbcType="VARCHAR" />
+    <result column="BID_START_TIME" property="bidStartTime" jdbcType="TIMESTAMP" />
+    <result column="BID_LIMITED_PERIOD" property="bidLimitedPeriod" jdbcType="DECIMAL" />
+    <result column="FIRST_WAIT_TIME" property="firstWaitTime" jdbcType="DECIMAL" />
+    <result column="AUCTION_TYPE" property="auctionType" jdbcType="VARCHAR" />
+    <result column="COM_FREE_STARTTIME" property="comFreeStarttime" jdbcType="TIMESTAMP" />
+    <result column="COM_FREE_ENDTIME" property="comFreeEndtime" jdbcType="TIMESTAMP" />
+    <result column="VALUATION_UNIT" property="valuationUnit" jdbcType="VARCHAR" />
+    <result column="PRIORITY_NUM" property="priorityNum" jdbcType="DECIMAL" />
+    <result column="HAVE_RESERVE_PRICE" property="haveReservePrice" jdbcType="VARCHAR" />
+    <result column="RESERVE_PRICE" property="reservePrice" jdbcType="DECIMAL" />
+    <result column="ALLOW_WATCH" property="allowWatch" jdbcType="VARCHAR" />  
+    <result column="WATCH_PASSWORD" property="watchPassword" jdbcType="VARCHAR" />
+    <result column="AUCTION_END_TIME" property="auctionEndTime" jdbcType="TIMESTAMP" />
+    <result column="GMT_CREATOR" property="gmtCreator" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="simpleResultMap" class="java.util.HashMap" >  
+  	 <result column="HAVE_AUCTIONEER" property="haveAuctioneer" jdbcType="VARCHAR" />
+  	 <result column="AUCTIONEER_ACCOUNT" property="auctioneerAccount" jdbcType="VARCHAR" />
+  	 <result column="HAVE_RESERVE_PRICE" property="haveReservePrice" jdbcType="VARCHAR" />
+  	 <result column="SUPPORT_PRIORITY" property="supportPriority" jdbcType="VARCHAR" />
+  	 <result column="PRIORITY_NUM" property="priorityNum" jdbcType="DECIMAL" />
+  	 <result column="BID_LIMITED_PERIOD" property="bidLimitedPeriod" jdbcType="DECIMAL" />
+     <result column="FIRST_WAIT_TIME" property="firstWaitTime" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <resultMap id="simpleResultMapForBid" class="java.util.HashMap" >
+  	 <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+  	 <result column="PRICE_DIRECTION" property="priceDirection" jdbcType="VARCHAR" />
+  	 <result column="HAVE_AUCTIONEER" property="haveAuctioneer" jdbcType="VARCHAR" />
+  	 <result column="BID_LIMITED_PERIOD" property="bidLimitedPeriod" jdbcType="DECIMAL" />
+  	 <result column="BID_START_PRICE" property="bidStartPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <resultMap id="simpleResultMapForEnd" class="java.util.HashMap" >
+  	 <result column="PROJECT_CODE" property="projectCode"  />
+  	 <result column="AUCTIONEER_ACCOUNT" property="auctioneerAccount"  />
+  	 <result column="HAVE_RESERVE_PRICE" property="haveReservePrice"  />
+  	 <result column="RESERVE_PRICE" property="reservePrice"  />
+  	 <result column="VALUATION_UNIT" property="valuationUnit" />
+  	 <result column="PRICE_DIRECTION" property="priceDirection"  />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    ID, PROJECT_CODE, HAVE_AUCTIONEER, AUCTIONEER_ACCOUNT, BID_START_PRICE, PRICE_DIRECTION, 
+    SUPPORT_PRIORITY, BID_START_TIME, BID_LIMITED_PERIOD, FIRST_WAIT_TIME, AUCTION_TYPE, 
+    COM_FREE_STARTTIME, COM_FREE_ENDTIME, VALUATION_UNIT, PRIORITY_NUM, HAVE_RESERVE_PRICE, 
+    RESERVE_PRICE, ALLOW_WATCH, WATCH_PASSWORD, AUCTION_END_TIME, GMT_CREATOR, GMT_MODIFY, 
+    OPERATOR
+  </sql>
+  
+  <!-- 根据项目编号，查找拍卖师账号 -->  
+  <select id="selectSimpleMsgByProjectCode" resultMap="simpleResultMap" parameterClass="AuctionHall" >
+    select HAVE_AUCTIONEER,AUCTIONEER_ACCOUNT,HAVE_RESERVE_PRICE,SUPPORT_PRIORITY,PRIORITY_NUM,BID_LIMITED_PERIOD,FIRST_WAIT_TIME
+    from AUCTION_HALL
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </select>
+  
+  <!-- 根据项目编号，获取拍卖大厅的简单数据(报价、使用优先权时用) -->  
+  <select id="selectSimpleHallForBidByProjectCode" resultMap="simpleResultMapForBid" parameterClass="AuctionHall" >
+    select PROJECT_CODE, PRICE_DIRECTION, HAVE_AUCTIONEER, BID_LIMITED_PERIOD, BID_START_PRICE
+    from AUCTION_HALL
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </select>
+  
+  <!-- 根据项目编号，获取拍卖大厅的简单数据(处理拍卖结束时用) -->  
+  <select id="selectSimpleHallForEndByProjectCode" resultMap="simpleResultMapForEnd" parameterClass="AuctionHall" >
+    select PROJECT_CODE, AUCTIONEER_ACCOUNT, HAVE_RESERVE_PRICE, RESERVE_PRICE, VALUATION_UNIT, PRICE_DIRECTION
+    from AUCTION_HALL
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </select>
+  
+  <!-- 根据项目编号，查找交易大厅数据 -->
+  <select id="selectByProjectCode" resultMap="BaseResultMap" parameterClass="AuctionHall" >
+    select 
+    <include refid="Base_Column_List" />
+    from AUCTION_HALL
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </select>
+  
+ 
+  <update id="updateByPrimaryKeySelective" parameterClass="AuctionHall" >
+    update AUCTION_HALL set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="projectCode" >
+        PROJECT_CODE = #projectCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="haveAuctioneer" >
+        HAVE_AUCTIONEER = #haveAuctioneer:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auctioneerAccount" >
+        AUCTIONEER_ACCOUNT = #auctioneerAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bidStartPrice" >
+        BID_START_PRICE = #bidStartPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="priceDirection" >
+        PRICE_DIRECTION = #priceDirection:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="supportPriority" >
+        SUPPORT_PRIORITY = #supportPriority:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bidStartTime" >
+        BID_START_TIME = #bidStartTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="bidLimitedPeriod" >
+        BID_LIMITED_PERIOD = #bidLimitedPeriod:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="firstWaitTime" >
+        FIRST_WAIT_TIME = #firstWaitTime:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="auctionType" >
+        AUCTION_TYPE = #auctionType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="comFreeStarttime" >
+        COM_FREE_STARTTIME = #comFreeStarttime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="comFreeEndtime" >
+        COM_FREE_ENDTIME = #comFreeEndtime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="valuationUnit" >
+        VALUATION_UNIT = #valuationUnit:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="priorityNum" >
+        PRIORITY_NUM = #priorityNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="haveReservePrice" >
+        HAVE_RESERVE_PRICE = #haveReservePrice:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reservePrice" >
+        RESERVE_PRICE = #reservePrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="allowWatch" >
+        ALLOW_WATCH = #allowWatch:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="watchPassword" >
+        WATCH_PASSWORD = #watchPassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auctionEndTime" >
+        AUCTION_END_TIME = #auctionEndTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+  
+  <update id="updateByProjectCodeSelective" parameterClass="AuctionHall" >
+    update AUCTION_HALL set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="haveAuctioneer" >
+        HAVE_AUCTIONEER = #haveAuctioneer:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auctioneerAccount" >
+        AUCTIONEER_ACCOUNT = #auctioneerAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bidStartPrice" >
+        BID_START_PRICE = #bidStartPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="priceDirection" >
+        PRICE_DIRECTION = #priceDirection:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="supportPriority" >
+        SUPPORT_PRIORITY = #supportPriority:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="bidStartTime" >
+        BID_START_TIME = #bidStartTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="bidLimitedPeriod" >
+        BID_LIMITED_PERIOD = #bidLimitedPeriod:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="firstWaitTime" >
+        FIRST_WAIT_TIME = #firstWaitTime:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="auctionType" >
+        AUCTION_TYPE = #auctionType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="comFreeStarttime" >
+        COM_FREE_STARTTIME = #comFreeStarttime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="comFreeEndtime" >
+        COM_FREE_ENDTIME = #comFreeEndtime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="valuationUnit" >
+        VALUATION_UNIT = #valuationUnit:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="priorityNum" >
+        PRIORITY_NUM = #priorityNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="haveReservePrice" >
+        HAVE_RESERVE_PRICE = #haveReservePrice:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reservePrice" >
+        RESERVE_PRICE = #reservePrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="allowWatch" >
+        ALLOW_WATCH = #allowWatch:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="watchPassword" >
+        WATCH_PASSWORD = #watchPassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="auctionEndTime" >
+        AUCTION_END_TIME = #auctionEndTime:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </update>
+  
+  <delete id="deleteByProjectCode" parameterClass="java.lang.String" >
+    delete from AUCTION_HALL
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </delete>
+ 
+</sqlMap>

@@ -1,0 +1,28 @@
+  #set($layout = 'layout/blank.vm')
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>已分配权限列表</span></h5>
+    <form action="$appServer/role/del_assign_auth.htm" id="form2" >
+        <input type="hidden" name="roleId" value="$roleId"/>	
+        <table width="100%">
+          <tr>
+    		<th><input type="checkbox" id="all"/></th>
+            <th>编码</th>
+            <th>名称</th>
+            <th>类型</th>
+          </tr>
+          #foreach($auth in $authList)
+          <tr #if($velocityCount%2 == 0)  class="bg" #end>
+            <td><input type="checkbox" name="authIds" id="authId" value="$auth.id"/></td>
+            <td>$!{auth.code}</td>
+            <td>$!{auth.name}</td>
+    		<td>
+             #foreach( $authorityType in $!{authorityTypeList} )
+    			 #if( ${auth.type} == ${authorityType.code} )$!{authorityType.desc} #end
+    		  #end
+    		</td>
+          </tr>
+    	  #end     
+        </table>
+	 </form>
+  </div>

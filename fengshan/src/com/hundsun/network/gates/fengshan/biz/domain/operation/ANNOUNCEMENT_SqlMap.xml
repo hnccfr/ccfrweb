@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Announcement" >
+  <typeAlias alias="Announcement" type="com.hundsun.network.gates.fengshan.biz.domain.operation.Announcement"/>
+  <typeAlias alias="AnnouncementQuery" type="com.hundsun.network.gates.fengshan.biz.domain.query.AnnouncementQuery" />
+  <resultMap id="SimplResultMap" class="Announcement" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATOR_TYPE" property="creatorType" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="PROJECT_TITLE" property="projectTitle" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPERATOR_TYPE" property="operatorType" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap" class="Announcement" extends="SimplResultMap">
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Simpl_Column_List" >
+    t_ann.ID, t_ann.TITLE, t_ann.TYPE, t_ann.PROJECT_ID, t_ann.STATUS, 
+    t_ann.CREATOR_TYPE, t_ann.CREATOR, t_ann.GMT_CREATE, t_ann.GMT_MODIFY, 
+    t_pl.TITLE PROJECT_TITLE, t_ann.OPERATOR, t_ann.OPERATOR_TYPE
+  </sql>
+  <sql id="Base_Column_List" >
+    t_ann.ID, t_ann.TITLE, t_ann.CONTENT, t_ann.TYPE, t_ann.PROJECT_ID, t_ann.STATUS, 
+    t_ann.CREATOR_TYPE, t_ann.CREATOR, t_ann.GMT_CREATE, t_ann.GMT_MODIFY, 
+    t_pl.TITLE PROJECT_TITLE, t_ann.OPERATOR, t_ann.OPERATOR_TYPE
+  </sql>
+  
+  <select id="getTotalCount" resultClass="java.lang.Integer" parameterClass="AnnouncementQuery">
+		select
+			count(*)
+		from ANNOUNCEMENT t_ann
+		where t_ann.STATUS = 2
+		   <isNotEmpty prepend="and" property="title">
+					<![CDATA[t_ann.TITLE LIKE '%$title$%' ]]>
+		   </isNotEmpty>
+		   <isNotEmpty prepend="and" property="type">
+					t_ann.TYPE = #type#
+		   </isNotEmpty>
+		   <isNotEmpty prepend="and" property="projectId">
+					t_ann.PROJECT_ID = #projectId#
+		   </isNotEmpty>
+		    <!--拍卖大厅ajax刷新新加的公告,查询比当前最新公告还要新的公告-->
+		    <isNotEmpty prepend="and" property="gmtModify">
+			<![CDATA[t_ann.GMT_MODIFY > #gmtModify# ]]>
+			</isNotEmpty>
+		   <isNotEmpty prepend="and" property="gmtCreateL">
+			<![CDATA[TRUNC(t_ann.GMT_CREATE) >= TRUNC(#gmtCreateL#) ]]>
+		   </isNotEmpty>
+		   <isNotEmpty prepend="and" property="gmtCreateR">
+		  	<![CDATA[TRUNC(t_ann.GMT_CREATE) <= TRUNC(#gmtCreateR#) ]]>
+		   </isNotEmpty>
+		   order by t_ann.GMT_MODIFY desc
+	</select>
+	
+	<select id="getPaginated" parameterClass="AnnouncementQuery" resultMap="SimplResultMap">
+		select *
+		  from (select t1.*, rownum linenum
+		          from (select 
+		          		<include refid="Simpl_Column_List" />
+		                  from ANNOUNCEMENT t_ann
+		                  left join PROJECT_LISTING t_pl
+		                  on t_pl.ID = t_ann.PROJECT_ID
+		                  where t_ann.STATUS = 2
+							   <isNotEmpty prepend="and" property="title">
+										<![CDATA[t_ann.TITLE LIKE '%$title$%' ]]>
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="type">
+										t_ann.TYPE = #type#
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="projectId">
+										t_ann.PROJECT_ID = #projectId#
+							   </isNotEmpty>
+							   <!--拍卖大厅ajax刷新新加的公告,查询比当前最新公告还要新的公告-->
+							   <isNotEmpty prepend="and" property="gmtModify">
+								<![CDATA[ t_ann.GMT_MODIFY > #gmtModify# ]]>
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="gmtCreateL">
+								<![CDATA[TRUNC(t_ann.GMT_CREATE) >= TRUNC(#gmtCreateL#) ]]>
+							   </isNotEmpty>
+							   <isNotEmpty prepend="and" property="gmtCreateR">
+							  	<![CDATA[TRUNC(t_ann.GMT_CREATE) <= TRUNC(#gmtCreateR#) ]]>
+							   </isNotEmpty>
+							   order by t_ann.GMT_MODIFY desc
+					      ) t1
+		         where rownum &lt;= #endIndex#) t2
+		 where t2.linenum &gt;= #beginIndex#
+	</select>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="long" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from ANNOUNCEMENT t_ann 
+	    left join PROJECT_LISTING t_pl 
+	    on t_pl.ID = t_ann.PROJECT_ID
+	    where t_ann.ID = #id:DECIMAL#
+  	</select>
+</sqlMap>

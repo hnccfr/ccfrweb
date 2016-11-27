@@ -1,0 +1,102 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs("jquery")
+#set($agentUserType = $!{eclpUserAgent.userType})
+<script>
+	function formSubmit(){
+		var t_account = jQuery.trim(jQuery('#account').val());
+		var t_realName = jQuery.trim(jQuery('#realName').val());
+		if(t_account.length>20){
+			alert('用户帐号长度不能大于20');
+			return false;
+		}
+		if(t_realName.length>20){
+			alert('姓名长度不能大于20');
+			return false;
+		}
+		var myForm=jQuery('#form1');
+		myForm.attr("action","$appServer/auth/view_user.htm");
+		myForm.submit();
+	}
+	function exportExcel()
+	{
+		var myForm=jQuery('#form1');
+		myForm.attr("action","$appServer/auth/user/excel.htm");
+		myForm.submit();
+	}
+
+</script>
+</head>
+<body>
+<div class="main">
+  <!-- 搜索模块 -->
+  <div class="searchBox">
+    <h5><span>搜索用户</span></h5>
+    <form action="$appServer/auth/view_user.htm" id="form1" name="form1" method="post">
+			<input type="hidden" id="id" name="id" value="$!{authority.id}"/>
+			<input type="hidden" id="sysId" name="sysId" value="$!{authority.subSystemId}"/>
+      <table>
+        <tr> #springBind("query.account")
+          <th>用户帐号：</th>
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+          
+		
+		#springBind("query.realName")
+          <th>&nbsp;&nbsp;姓名：</th>
+          <td><input type="text" id="${status.expression}" name="${status.expression}" class="inp inp-w90" value="$!{status.value}"/></td>
+		  <th>&nbsp;</th>
+          <td><button type="button" class="btn" onclick="formSubmit()">搜 索</button></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+   <div class="tool">
+	#if($!adminAccess.has("AUTH_ROLE"))
+		<span><a href="#" onclick="javascript:exportExcel();" hidefocus="true" class="bt_wu">导出用户</a></span>
+	#end
+	<span><a href="$appServer/auth/view.htm?id=$!{authority.id}" hidefocus="true" class="bt_wu">权限信息</a></span>
+  </div>
+  <!-- 搜索模块 END -->
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  <div class="listBox">
+    <h5><span>$!{authority.name}权限已分配的用户</span></h5>
+    <table width="100%">
+      <tr>
+        <th>用户帐号</th>
+        <th>姓名</th>
+        <th>用户类型</th>
+		<th>状态</th>
+		<th>创建时间</th>
+        <!--
+		<th>创建时间</th>
+		<th>修改时间</th>
+		-->
+      </tr>
+      #foreach($users in $query.items)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end id="row_user_$!{users.id}">
+        <td  id="u_name_$!{users.id}">$!{users.account}</td>
+        <td>$!{users.name}</td>
+        <td> #foreach($type in $enumUsersType)
+          #if($!{users.userType} == $!{type.code})
+          $!{type.msg}
+          #end
+          #end </td>
+		<td>$!userStatusMap.get($!users.status.toString())</td>
+		<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.gmtCreate})</td>
+      </tr>
+      #end
+    </table>
+    #if($query.items)
+    $contain.get('/contain/form_page_slider.htm').put('slider_query',$query).put('slider_target',"/auth/view_user.htm?id=$!{authority.id}&sysId=$!{authority.subSystemId}").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

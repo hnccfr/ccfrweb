@@ -1,0 +1,40 @@
+#set($title = '保存成功')
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/common.css" />
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script>
+    var appServer = "$!{appServer}";
+</script>
+##<script type="text/javascript" src="$!{imageServer}/scripts/project/list.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/project/match.js"></script>
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+            <ul>
+                <li>
+                    <a class="cursor" href="#">新增结果</a>
+                </li>
+            </ul>
+    </div>
+    <div  class="right-body">
+		<div class="formBox">
+			<input type="hidden" id="projectListingId" name="projectListingId" value="$!{projectListingId}">
+				<input type="hidden" id="projectId" name="projectId" value="$!{projectListingId}">
+			<input type="hidden" id="reURL" name="reURL" value="$!{reURL}">
+            <div id="auditDiv" class="mag-t2" >
+                <span id="loginAuditMsg">挂牌信息保存成功!</span>
+				 <a style="color:#0066CC" id="loginAuditBtn" href="#" onclick="auditSellProjectConfirm($!{projectListingId});" title="提交审核">提交审核</a>
+				#if($!{matche} == "YES")
+				<br />看看哪些项目和我的挂牌<a style="color:#0066CC" href="#" onclick="doMatch();" title="找一下...？">匹配</a>;
+				#end
+				或者去查看<a href="$!{appServer}$!{reURL}" style="color:#0066CC">我的挂牌信息</a>!
+			</div>
+			<div class="form-but"><!-- 表单按钮区 -->
+				<button type="button" class="button-t3" onclick="javascript:#if($!{reURL}) window.location.href='$!{appServer}$!{reURL}' #else history.go(-1) #end " title="查看我的挂牌信息">返回</button>
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="b"></div>
+	<div  id="auditSellProjectConfirmDialog"></div>
+</div>

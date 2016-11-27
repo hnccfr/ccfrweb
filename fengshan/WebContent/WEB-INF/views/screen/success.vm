@@ -1,0 +1,8 @@
+#set($title = '操作成功')
+<link rel="stylesheet" href="$!{imageServer}/styles/result.css" type="text/css">
+<div class="r-success">
+    	<h3>#if($!{message})$!{message}#else 操作成功！#end</h3>
+        <h2>$!{tips}</h2>		
+        <button class="button-s10" type="button" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}.htm'#else history.go(-1)#end">返回</button>
+       	##<p>相关操作：<a href="#">管理员首页</a> <a href="#">新增用户</a> <a href="#">用户列表</a></p> 
+</div>

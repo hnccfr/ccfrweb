@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="UserRoleRelationship">
+
+	<typeAlias alias="UserRoleRelationship"
+		type="com.hundsun.network.gates.fengshan.biz.domain.user.UserRoleRelationship" />
+
+	<resultMap id="userRoleRelationshipResultMap" class="UserRoleRelationship">
+		<result column="ID" property="id" />
+		<result column="ROLE_ID" property="roleId" />
+		<result column="USER_ID" property="userId" />
+		<result column="GMT_CREATE" property="gmtCreate" />
+		<result column="GMT_MODIFY" property="gmtModify" />
+		<result column="OPERATOR" property="operator" />
+	</resultMap>
+
+	<select id="getUserRoleByUserId" resultMap="userRoleRelationshipResultMap">
+		select * from
+		USER_ROLE_RELATIONSHIP t
+		where t.USER_ID = #userId#
+	</select>
+
+	<insert id="addUserRole">
+		<selectKey keyProperty="id" resultClass="long" type="pre">
+			select
+			SEQ_USER_ROLE_RELATIONSHIP.nextval as id from dual
+		</selectKey>
+		insert into USER_ROLE_RELATIONSHIP (ID, ROLE_ID, USER_ID,
+		GMT_CREATE, GMT_MODIFY, OPERATOR)
+		values (#id#, #roleId#, #userId#,
+		sysdate, sysdate, #operator#)
+	</insert>
+
+	<delete id="removeUserRoleByUserId">
+		delete from USER_ROLE_RELATIONSHIP where USER_ID =
+		#userId#
+	</delete>
+
+	<delete id="deleteById">
+		delete from USER_ROLE_RELATIONSHIP where ID = #id#
+	</delete>
+
+	<select id="getUserRoleByRoleId" resultClass="int">
+		select count(*) from
+		USER_ROLE_RELATIONSHIP t
+		where t.ROLE_ID = #roleId#
+	</select>
+	
+</sqlMap>

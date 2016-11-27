@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head >
+	$contain.get('/contain/htmlhead.htm').put('title',$title)
+<link rel="stylesheet" href="$appServer.get('styles/ligerAll.css')" />
+<link rel="stylesheet" href="$appServer.get('styles/ligerLayout.css')" />
+<script type="text/javascript" src="$appServer.get('scripts/jqueryeasyui/jquery-1.4.4.min.js')"></script>
+<script type="text/javascript" src="$appServer.get('scripts/ligerLayout.js')"></script>
+#set($layout = 'layout/blank.vm')
+<script type="text/javascript">
+function del(){
+	var nodes = parent.authTreeIframe.zTree1.getChangeCheckedNodes();
+	if( nodes.length == 0 ){
+		alert( "请选择！" );
+		return false;
+	}
+	var ids = "";
+	for( var i=0; i<nodes.length; i++ ){
+		ids = ids + nodes[ i ].id + ",";
+	}
+	if(confirm('确定删除此仓库?' + ids)){
+		alert( "确认！！！" );
+	}
+}
+</script> 
+<style type="text/css"> 
+body{padding:5px; margin:0; padding-bottom:15px;}
+#layout1{  width:100%;margin:0; padding:0;  }  
+.l-page-top{ height:80px; background:#f8f8f8; margin-bottom:3px;}
+h4{ margin:20px;}
+</style>
+</head>
+<body style="padding:10px">
+	 <input type="button" onclick="del()" value="删除" />
+	#*
+    <div class="main-right" >
+        <!-- 查询框 -->
+        <div class="search-box">
+			<form id="searchForm"  method="post">
+                <table>
+                    <tr>
+						<th width="40px">名称：</th>
+						#springBind("page.name")
+            			<td><input type="text" id="name"  class="inp" name="${status.expression}" value="$!{status.value}"></td>
+						<th>所在城市：</th>
+						#springBind("page.city")
+            			<td><input type="text" id="city"  class="inp" name="${status.expression}" value="$!{status.value}"></td>
+                        <th width="60px">联系人：</th>
+						#springBind("page.link")
+            			<td><input type="text" id="link" class="inp" name="${status.expression}" value="$!{status.value}"></td>
+                    </tr>
+                    <tr>
+						<th width="40px">状态：</th>
+                        #springBind("page.state")
+						<td>
+                            <select name="state" id="state">
+                                <option value="0">请选择</option>
+								<option value="1" #if($!{status.value} == "1") selected #end>启用</option>
+								<option value="2" #if($!{status.value} == "2") selected #end>禁用</option>
+                            </select>
+                        </td>
+                        <th colspan="4">
+                            <input type="submit" class="but-61" value="查 询" />
+                            <input type="reset"  class="but-62" value="重 置" />
+                        </th>
+                    </tr>
+                </table>
+			 </form>
+        </div>
+        <!-- 查询框 END -->
+        <div class="basic">
+			
+		   <div class="tool">
+                    <span><a href="$!{appServer}/base/storage/add.htm" class="bt_add" hidefocus="true">新增</a></span>   
+            </div>  
+			
+            <div class="listbox" >
+                <table class="list-table">
+                    <tr>
+                        <th style="width:140px;">名称</th>
+                        <th style="width:100px;">所在城市</th>
+                        <th style="width:80px;">联系人</th>
+                        <th style="width:100px;">联系电话</th>
+                        <th style="width:100px;">手机</th>
+                        <th style="width:40px;">状态</th>
+						<th style="width:120px;">操作</th>
+                    </tr>
+					#if($!{page.data} && !${page.data.empty})
+    					#foreach($query in $page.data)
+                        <tr #if($!{velocityCount}%2 == 0) class="bg" #end>
+                            <td align="left">
+                            	$!{query.getNameListShow()}
+                            </td>
+                            <td align="center">$!{query.getCityListShow()}</td>
+                            <td align="center">$!{query.getLinkListShow()}</td>
+                            <td align="center">$!{query.tel}</td>
+                            <td align="center">$!{query.mobile}</td>
+                            <td align="center">
+								#if($!{query.isEnable()})
+									启用
+								#elseif($!{query.isDisable()})
+									禁用
+                                #end
+							</td>
+                            <td class="link-td" align="center">
+									<a href="${appServer}/base/storage/edit.htm?id=$!{query.id}">修改</a>
+									<a href="#" onclick="del($!{query.id})">删除</a>
+								#if($!{query.isDisable()} )
+									<a href="#" onclick="enable($!{query.id})">启用</a>
+								#elseif($!{query.isEnable()})
+									<a href="#" onclick="disable($!{query.id})">禁用</a>
+                                #end
+							</td>
+                        </tr>
+    					#end
+					#else
+            		<tr>
+            			<td colspan="9">
+            				<p>没有结果</p>
+            			</td>
+            		</tr>
+					#end
+                </table>
+				
+                <div class="pages-box" >
+          			#pager($page, "searchForm")
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+        </div>
+    </div>
+	*#
+	列表
+</body>
+</html>

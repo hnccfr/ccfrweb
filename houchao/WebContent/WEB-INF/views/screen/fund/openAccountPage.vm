@@ -1,0 +1,168 @@
+##资金账户 开户
+<script src="$!{imageServer}/script/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+     function openfund(){
+		window.location = "$!{appServer}/fund/open_account_page.htm";
+	}
+
+	function closefund(){
+		window.location = "$!{appServer}/fund/close_account_page.htm";
+	}
+
+ 	jQuery(document).ready(function(){
+		jQuery("#active").click(function() {
+			   jQuery.getJSON("http://172.21.1.73:8888/houchao/fund/openAccount.htm?fundAccount=1&bankNo=1&bankAccount=1&idKind=1&idNo=1&jsoncallback=?",
+                function(data){
+					if(data.success == "true"){
+						alert("操作成功");
+					}else{
+						alert("操作失败");
+					}
+                });
+		});
+  	});
+
+	function openactive(){
+			var remoteFundUrl = "http://127.0.0.1:8080/houchao/fund/openAccount.htm?fundAccount=1&bankNo=1&bankAccount=1&idKind=1&idNo=1";
+
+			##var remoteFundUrl = "http://172.21.1.73:8888/houchao/fund/openAccount.htm?fundAccount=1&bankNo=1&bankAccount=1&idKind=1&idNo=1";
+
+			jQuery.get(remoteFundUrl, function(data) {
+                alert(data.success);
+				alert(data.msg);
+            });
+	}
+
+
+
+
+
+
+</script>
+<div class="main-right">
+	<div class="basic">
+		<ul class="form-tab">
+			<li class="c">
+                <span><a href="$appServer.get('index.htm')"">首页</a></span>
+            </li>
+            <li class="c">
+                <span><a href="#" onclick="openfund()">开户</a></span>
+            </li>
+			<li class="c">
+                <span><a href="#" onclick="closefund()">销户</a></span>
+            </li>
+		</ul>
+		<div class="formbox">
+			<div class="clear"></div>
+			<form action="$!{appServer}/fund/open_fund_trans.htm" method="post">
+			<div class="nr">
+				<div class="nr-t"></div>
+				<div class="nr-c">
+					<table class="c2">##输出字段(始)
+					    <tr>
+							<th>资料都填完哦，后果自负哈</th>
+							<td>
+							</td>
+						</tr>
+
+						<tr>
+							<th>资金账号:</th>#springBind("transReq.fundAccount")
+							<td>
+								<input type="text" class="inp" name="${status.expression}"  maxlength="10"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>机构号:</th>#springBind("transReq.bankBranch")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="1000000"  maxlength="8"/>
+							</td>
+						</tr>
+						<tr>
+							<th>银行分支:</th>#springBind("transReq.branchNo")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="100001"  maxlength="6"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>银行号:</th>#springBind("transReq.bankNo")
+							<td>
+								<input type="text" class="inp" name="${status.expression}"   maxlength="8"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>银行账号:</th>#springBind("transReq.bankAccount")
+							<td>
+								<input type="text" class="inp" name="${status.expression}"   maxlength="20"/>
+							</td>
+						</tr>
+						<tr>
+							<th>币     种:</th>#springBind("transReq.moneyType")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="CNY"  maxlength="3"/>
+							</td>
+						</tr>
+						<tr>
+							<th>国别:</th>#springBind("transReq.country")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="CHN"  maxlength="3"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>证件类型:</th>#springBind("transReq.idKind")
+							<td>
+								<input type="text" class="inp" name="${status.expression}"   maxlength="2"/>
+							</td>
+						</tr>
+						<tr>
+							<th>证件号码:</th>#springBind("transReq.idNo")
+							<td>
+								<input type="text" class="inp" name="${status.expression}"   maxlength="20"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>姓      名:</th>#springBind("transReq.holderName")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="无名氏"  maxlength="20"/>
+							</td>
+						</tr>
+
+						<tr>
+							<th>操作人:</th>#springBind("transReq.operator")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="g"  maxlength="20"/>
+							</td>
+						</tr>
+
+
+
+						<tr>
+							<th>备注:</th>#springBind("transReq.memo")
+							<td>
+								<input type="text" class="inp" name="${status.expression}" value="开户啦，赚钱啦"  maxlength="20"/>
+							</td>
+						</tr>##输出字段(终)
+					</table>
+				</div>
+				<div class="nr-b"></div>
+			</div>
+
+			<div class="form-but">##操作按键区(始)
+				<input type="submit" class="but" value="开户" />
+				<input type="reset" class="but" value="重置" />
+			</div>##操作按键区(终)
+            </form>
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+
+
+		<a href="#" id="active">激活资金账户</a>
+
+    </div>
+
+</div>

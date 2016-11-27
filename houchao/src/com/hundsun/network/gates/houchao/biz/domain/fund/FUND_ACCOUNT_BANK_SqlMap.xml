@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FUND_ACCOUNT_BANK">
+	<typeAlias alias="FundAccountBank"
+		type="com.hundsun.network.gates.houchao.biz.domain.fund.FundAccountBank" />
+
+  <resultMap id="fundAccountBankResult" class="fundaccountbank" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+	<result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR" />
+	<result column="CLIENT_ID" property="clientId" jdbcType="VARCHAR" />
+	<result column="POSITION_ID" property="positionId" jdbcType="VARCHAR" />
+	<result column="MONEY_TYPE" property="moneyType" jdbcType="VARCHAR" />
+	<result column="BRANCH_NO" property="branchNo" jdbcType="VARCHAR" />
+	<result column="BANK_NO" property="bankNo" jdbcType="VARCHAR" />
+	<result column="BANK_BRANCH" property="bankBranch" jdbcType="VARCHAR" />
+	<result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+	<result column="BANK_ACCOUNT_TYPE" property="bankAccountType" jdbcType="VARCHAR" />
+	<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+	<result column="CARD_KIND" property="cardKind" jdbcType="VARCHAR" />
+	<result column="CARD_NO" property="cardNo" jdbcType="VARCHAR" />
+	<result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+	<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+	<result column="CREATE_ID" property="createId" jdbcType="VARCHAR" />
+	<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+	<result column="MODIFY_ID" property="modifyId" jdbcType="VARCHAR" />
+	<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <insert id="insertFundAccountBank" parameterClass="fundaccountbank" >
+	<selectKey resultClass="long" keyProperty="id" >
+		SELECT SEQ_FUND_ACCOUNT_BANK.NEXTVAL AS ID FROM DUAL
+	</selectKey>
+    INSERT INTO FUND_ACCOUNT_BANK
+      (ID ,
+	   FUND_ACCOUNT ,
+	   CLIENT_ID ,
+	   POSITION_ID,
+	   MONEY_TYPE ,
+	   BRANCH_NO,
+	   BANK_NO ,
+	   BANK_BRANCH ,
+	   BANK_ACCOUNT ,
+	   BANK_ACCOUNT_TYPE ,
+	   CUSTOMER_NAME ,
+	   CARD_KIND ,
+	   CARD_NO ,
+	   COUNTRY ,
+	   GMT_CREATE ,
+	   CREATE_ID ,
+	   GMT_MODIFY ,
+	   MODIFY_ID ,
+	   MEMO)
+    VALUES
+      (#id#,
+	   #fundAccount#,
+	   #clientId#,
+	   #positionId#,
+	   #moneyType#,
+	   #branchNo#,
+	   #bankNo#,
+	   #bankBranch#,
+	   #bankAccount#,
+	   #bankAccountType#,
+	   #customerName#,
+	   #cardKind#,
+	   #cardNo#,
+	   #country#,
+	   SYSDATE,
+	   #createId#,
+	   SYSDATE,
+	   #modifyId#,
+	   #memo#)
+  </insert>
+
+	 <select id="getFundAccountBankIsExist" parameterClass="java.lang.String" resultMap="fundAccountBankResult">
+		SELECT * FROM FUND_ACCOUNT_BANK
+		WHERE CARD_NO = #value#
+   	 </select>
+
+    <delete id="updateFundAccountBankStatus" parameterClass="fundaccountbank">
+		<![CDATA[
+			DELETE FROM FUND_ACCOUNT_BANK WHERE FUND_ACCOUNT = #fundAccount#
+		]]>
+	</delete>
+	
+	<select id="getFundAccountBankByAccount" parameterClass="java.lang.String" resultMap="fundAccountBankResult">
+		SELECT * FROM FUND_ACCOUNT_BANK WHERE FUND_ACCOUNT = #account#
+   	 </select>
+
+</sqlMap>

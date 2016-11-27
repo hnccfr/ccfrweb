@@ -1,0 +1,64 @@
+#set($layout = 'layout/default.vm')
+$iDemand.addCss('admin')
+$iDemand.addCss('basic')
+$iDemand.addJs('layer')
+$iDemand.addJs('WdatePicker')
+$iDemand.addJs("jquery")
+#set($agentUserType = $!{eclpUserAgent.userType})
+<script>
+	
+</script>
+</head>
+<body>
+<div class="main">
+  <div class="tool">
+	#if($!adminAccess.has("ROLE_VIEW_USER"))
+		<span><a href="$appServer/role/exportUser.htm?roleId=$!roleId" hidefocus="true" class="bt_wu">导出用户</a></span>
+	#end
+	<span><a href="$appServer/role/role_list.htm" hidefocus="true" class="bt_wu">角色列表</a></span>
+  </div>
+  <div class="clear"></div>
+  <!-- 列表模块 -->
+  
+  <div class="listBox">
+    <h5><span>#if($!role)$!role.displayName角色的用户列表#else 用户列表 #end </span></h5>
+    <table width="100%">
+      <tr>
+        <th>用户帐号</th>
+        <th>姓名</th>
+        <th>用户类型</th>
+        <th>状态</th>
+		<th>创建时间</th>
+		<th>修改时间</th>
+	
+      </tr>
+      #foreach($users in $page.items)
+      <tr #if($velocityCount%2 == 0)  class="bg" #end id="row_user_$!{users.id}">
+        <td  id="u_name_$!{users.id}">$!{users.account}</td>
+        <td>$!{users.name}</td>
+        <td> #foreach($type in $enumUsersType)
+          #if($!{users.userType} == $!{type.code})
+          $!{type.msg}
+          #end
+          #end </td>
+        <td name="status"> #foreach($status in $enumUsersStatus)
+          #if($!{users.status} == $!{status.code})
+          $!{status.desc}
+          #end
+          #end </td>
+        <td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.gmtCreate})</td>
+		<td>$dateUtil.convertDateToString("yyyy-MM-dd HH:mm:ss", $!{users.gmtModify})</td>     
+      </tr>
+      #end
+    </table>
+  
+    #if($page.items)
+    $contain.get('/contain/form_page_slider.htm').put('slider_query',$page).put('slider_target',"/role/role_user.htm").put("slider_width",3)
+    #else
+    <div class="pages-box" >
+      <div class="pages" style="text-align: center;"> <span style="font-weight:bold;font-size:13px;">没有数据</span> </div>
+    </div>
+    #end </div>
+  <!-- 列表模块 END -->
+</div>
+</body>

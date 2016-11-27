@@ -1,0 +1,85 @@
+#set($layout = 'layout/default.vm')
+#set($title = '历史报价列表'+$!listing.code)
+<div class="main">
+	<div class="formBox">
+		<h2><span>查看报价列表</span></h2>
+    </div>
+    <div class="content">
+		<form id="searchForm" action="$!{appServer}/auction/bidrecordhis.htm" method="post">
+		#springBind("brhquery.projectCode")
+		<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+		<input type="hidden" name="returnUrl" value="$!{returnUrl}" />
+        </form>
+		<div class="searchBox">
+    		<table class="c2">
+				<tr>
+                    <th>项目编号：</th>
+                    <td>$!listing.code</td>
+					<th>项目名称：</th>
+                    <td>$!listing.title</td>
+				</tr>
+                <tr>
+                    <th>交易结果：</th>
+                    <td>$!EnumAuctionResultTranResultMap.get($!auctionResult.tranResult)</td>
+					<th>拍卖师：</th>
+                    <td>$!auctionResult.auctioneerAccount</td>
+				</tr>
+				<tr>
+					<th>成交帐号：</th>
+                    <td>$!auctionResult.bidderAccount</td>
+					<th>成交牌号：</th>
+                    <td>$!auctionResult.bidderTrademark</td>
+				</tr>
+				<tr>
+					<th>成交价格：</th>
+                    <td>$!commonUtils.getValuationUnitDesc($!auctionResult.price,$!auctionResult.getValuationUnit())
+					</td>
+					<th>交易结束时间：</th>
+                    <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{auctionResult.endTime})</td>
+				</tr>
+				<tr>
+					<th>备注：</th>
+                    <td>$!auctionResult.remark</td>
+				</tr>
+                </tr>
+            </table>
+        </div>
+		
+		 ##项目数据展示
+		<div class="listBox">
+			<div>
+				<table style="width:100%;">
+					<tr>
+						<th class="list-order-field" id="projectCode">项目编号</th>
+                        <th class="list-order-field" id="projectName">项目名称</th>
+                        <th class="list-order-field" id="bidderAccount">报价人</th>
+						<th class="list-order-field" id="bidderTrademark">竞价人牌号</th>
+						<th class="list-order-field" id="price">价格</th>
+						<th class="list-order-field" id="usePriority">是否使用优先权</th>
+                        <th class="list-order-field" id="gmtCreate">创建时间</th>
+					</tr>
+					#foreach($item in $!{brhquery.data})
+						<tr  #if($velocityCount%2==1) class="bg"   #end style="text-align:center;">
+                            <td> &nbsp;$!{item.projectCode}</td> 
+                            <td> &nbsp;<a style="color:#0066CC" target="_blank" href="$!{appServer}/home/detail.htm?projectCode=$!{item.projectCode}">$!{item.projectName}</a></td> 
+							<td> &nbsp;$!{item.bidderAccount}</td>
+							<td> &nbsp;$!{item.bidderTrademark}</td>
+							<td> &nbsp;$!commonUtils.getValuationUnitDesc($!item.price,$!auctionResult.getValuationUnit())</td>
+							<td> &nbsp;#if($!item.usePriority=="Y")是#else否#end</td>
+							<td> &nbsp;$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{item.gmtCreate})</td>
+						</tr>
+					#end
+				</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{brhquery},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+	<div class="form-but">
+      <!-- 表单按钮区 -->
+	  <button type="button" class="button-s4" onclick="javascript:#if($!{returnUrl})window.location.href='$!{appServer}/$!{returnUrl}'#else history.go(-1)#end">返回</button>
+    </div>
+</div>
