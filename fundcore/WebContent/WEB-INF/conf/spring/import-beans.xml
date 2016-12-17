@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 此配置文件包括所有通过远程调用import来的service -->
+<beans>
+	 <!--<bean id="remoteBaseService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${gold.baseService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.gold.remote.service.RemoteBaseService" />
+    </bean>
+	 <bean id="remoteFundService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${gold.fundService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.gold.remote.service.RemoteFundService" />
+    </bean>
+	 <bean id="remotePositionService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${gold.positionService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.gold.remote.service.RemotePositionService" />
+    </bean>
+ 	 <bean id="remoteUserTraderService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${gold.remoteUserTraderService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.gold.remote.service.RemoteUserTraderService" />
+    </bean>
+
+    <bean id="remoteTradeService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${silver.tradeService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.silver.remote.service.RemoteTradeService" />
+    </bean>
+    
+    
+    <bean id="remoteFundQueryService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${gold.fundQueryService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.gold.remote.service.RemoteFundQueryService" />
+    </bean>
+    <bean id="remoteForceService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${silver.remoteForceService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.silver.remote.service.RemoteForceService" />
+    </bean>
+
+    <bean id="remoteAnnouncementService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+        <property name="serviceUrl"  value="${aluminum.announcementService.hessian.url}" />
+        <property name="serviceInterface"  value="com.hundsun.network.greenlake.aluminum.remote.service.RemoteAnnouncementService" />
+    </bean>
+    -->
+   
+</beans>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FUND_ACCOUNT_LOG">
+	<typeAlias alias="FundAccountLog"
+		type="com.hundsun.network.gates.houchao.biz.domain.fund.FundAccountLog"/>
+
+  	<resultMap id="fundAccountLogResult" class="FundAccountLog">
+		<result column="ID" property="id" jdbcType="DECIMAL"/><!--ID-->
+		<result column="TRANS_DATE" property="transDate" jdbcType="VARCHAR"/><!--交易日期YYYY-MM-DD-->
+		<result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR"/><!--资金账号-->
+		<result column="TRANS_CODE" property="transCode" jdbcType="CHAR"/><!--交易代码-->
+		<result column="SUB_TRANS_CODE" property="subTransCode" jdbcType="CHAR"/><!--交易子码-->
+		<result column="TRANS_AMOUNT" property="transAmount" jdbcType="DECIMAL"/><!--发生金额-->
+		<result column="BIZ_NO" property="bizNo" jdbcType="VARCHAR"/><!--业务流水号-->
+		<result column="UNDO_FLAG" property="undoFlag" jdbcType="CHAR"/><!--冲正标志:0－正常交易;1－冲正交易（C:冲正,B：被冲正）-->
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR"/><!--操作员-->
+		<result column="BRANCH_NO" property="branchNo" jdbcType="VARCHAR"/><!--操作员机构号-->
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP"/><!--创建时间-->
+		<result column="CREATE_ID" property="createId" jdbcType="VARCHAR"/><!--创建人-->
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP"/><!--最后修改时间-->
+		<result column="MODIFY_ID" property="modifyId" jdbcType="VARCHAR"/><!--最后修改人-->
+		<result column="MEMO" property="memo" jdbcType="VARCHAR"/><!--备注信息-->
+		<result column="POST_AMOUNT" property="postAmount" jdbcType="DECIMAL"/><!--后资金额-->
+  	</resultMap>
+
+  	<!--插入	-->
+  	<insert id="insert" parameterClass="FundAccountLog" >
+  		<selectKey resultClass="long" keyProperty="id" >
+			SELECT SEQ_FUND_ACCOUNT_LOG.NEXTVAL AS ID FROM DUAL
+		</selectKey>
+	    INSERT INTO FUND_ACCOUNT_LOG
+		  (ID,
+		   TRANS_DATE,
+		   FUND_ACCOUNT,
+		   TRANS_CODE,
+		   SUB_TRANS_CODE,
+		   TRANS_AMOUNT,
+		   POST_AMOUNT,
+		   BIZ_NO,
+		   UNDO_FLAG,
+		   OPERATOR,
+		   BRANCH_NO,
+		   GMT_CREATE,
+		   CREATE_ID,
+		   GMT_MODIFY,
+		   MODIFY_ID,
+		   MEMO
+		   )
+		VALUES
+		  (#id:DECIMAL#,
+		   #transDate:VARCHAR#,
+		   #fundAccount:VARCHAR#,
+		   #transCode:CHAR#,
+		   #subTransCode:CHAR#,
+		   #transAmount:DECIMAL#,
+		   #postAmount:DECIMAL#,
+		   #bizNo:VARCHAR#,
+		   #undoFlag:CHAR#,
+		   #operator:VARCHAR#,
+		   #branchNo:VARCHAR#,
+		   SYSDATE,
+		   #createId:VARCHAR#,
+		   SYSDATE,
+		   #modifyId:VARCHAR#,
+		   #memo:VARCHAR#
+		   )
+	  </insert>
+
+	<select id="get-by-bizNo-and-subCode"  resultMap="fundAccountLogResult">
+		SELECT t.* FROM FUND_ACCOUNT_LOG t
+		WHERE t.BIZ_NO=#bizNo#
+		  AND t.SUB_TRANS_CODE=#subTransCode#
+		  AND t.UNDO_FLAG is null
+	</select>
+	
+	<select id="get-by-bizNo-and-subCode-and-fundAccount"  resultMap="fundAccountLogResult">
+		SELECT t.* FROM FUND_ACCOUNT_LOG t
+		WHERE t.BIZ_NO=#bizNo#
+		  AND t.SUB_TRANS_CODE=#subTransCode#
+		  AND t.FUND_ACCOUNT=#fundAccount#
+		  AND t.UNDO_FLAG is null
+	</select>
+
+	<update id="update-to-cancelFlag" parameterClass="FundAccountLog">
+		UPDATE FUND_ACCOUNT_LOG
+		   SET UNDO_FLAG=#undoFlag#,
+		   	   MODIFY_ID=#modifyId#,
+		   	   GMT_MODIFY=SYSDATE
+		 WHERE ID=#id#
+	</update>
+
+	<select id="get-by-bizNo-and-subCode-val" resultMap="fundAccountLogResult" parameterClass="FundAccountLog">
+		SELECT t.* FROM FUND_ACCOUNT_LOG t
+		 WHERE t.BIZ_NO=#bizNo#
+		   AND t.SUB_TRANS_CODE=#subTransCode#
+		   AND t.UNDO_FLAG is null
+    </select>
+
+   <select id="get-by-bizNo" resultMap="fundAccountLogResult" parameterClass="FundAccountLog">
+		SELECT t.* FROM FUND_ACCOUNT_LOG t
+		 WHERE t.BIZ_NO=#bizNo#
+		   AND t.UNDO_FLAG is null
+   </select>
+   
+   <select id="fundAccountLogBybizNO" resultMap="fundAccountLogResult">
+		SELECT t.* FROM FUND_ACCOUNT_LOG t
+		 WHERE t.BIZ_NO=#bizNO#
+		   and TRANS_CODE IN ('2001','2002')
+		   AND t.UNDO_FLAG is null
+   </select>
+
+</sqlMap>

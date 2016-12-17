@@ -1,0 +1,33 @@
+##资金账户 开户
+<script type="text/javascript">
+     function openfund(){
+		window.location = "$!{appServer}/fund/open_account_page.htm";
+	}
+
+	function closefund(){
+		window.location = "$!{appServer}/fund/close_account_page.htm";
+	}
+
+</script>
+<div class="main-right">
+	<div class="basic">
+		<ul class="form-tab">
+			<li class="c">
+                <span><a href="$appServer.get('index.htm')"">返回首页</a></span>
+            </li>
+			<li><a href="$appServer.get('fund/open_account_page.htm')">开户销户</a></li>
+<li></li>
+<li><a href="$appServer.get('fund/bank_fund_out.htm')">银行转交易所</a></li>
+<li></li>
+<li><a href="$appServer.get('fund/bank_fund_in.htm')">交易所转银行</a></li>
+<li></li>
+<li><a href="$appServer.get('/fund/current_trade_day.htm')">当前交易日</a></li>
+<li></li>
+		</ul>
+		<div class="formbox">
+				操作失败哈   $!{message}
+        </div>
+		<div class="clear"></div>
+    </div>
+
+</div>
