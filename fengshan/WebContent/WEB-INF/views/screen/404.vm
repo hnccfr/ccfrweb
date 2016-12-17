@@ -1,9 +1,0 @@
-#set($layout = 'login')
-<div class="error-404">
-	<p>
-    	杯具了，这里的页面破了相了...
-    </p>
-	<div class="btn-box">
-    	<a href="#">返回首页</a>
-    </div>
-</div>

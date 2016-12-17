@@ -1,2 +1,0 @@
-#set($layout = '')
-  <title>melody #if($title)--$title #end</title>

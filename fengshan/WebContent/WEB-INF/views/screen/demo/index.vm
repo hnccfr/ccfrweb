@@ -1,2 +1,0 @@
-#set($layout = 'layout/blank.vm')
-<a href="$!{imageServer}/demo/active.htm"> 激活资金账户</a>

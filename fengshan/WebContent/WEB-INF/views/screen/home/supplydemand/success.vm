@@ -1,8 +1,0 @@
-#set($layout = 'layout/index.vm')
-<link rel="stylesheet" href="$!{imageServer}/styles/result.css" type="text/css">
-<div class="r-success">
-    	<h3>#if($!{message})$!{message}#else 举报成功，请等待管理员的审核！#end</h3>
-        <h2>$!{tips}</h2>		
-        <button class="button-s10" type="button" onclick="javascript:window.location.href='$!{imageServer}/home/supplydemand/information.htm'">返回</button>
-       	##<p>相关操作：<a href="#">管理员首页</a> <a href="#">新增用户</a> <a href="#">用户列表</a></p> 
-</div>

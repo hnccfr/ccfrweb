@@ -1,7 +1,0 @@
-#set($layout = 'layout/error.vm')
-#set($title = '²Ù×÷Ê§°Ü')
-<link rel="stylesheet" href="$!{imageServer}/styles/result.css" type="text/css">
-<div class="r-error">
-    	<h3>#if($!{message})$!{message}#else ²Ù×÷Ê§°Ü£¡#end</h3>
-        <button class="button-s9" type="button" style="margin-top:20px;" onclick="javascript:window.location.href='$!{fengshanAppServer.get('login.htm').addQueryData('returnurl',$!{appServer.get($!{returnUrl})})}'">µÇÂ¼</button>
-</div>

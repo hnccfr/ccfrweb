@@ -1,4 +1,0 @@
-#set($layout = '')
-<div class="error-404">
-	µÇÂ½ÓÃ»§Îª $!{userAgent.account}
-</div>
