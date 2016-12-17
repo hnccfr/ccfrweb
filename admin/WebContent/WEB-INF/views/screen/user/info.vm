@@ -1,0 +1,220 @@
+#set($layout = 'layout/default.vm')
+<script src="$!{imageServer}/scripts/area.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(function() {
+		var area = new Area("$!{appServer}/ajax","$!{userAccount.province}","$!{userAccount.city}","$!{userAccount.area}",'province','city','area');
+	});
+</script>
+
+<div class="main">
+	<h2>用户详细信息</h2>
+	<div class="clear"></div>
+	<div class="right-body">
+		<div class="formBox">
+            <div class="content">
+				<h4><span>账户信息</span></h4>
+            	<table class="c3">
+					<tr>
+						<th>会员类型：</th>							
+						<td>
+							$!{userAccount.userTypeDesc}
+                        </td>
+						<th>交易权限：</th>
+						<td>
+							$!{userAccount.userRoleDesc}
+                        </td>
+                    </tr>
+					<tr>
+						<th>会员账号：</th>
+						<td>
+							$!{userAccount.account}
+                        </td>
+						<th>会员邮箱：</th>							
+						<td>
+							$!{userAccount.email}
+                        </td>
+                    </tr>
+					#*
+					<tr>
+						<th>会员积分：</th>
+						<td>
+							$!{userLevel.integral}
+                        </td>
+						<th>会员等级：</th>							
+						<td>
+							$!{userLevel.memberLevel}
+                        </td>
+                    </tr>	
+					*#
+					<tr>
+						<th>会员状态：</th>
+						<td colspan="3">
+							$!{userAccount.userStatusDesc}
+                        </td>
+                    </tr>					
+                </table>
+				#if($fundAccountMsg.fundAccount)
+					<h4><span>资金账户信息</span></h4>
+					<table class="c3">
+						<tr>
+							<th>开户银行：</th>							
+							<td>
+								$!{userAccount.bankDesc}
+                            </td>
+							<th>银行账号：</th>							
+							<td>
+								$!{userAccount.bankCard}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>资金账号：</th>
+                            <td>${fundAccountMsg.fundAccount}</td>
+                            <th>资金余额：</th>
+                            <td>$!{commonUtils.getMoneyDesc($!{fundAccountMsg.amount})}  元</td>
+						</tr>
+                        <tr>
+                            <th>冻结金额：</th>
+                            <td>$!{commonUtils.getMoneyDesc($!{fundAccountMsg.freezeTotal})}  元</td>
+                            <th>可用余额：</th>
+                            <td>$!{commonUtils.getMoneyDesc($!{fundAccountMsg.useBanlance})}  元</td>
+						</tr>
+                    </table>
+				#end
+				<h4><span>高级信息</span></h4>
+				#if($!{userAccount.type} == "P")
+                	<table class="c3">
+						<tr>
+							<th>真实姓名：</th>							
+							<td>
+								$!{userAccount.name}
+                            </td>
+							<th>联系电话：</th>							
+							<td>
+								$!{userAccount.mobile}
+                            </td>
+                        </tr>
+						#*<tr>
+							<th>开户银行：</th>							
+							<td>
+								$!{userAccount.bankDesc}
+                            </td>
+							<th>银行账号：</th>							
+							<td>
+								$!{userAccount.bankCard}
+                            </td>
+                        </tr>*#							
+						<tr>
+							<th>证件类型：</th>
+							<td>
+								$!{userAccount.certificateTypeDesc}
+                            </td>
+							<th>证件号码：</th>
+							<td>
+								$!{userAccount.certificateNum}
+                            </td>
+                        </tr>
+						<tr>
+                            <th>所处地域：</th>
+							<td colspan="3" style="width:auto">
+								<select class="select" id="province" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>
+								<select class="select" id="city" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>
+								<select class="select" id="area" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>
+                            </td>
+						</tr>
+						<tr>
+                            <th>详细地址：</th>							
+							<td>
+								$!{userAccount.address}
+                            </td>
+                            <th>邮政编码：</th>							
+							<td>
+								$!{userAccount.zipCode}
+                            </td>
+                        </tr>
+                    </table>
+				#else
+                	<table class="c3">
+						<tr>
+							<th>法人：</th>							
+							<td>
+								$!{userAccount.name}
+                            </td>
+							<th>联系电话：</th>							
+							<td>
+								$!{userAccount.mobile}
+                            </td>
+                        </tr>
+						#*<tr>
+							<th>开户银行：</th>							
+							<td>
+								$!{userAccount.bankDesc}
+                            </td>
+							<th>银行账号：</th>							
+							<td>
+								$!{userAccount.bankCard}
+                            </td>*#
+                        </tr>						
+						<tr>
+							<th>企业全称：</th>
+							<td>
+								$!{userAccount.fullName}
+                            </td>
+                            <th>企业门户：</th>
+							<td>
+								$!{userAccount.homePage}
+                            </td>
+                        </tr>
+						<tr>
+							<th>营业执照：</th>
+							<td>
+								$!{userAccount.certificateNum}
+                            </td>
+							<th>企业税号：</th>
+							<td>
+								$!{userAccount.taxNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>经营范围：</th>
+							<td>
+								$!{userAccount.scope}
+                            </td>
+							<th>简介：</th>
+							<td>
+								$!{userAccount.intro}
+                            </td>
+                        </tr>
+						<tr>
+							<th>企业电话：</th>							
+							<td colspan="3">
+								$!{userAccount.phone}
+                            </td>
+                        </tr>
+						<tr>
+                            <th>所处地域：</th>
+							<td colspan="3"  style="width:auto">
+								<select class="select" id="province" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>
+								<select class="select" id="city" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>
+								<select class="select" id="area" name="${status.expression}" value="$!{status.value}" style="width:100px;" disabled="disabled"><option>请选择</option></select>	
+                            </td>
+						</tr>
+						<tr>
+                            <th>详细地址：</th>							
+							<td>
+								$!{userAccount.address}
+                            </td>
+                            <th>邮政编码：</th>							
+							<td>
+								$!{userAccount.zipCode}
+                            </td>
+                        </tr>
+                    </table>						
+				#end
+			</div>
+        </div>
+		<div class="form-but">
+			<button type="button" class="button-s4" onclick="JavaScript:history.go(-1);">返回</button>
+		</div>
+    </div>
+</div>

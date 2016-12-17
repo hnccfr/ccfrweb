@@ -1,0 +1,70 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/systemdict/list.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+  <h2>查看字典配置</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2" style="width:800px;">
+        <tr>
+          <th style="width:100px;">参数编码：</th>
+          <td style="width:300px;">$!smls.paraCode</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">参数名称：</th>
+          <td>$!smls.paraName</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">参数值：</th>
+          <td>$!smls.paraValue</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">备注：</th>
+          <td>$!smls.remark</td>
+          <td>&nbsp;</td>
+        </tr>
+		
+		<tr>
+          <th style="width:100px;">HTML控件类型：</th>
+          <td>$!smls.inputType
+			#** 
+			<select id="$!status.expression" name="$!status.expression" >
+				<option value="textarea" #if("$!{status.value}"=="textarea")selected#end>文本框</option>
+				<option value="htmledit" #if("$!{status.value}"=="htmledit")selected#end>HTML编辑器</option>
+            </select>
+			**#
+		  </td>
+          <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">创建时间：</th>
+          <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{smls.gmtCreate})</td>
+          <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">修改时间：</th>
+          <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{smls.gmtModify})</td>
+          <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">操作者：</th>
+          <td>$!smls.operator</td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+    </div>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+#set($layout = 'layout/default.vm')
+#set($title = '录入招标转让结果')
+<script language="javascript">
+//取消按钮
+function changeSp(res){
+	if('N' == res) {
+		$("#priceSp").innerHTML='';
+		$("#bidderSp").innerHTML='';
+	} else {
+		$("#priceSp").innerHTML='*';
+		$("#bidderSp").innerHTML='*';
+	}
+}
+</script>
+<div class="main">
+	<h2>录入招标转让结果</h2>
+	<form action="${appServer}/auction/tender/input.htm?url=${url}" method="post">
+ 	<div class="formBox">
+		<div class="content">
+			<h3>成交结果</h3>
+			<table class="c3">
+				<tr>
+    				<th>项目编号:</th>
+    				<td>#springBind("auctionResult.projectCode")
+    					<input type="text" class="inp inp-w160-readonly" name="${status.expression}" value="$!{status.value}" readonly/>
+						<font color="red"><label class="error">${status.errorMessage}</label></font>
+    				</td>
+				</tr>
+				<tr>
+    				<th><span class="red">*</span>交易结果:</th>##成交Y/流拍N
+    				<td>#springBind("auctionResult.tranResult")
+						<input type="radio" name="${status.expression}" value="Y" #if(${status.value}=='Y') checked #end class="radio" onclick="changeSp('Y')"/>成交
+						&nbsp;
+						<input type="radio" name="${status.expression}" value="N" #if(${status.value}=='N') checked #end class="radio" onclick="changeSp('N')"/>流拍
+						<font color="red"><label class="error">${status.errorMessage}</label></font>
+    				</td>
+				</tr>
+				<tr>
+    				<th><span class="red" id="priceSp">#if("${auctionResult.tranResult}"=="N")#else*#end</span>成交价格:</th>
+    				<td>#springBind("auctionResult.priceDesc")
+    					<input type="text" class="inp inp-w160" name="${status.expression}" value="$!{status.value}"/>
+						$!{auctionResult.valuationUnitDes}
+						<font color="red"><label class="error">${status.errorMessage}</label></font>
+					</td>
+				</tr>
+				<tr>
+    				<th><span class="red" id="bidderSp">#if("${auctionResult.tranResult}"=="N")#else*#end</span>成交人账号:</th>
+    				<td>#springBind("auctionResult.bidderAccount")
+						#if($!{tradeWishOrderList} && $!{tradeWishOrderList.size()} > 0)
+							#foreach($item in $!{tradeWishOrderList})
+								<input type="radio" name="${status.expression}" value="$!{item.userAccount}" #if(${status.value}==$!{item.userAccount}) checked #end class="radio"/>$!{item.userAccount}&nbsp;
+							#end
+						#end
+						<font color="red"><label class="error">${status.errorMessage}</label></font>
+    				</td>
+				</tr>
+				<tr>
+        			<th style="width:20%"><span class="red">*</span>备注：</th>
+        			<td>#springBind("auctionResult.remark")
+                        <textarea style="width:60%;height:100px" id="remark" name="${status.expression}" >$!{status.value}</textarea>
+						<font color="red"><label class="error">${status.errorMessage}</label></font>
+                    </td>
+                 </tr>
+			</table>
+		</div>
+	</div>
+	<div class="form-but">
+		<input class="button-s4" type="submit" value="提交"> 
+		<input class="button-s4" type="button" value="返回" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}.htm'#else history.go(-1)#end"> 
+    </div>
+	</form>
+</div>

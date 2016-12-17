@@ -1,0 +1,179 @@
+#set($title = '审核供求信息')
+#set($layout = 'layout/default.vm')
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<script src="$!{imageServer}/scripts/jquery.datePicker.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/supplyDemand/audit.js" type="text/javascript"></script>
+    <div class="main">
+        <div class="formBox" id="detail">
+			<h3><span>审核供求信息</span></h3>
+            <form action="$!{appServer}/supplyDemand/audit.htm" id="replayForm" method="post" onsubmit="return validate();">
+                <div class="content">
+                <table class="c2">
+		<h4><span>信息详情</span></h4>
+        <tr>
+           <th>项目名称：</th>
+           <td>$!{supplyDemandInfo.title}</td>
+		   <th>项目类型：</th>
+		   <td>$!{supplyDemandInfo.projectTypeCodeDesc}</td>
+        </tr>
+		<tr>
+			  <th>信息类型：</th>
+              <td>$!{supplyDemandInfo.supplyTypeDesc}</td>
+			  <th>总价：</th>
+              <td>$!{supplyDemandInfo.amount}</td>
+        </tr>
+		<tr>
+			#* 
+              <th>标准规格：</th>
+              <td>$!{supplyDemandInfo.breadStandard}</td>
+			  <th>价格：</th>
+              <td>$commonUtils.getValuationUnit($!{supplyDemandInfo.price},$!{supplyDemandInfo.valuationUnit}) $!{supplyDemandInfo.valuationUnitDesc}/$!{supplyDemandInfo.measureUnitDesc}</td>
+			  <th>货物计价单位：</th>
+              <td>$!{supplyDemandInfo.valuationUnitDesc}</td>
+			  *#
+		</tr>
+		<tr>
+              <th>数量：</th>
+              <td>$!{supplyDemandInfo.quantity} $!{supplyDemandInfo.measureUnitDesc}</td>
+			  <th>计量单位：</th>
+              <td>$!{supplyDemandInfo.measureUnitDesc}</td>
+		</tr> 
+		<tr>
+              <th>发票支持:</th>
+              <td>$!{supplyDemandInfo.InvoiceDesc}</td>
+			  <th>是否零售：</th>
+              <td>$!{supplyDemandInfo.retailDesc}</td>
+        </tr>
+		<tr>
+			  <th>交易日期：</th>
+              <td>$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.deliveryDate})</td>
+			  ##<th>交易方式: </th>
+			  ##<td>$!{supplyDemandInfo.DeliveryTypeDesc}</td>
+        </tr> 
+		<tr>
+            ##<th>邮编：</th>
+             ##<td>$!{supplyDemandInfo.zipCode}</td>
+			  <th>发布者账号：</th>
+				<td>$!{supplyDemandInfo.publisherAccount}</td>
+        ##</tr> 
+		##<tr>
+              <th>信息状态：</th>
+              <td>$!{supplyDemandInfo.supplyStatusDesc}</td>
+			  ##<th>仓库名称：</th>
+              ##<td>$!{supplyDemandInfo.storeHouse}</td>
+        </tr>
+		<tr>
+			  <th>联系人：</th>
+              <td>$!{supplyDemandInfo.linkMan}</td>
+              <th>联系电话：</th>
+             <td>$!{supplyDemandInfo.phone}</td> 
+        </tr>
+		<tr>
+		<th>交收地址：</th>
+              <td>$!{supplyDemandInfo.deliveryPlace}</td>
+			 <th>详细地址：</th>
+             <td>$!{supplyDemandInfo.address}</td>
+        </tr> 
+        <tr>
+		<th>有效开始时间：</th>
+             <td>$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveStartDate})</td>
+             <th>有效截止时间：</th>
+             <td>$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.endTime})</td>
+        </tr>
+		<tr>
+		 <th>描述：</th>
+              <td colspan="3">$!{supplyDemandInfo.description}</td>   
+        </tr>
+		<table id="picture" class="c2">
+				#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath}))
+        			<tr>
+                        <th>主图片：</th>
+						<td>
+							<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath}" />
+                        </td>
+                    </tr>
+				#end
+				#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath1}))
+        			<tr>
+                        <th>图片1：</th>
+						<td>
+							<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath1}" />
+                        </td>
+                    </tr>
+				#end
+				#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath2}))
+        			<tr>
+                        <th>图片2：</th>
+						<td>
+							<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath2}" />
+                        </td>
+                    </tr>
+				#end
+				#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath3}))
+        			<tr>
+                        <th>图片3：</th>
+						<td>
+							<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath3}" />
+                        </td>
+                    </tr>
+				#end
+				#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath4}))
+        			<tr>
+                        <th>图片4：</th>
+						<td>
+							<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath4}" />
+                        </td>
+                    </tr>
+				#end
+			</table>
+      </table>
+                    <table class="c4" >
+                     #springBind("query.title")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.publisherAccount")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.status")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.infoType")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.gmtCreateFrom")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.gmtCreateTo")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.pageNo")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+					 #springBind("query.pageSize")
+					 <input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+                        <tr>
+							<h4><span>审核信息</span></h4>
+							<br/>
+	                        <th style="vertical-align:top;">审核：</th>
+	                         #springBind("audit.auditResult")
+	                       	<td>
+	                       	<input type="radio" checked="checked" value="Y" name="${status.expression}" class="_dealType" onclick="showRemarkTxt(this)">审核通过&nbsp;&nbsp; 
+						   	<input type="radio" id="auditResult_N" value="N" name="${status.expression}" class="_dealType" onclick="showRemarkTxt(this)">审核不通过<br> 
+	                       	</td>
+                        </tr>
+                        
+                        <tr style="display:none" id="auditRemarkId">
+							<th style="width:20%">审核说明：</th>
+							
+							<td>
+							#springBind("audit.mark")
+				                <textarea style="width:80%;height:100px" id="remark" name="${status.expression}"></textarea>
+				                <br/>
+				    			<font color="red"><label class="error">注意：审核内容不超过340个字</label></font>
+				            </td>
+         				</tr>
+                    	</table>
+               		</div>
+               		#springBind("supplyDemandInfo.id")
+               		<input type="hidden" name="infoId" value="${status.value}"/>
+                 	<div class="form-but">
+				      <!-- 表单按钮区 -->
+				      <button type="submit" class="button-s4">提交</button>
+					  <button type="button" class="button-s4" onclick="window.history.back(-1);">取消</button>
+				    </div>
+            	</form>
+       	 	</div>
+  	  </div>

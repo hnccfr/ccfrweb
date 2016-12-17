@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+	<!-- 验证共通配置，可以在此配置段内配置通用验证、function等 -->
+	<bean id="valangValidator" abstract="true">
+		<!-- 验证通用function -->
+		<!--
+		<property name="customFunctions">
+			<map>
+				<entry key="" value="" />
+			</map>
+		</property>
+		-->
+	</bean>
+	
+	<!-- 会员级别设置新增validator -->
+	<bean id="sysMemLevelSetAddValidator" class="com.hundsun.network.gates.genshan.web.validator.SysMemLevelSetAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{memberLevel  : ? has text : '请填写会员级别'}
+				{levelName : ? has text : '请填写级别名称'}
+				{integralStart	: ? has text : '积分开始值要是数字'}
+				{integralEnd	: ? has text : '积分开始值要是数字'}
+				{remark   : length(remark)<=50  : '备注不能超过50个字'}
+				{imgName : ? has text : '请选择图片'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 会员级别设置修改validator -->
+	<bean id="sysMemLevelSetEditValidator" class="com.hundsun.network.gates.genshan.web.validator.SysMemLevelSetEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{memberLevel  : ? has text : '请填写会员级别'}
+				{levelName : ? has text : '请填写级别名称'}
+				{integralStart	: ? has text : '积分必须是整数'}
+				{integralEnd	: ? has text : '积分必须是整数'}
+				{remark   : length(remark)<=50  : '备注不能超过50个字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 特殊服务费validator -->
+	<bean id="sysSerCSpecialAddValidator" class="com.hundsun.network.gates.genshan.web.validator.SysSerCSpecialAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{listUnturnover	: ? has no text or length(listUnturnover)<30 : '挂牌未成交要是不超过100的两位数字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 特殊服务费validator -->
+	<bean id="sysSerCSpecialEditValidator" class="com.hundsun.network.gates.genshan.web.validator.SysSerCSpecialEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{listUnturnover	: ? has no text or length(listUnturnover)<30 : '挂牌未成交要是不超过100的两位数字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 新增客户级别validator -->
+	<bean id="userLevelAddValidator" class="com.hundsun.network.gates.genshan.web.validator.UserLevelAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{userAccount	: ? has text : '会员帐号必须填写'}
+				{integral	: ? has text : '积分必须是整数'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 编辑客户级别validator -->
+	<bean id="userLevelEditValidator" class="com.hundsun.network.gates.genshan.web.validator.UserLevelEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{userAccount	: ? has text : '会员帐号必须填写'}
+				{integral	: ? has text : '积分必须是整数'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 新增字典validator -->
+	<bean id="systemDictAddValidator" class="com.hundsun.network.gates.genshan.web.validator.SystemDictAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{paraCode	: ? has text : '参数编码必须填写'}
+				{paraName	: ? has text : '参数名称必须填写'}
+				{paraValue	: ? has text : '参数值必须填写'}
+				{remark   : length(remark)<=300  : '备注不能超过300个字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 修改字典validator -->
+	<bean id="systemDictEditValidator" class="com.hundsun.network.gates.genshan.web.validator.SystemDictEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{paraCode	: ? has text : '参数编码必须填写'}
+				{paraName	: ? has text : '参数名称必须填写'}
+				{paraValue	: ? has text : '参数值必须填写'}
+				{remark   : length(remark)<=300  : '备注不能超过300个字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 客户信用新增validator -->
+	<bean id="systemCreditLevelAddValidator" class="com.hundsun.network.gates.genshan.web.validator.SystemCreditLevelAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{creditLevel	: ? has text : '信用等级必须填写'}
+				{levelName	: ? has text : '等级名称必须填写'}
+				{integralStart	: ? has text : '积分必须是整数'}
+				{integralEnd   : ? has text :  '积分必须是整数'}
+				{remark   : length(remark)<=80  : '备注不能超过80个字'}
+				{imgName	: ? has text : '请选择图片'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 客户信用修改validator -->
+	<bean id="systemCreditLevelEditValidator" class="com.hundsun.network.gates.genshan.web.validator.SystemCreditLevelEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{creditLevel	: ? has text : '信用等级必须填写'}
+				{levelName	: ? has text : '等级名称必须填写'}
+				{integralStart	: ? has text : '积分必须是整数'}
+				{integralEnd   : ? has text :  '积分必须是整数'}
+				{remark   : length(remark)<=80  : '备注不能超过80个字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 挂牌项目validator -->
+	<bean id="proEditValidator" class="com.hundsun.network.gates.genshan.web.validator.ProEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{title			: ? is not null and ? has text : '项目名称 为必填项'}
+				{title			: ? has no text or length(?) <= 60  : '项目名称 不能超过60字符'}
+				{measureUnit	: ? is not null and ? has text  : '计量单位 为必填项'}
+				{quantity		: ? is not null and ? has text : '挂牌数量 为必填项'}
+				{quantity		: ? is null or ? <= 99999999999999999999 : '挂牌数量 不能超过99999999999999999999'}
+				{valuationUnit	: ? is not null and ? has text : '计价单位 为必填项'}
+				{listingPriceDesc	: ? is not null and ? has text : '挂牌价格 为必填项'}
+				{deliveryType	: ? is not null and ? has text : '至少要选择1项'}
+				{paymentType	: ? is not null and ? has text : '至少要选择1项'}
+				{listingStartTime	: ? is not null and ? has text : '挂牌开始时间 为必填项'}
+				{listingEndTime	: ? is not null and ? has text : '挂牌结束时间 为必填项'}
+				{invoice		: ? is not null and ? has text : '至少要选择1项'}
+				{phone			: ? is not null and ? has text : '联系电话 为必填项'}
+				{phone			: ? has no text or length(?) <= 20  : '联系电话 不能超过20字符'}
+				{linkMan		: ? is not null and ? has text : '联系人 为必填项'}
+				{linkMan		: ? has no text or length(?) <= 30  : '联系人  不能超过30字符'}
+				{address		: ? is not null and ? has text : '详细地址 为必填项'}
+				{address		: ? has no text or length(?) <= 80  : '详细地址  不能超过80字符'}
+				{storehouse		: ? has no text or length(?) <= 30  : '仓库名称  不能超过30字符'}
+				{zipCode		: ? has no text or matches('[0-9]{6}',?) is true : '邮编 请输入6位数字'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 新增公告validator -->
+	<bean id="announcementAddValidator" class="com.hundsun.network.gates.genshan.web.validator.AnnouncementAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{title			: ? is not null and ? has text : '公告标题 为必填项'}
+				{title			: ? has no text or length(?) <= 160  : '公告标题 不能超过160字符'}
+				{content		: ? is not null and ? has text : '公告内容 为必填项'}
+				{type			: ? is not null and ? has text : '公告类型 为必填项'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 添加会员Validator -->
+	<bean id="userAccountValidator" class="com.hundsun.network.gates.genshan.web.validator.UserAccountValidator" 
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{account : ? has text : '' : 'common.error.required'}
+				{account : length(?) <=10 : '' : 'common.error.maxlength':10}
+				{account : length(?) >=2 : '' : 'common.error.minlength':2}
+				
+				{email :  ?  has text : '' : 'common.error.required'}
+				{email :  ?  has no text or email(?) is true : '' : 'common.error.matches'}
+				
+				{mobile :  ?  has text : '' : 'common.error.required'}
+				{mobile : length(?) <=20 : '' : 'common.error.maxlength':20}
+				
+												
+				{address : ? has no text or length(?) <= 80: '' : 'common.error.maxlength':80}
+				{zipCode : ? has no text or match('^\\d{6}$',?) is true : '' : 'common.error.matches'}
+				
+				{name : ? has text : '' : 'common.error.required'}
+				{name : length(?) <=30 : '' : 'common.error.maxlength':30}
+				
+				{certificateNum : ? has text : '' : 'common.error.required'}
+				{certificateNum : length(?) <=30 : '' : 'common.error.maxlength':30}
+
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="basePhaseValidator"
+		class="com.hundsun.network.gates.genshan.web.validator.BasePhaseValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+					{phaseCode : ? is not null and ? has text : '' : 'basephase.code.error.required'}
+					{phaseCode : length(?) <= 20 : '' : 'basephase.code.error.maxlength' : 20}
+					{phaseCode : ? has text and matches('[0-9a-zA-Z]{1,20}',?) is true : '' : 'basephase.code.error.matches'}
+					{phaseName : ? is not null and ? has text : '' : 'basephase.name.error.required'}
+					{phaseName : length(?) <= 20 : '' : 'basephase.name.error.maxlength' : 20}
+					{gmtStartHour : ? is not null and ? has text : '' : 'basephase.gmtstarthour.error.required'}
+					{gmtStartHour: ? is not null and ? between 0 and 23 : '' : 'basephase.gmtstarthour.error.length' : 0,23 }
+					{gmtStartMinute : ? is not null and ? has text : '' : 'basephase.gmtstartminute.error.required'}
+					{gmtStartMinute: ? is not null and ? between 0 and 59 : '' : 'basephase.gmtstartminute.error.length' : 0,59 }
+					{gmtEndHour : ? is not null and ? has text : '' : 'basephase.gmtendhour.error.required'}
+					{gmtEndHour: ? is not null and ? between 0 and 23 : '' : 'basephase.gmtendhour.error.length' : 0,23 }
+					{gmtEndMinute : ? is not null and ? has text : '' : 'basephase.gmtendminute.error.required'}
+					{gmtEndMinute: ? is not null and ? between 0 and 59 : '' : 'basephase.gmtendminute.error.length' : 0,59 }
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 新增交易分中心validator -->
+	<bean id="tradeSubstationAddValidator" class="com.hundsun.network.gates.genshan.web.validator.TradeSubstationAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{id			: ? is not null and ? has text : '分中心编号不能为空'}
+				{id			: ? has no text or length(?) <= 18  : '分中心编号 不能超过18个字 '}
+				{name		: ? is not null and ? has text : '分中心名称不能为空'}
+				{name		: ? has no text or length(?) <= 16  : '分中心名称 不能超过16个字 '}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 录入协议转让成交结果validator -->
+	<bean id="transferInputValidator" class="com.hundsun.network.gates.genshan.web.validator.TransferInputValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{projectCode			: ? is not null and ? has text : '项目编号 不能为空'}
+				{tranResult				: ? is not null and ? has text : '请选择 交易结果'}
+				{tranResult				: ? has no text or length(?) <= 2  : '请选择 交易结果 '}
+				{remark					: ? is not null and ? has text : '请填写 备注'}
+				{remark					: ? has no text or length(?) <= 340  : '备注 不能超过340个字 '}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 新增融资项目validator -->
+	<bean id="financingAddValidator" class="com.hundsun.network.gates.genshan.web.validator.FinancingAddValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{gmtApply			: ? is not null and ? has text : '申请时间不能为空'}
+				{title				: ? is not null and ? has text : '融资项目名称不能为空'}
+				{title				: ? has no text or length(?) <= 80  : '融资项目名称 不能超过80个字'}
+				{userName			: ? is not null and ? has text : '融资人不能为空'}
+				{userName			: ? has no text or length(?) <= 32  : '融资人 不能超过32个字'}
+				{userTel			: ? has no text or length(?) <= 32  : '融资人联系电话 不能超过32个字'}
+				{userAddress		: ? has no text or length(?) <= 80  : '融资人地址 不能超过80个字'}
+				{guaranteeName		: ? has no text or length(?) <= 32  : '担保人 不能超过32个字'}
+				{guaranteeTel		: ? has no text or length(?) <= 32  : '担保人联系电话 不能超过32个字'}
+				{guaranteeAddress	: ? has no text or length(?) <= 80  : '担保人地址 不能超过80个字'}
+				{remark				: ? has no text or length(?) <= 1300  : '备注 不能超过1300个字'}
+				{applyLimitDes		: ? is not null and ? has text : '借款期限不能为空'}
+				{applyAmountDes		: ? is not null and ? has text : '融资金额不能为空'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 修改融资项目validator -->
+	<bean id="financingEditValidator" class="com.hundsun.network.gates.genshan.web.validator.FinancingEditValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{gmtApply			: ? is not null and ? has text : '申请时间不能为空'}
+				{title				: ? is not null and ? has text : '融资项目名称不能为空'}
+				{title				: ? has no text or length(?) <= 80  : '融资项目名称 不能超过80个字'}
+				{userName			: ? is not null and ? has text : '融资人不能为空'}
+				{userName			: ? has no text or length(?) <= 32  : '融资人 不能超过32个字'}
+				{userTel			: ? has no text or length(?) <= 32  : '融资人联系电话 不能超过32个字'}
+				{userAddress		: ? has no text or length(?) <= 80  : '融资人地址 不能超过80个字'}
+				{guaranteeName		: ? has no text or length(?) <= 32  : '担保人 不能超过32个字'}
+				{guaranteeTel		: ? has no text or length(?) <= 32  : '担保人联系电话 不能超过32个字'}
+				{guaranteeAddress	: ? has no text or length(?) <= 80  : '担保人地址 不能超过80个字'}
+				{remark				: ? has no text or length(?) <= 1300  : '备注 不能超过1300个字'}
+				{applyLimitDes		: ? is not null and ? has text : '借款期限不能为空'}
+				{applyAmountDes		: ? is not null and ? has text : '融资金额不能为空'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 融资放款validator -->
+	<bean id="financingLoanValidator" class="com.hundsun.network.gates.genshan.web.validator.FinancingLoanValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{applyLimitDes		: ? is not null and ? has text : '借款期限不能为空'}
+				{loanAmountDes		: ? is not null and ? has text : '不能为空'}
+				{gmtLoan			: ? is not null and ? has text : '不能为空'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<!-- 融资还款validator -->
+	<bean id="financingRepayValidator" class="com.hundsun.network.gates.genshan.web.validator.FinancingRepayValidator"
+		parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{repayAmountDes		: ? is not null and ? has text : '不能为空'}
+				{gmtRepay			: ? is not null and ? has text : '不能为空'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	
+	<import resource="project-validation.xml" />
+</beans>

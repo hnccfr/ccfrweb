@@ -1,0 +1,91 @@
+#set($layout = 'layout/default.vm')
+<link href="$!{appServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{appServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{appServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script src="$!{appServer}/scripts/zTree/jquery.ztree-2.6.min.js" type="text/javascript"></script>
+<script>
+	var code ="";
+	function loadTree(){
+		var treeBox = $("#prjTypeTreeUL");
+		var targetURL = appServer+"/baseset/projecttype/attriList.htm"; //查看属性列表
+		var setting = {
+			expandSpeed : "",
+			async : true,
+			asyncUrl : appServer+"/ajax/getProjectTypeTree.htm", // 获取节点数据的URL地址
+			asyncParam : ["id","name", "code"], // 获取节点数据时，必须的数据名称，例如：id、name
+			showLine : true,
+			isSimpleData : true,
+			treeNodeKey : "code",
+			treeNodeParentKey : "parentcodeShort",
+			callback : {
+              click: function(event, treeId, treeNode){
+					  document.getElementById('add').href=appServer+"/baseset/projecttype/addtype.htm?tCode="+treeNode.code;
+					  document.getElementById('edit').href=appServer+"/baseset/projecttype/edittype.htm?tCode="+treeNode.code;
+					  document.getElementById('enable').href=appServer+"/baseset/projecttype/enabletype.htm?tCode="+treeNode.code;
+					  document.getElementById('close').href=appServer+"/baseset/projecttype/closetype.htm?tCode="+treeNode.code;
+					  code = treeNode.code;
+					  window.parent.frames.listright.location.href=targetURL+"?tCode="+treeNode.code;  //属性列表
+				}
+            }
+		};
+		var prjTypeTreeNodes = [];
+		treeBox.zTree(setting, prjTypeTreeNodes);
+	}
+    
+	function loadURL(a){
+		if(code=="" && a.id=="add"){	//添加顶级节点
+			window.parent.frames.listright.location.href=appServer+"/baseset/projecttype/addtype.htm?tCode=0";
+			return;
+		}
+		
+    	if(code==""){
+    	   alert('请在类型树中选择要操作的项目类型！');
+    	}else{
+			if(a.id=="enable"){
+				if(confirm('确定要启用此项目类型及其所有子项目类型吗?')){
+					jQuery.ajax({
+                       type: "POST",
+                       url: a.href,
+                       success: function(msg){
+					   	 if(msg=="Y"){
+                         	window.parent.frames.listright.location.href=a.href;
+						 }
+						 else{alert("父项目类型状态为禁用，不允许启用！");}
+						 
+                       }
+                    });
+				}else{
+					return;
+				}
+			}
+			if(a.id=="close"){
+				if(confirm('确定要禁用此项目类型及其所有子项目类型吗?')){
+					window.parent.frames.listright.location.href=a.href;
+				}else{
+					return;
+				}
+			}
+			if(a.id=="add" || a.id=="edit"){
+				window.parent.frames.listright.location.href=a.href;
+			}
+    	    
+    	}
+	}
+	
+	
+	$(function(){
+		loadTree();	
+	});
+	
+</script>
+
+<div class="ctrls">
+  <p class="addleaf"><a id="add" title="添加项目类型" href="javascript:void(0)" onclick="javascript:loadURL(this);return false;" ><img src="$!{appServer}/images/admin/role_add.gif" width="20" height="19" /></a></p>
+  <p class="edit"><a id="edit" title="编辑项目类型" href="javascript:void(0)" onclick="javascript:loadURL(this);return false;" ><img src="$!{appServer}/images/admin/role_edit.gif" width="20" height="19" /></a></p>
+  <p class="edit"><a id="enable" title="启用项目类型"  href="javascript:void(0)" onclick="javascript:loadURL(this);return false;" ><img src="$!{appServer}/images/admin/ico_accept.png" width="20" height="19" /></a></p>
+  <p class="edit"><a id="close" title="禁用项目类型"  href="javascript:void(0)" onclick="javascript:loadURL(this);return false;" ><img src="$!{appServer}/images/admin/ico_delete.png" width="20" height="19" /></a></p>
+  <div style="clear: both;"></div>
+</div>
+<ul id="prjTypeTreeUL" class="tree" ></ul>
+
+

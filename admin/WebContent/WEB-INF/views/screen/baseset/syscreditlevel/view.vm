@@ -1,0 +1,58 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/syscreditlevel/list.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+  <h2>查看信用设置</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2" style="width:800px;">
+        <tr>
+          <th style="width:100px;">信用等级：</th>
+          <td style="width:300px;">$!smls.creditLevel</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">等级名称：</th>
+          <td>$!smls.levelName</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">积分开始值：</th>
+          <td>$!smls.integralStart</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">积分结束值：</th>
+          <td>$!smls.integralEnd</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">备注：</th>
+          <td>$!smls.remark</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">图片：</th>
+          <td>
+			#if($smls.imgName)
+				<img src="$!uploadServer$smls.imgName" />
+			#else
+				无图片
+			#end
+		  </td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+    </div>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>

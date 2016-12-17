@@ -1,0 +1,275 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/kindeditor-min-unupload.js"></script>
+<script charset="utf-8" src="${imageServer}/scripts/kindEditor/lang/zh_CN.js"></script>
+<script src="$!{imageServer}/scripts/project/projectListing.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/project/suspension.js" type="text/javascript"></script>
+<div class="main">
+  <!-- 表单模块 -->
+  <div class="formBox">
+    <h3><i></i><span>查看挂牌详细</span></h3>
+    <div class="content">
+	  <h5><span>项目基本信息</span></h5>
+      <table class="c5" style="width:80%">
+        <tr>
+          <th>项目名称：</th>
+          <td>
+			$!{projectListing.title}
+			#if($!{projectListing.attachedFilePath})
+				&nbsp;<a style="color:#0066CC;text-decoration: underline;" href="$!{uploadServer}/$!{projectListing.attachedFilePath}" target="_blank">[附件下载]</a>
+			#end
+		  </td>
+          <th>项目编号：</th>
+          <td>$!{projectListing.code}</td>
+		  #if($!{projectListing.displayDeposit})
+		  <th>挂牌交易保证金：</th>
+          <td><font color="red">$!{projectListing.depositDesc}</font></td>
+		  #end
+        </tr>
+		<tr>
+		  <th>挂牌账号：</th>
+          <td><a href="$!{appServer}/user/info.htm?account=$!{projectListing.userAccount}" style="color:#0066CC">$!{projectListing.userAccount}</a></td>
+          <th>创建者账号：</th>
+          <td>$!{projectListing.creator}</td>
+          <th>创建者类型：</th>
+          <td>$!{projectListing.creatorTypeDesc}</td>
+        </tr>
+		<tr>
+          <th>挂牌类型：</th>
+          <td>$!{projectListing.listingTypeDesc}</td>
+		  <th>项目状态：</th>
+          <td>$!{projectListing.statusDesc}</td>
+          <th>创建时间：</th>
+          <td>$!{dateTool.format($!{projectListing.gmtCreate})}</td>
+        </tr>
+		<tr>
+          <th>项目类型：</th>
+          <td>$!{projectListing.projectTypeName}</td>
+		  #if($!{projectListing.breedStandardId})
+          <th>标准规格：</th>
+          <td>
+			<a href="$!{appServer}/project/standard/view.htm?id=$!{projectListing.breedStandardId}" title="点击查看标准规格" style="color:#0066CC">
+				$!{projectListing.breedStandard}
+			</a>
+		  </td>
+		  #end
+          <th>交易方式：</th>
+          <td>$!{projectListing.tradingTypeDesc}</td>
+		</tr>
+		<tr>
+		  <th>挂牌参考价：</th>
+          <td>$!commonUtils.getValuationUnitDesc($!{projectListing.listingPrice},$!{projectListing.valuationUnit})/$!{projectListing.measureUnitDesc}</td>
+		  <th>挂牌数量：</th>
+          <td>$!{projectListing.quantity}</td>
+        </tr>
+		<tr>
+		  <th>计价单位：</th>
+          <td>$!{projectListing.valuationUnitDesc}</td>
+		  <th>计量单位：</th>
+          <td>$!{projectListing.measureUnitDesc}</td>
+        </tr>
+		<tr>
+		  <th>挂牌时间范围：</th>
+          <td>$!{dateTool.format("yyyy-MM-dd HH:mm:ss",$!{projectListing.listingStartTime})}&nbsp;-&nbsp;$!{dateTool.format("yyyy-MM-dd HH:mm:ss",$!{projectListing.listingEndTime})}</td>
+		#if($!{projectListing.listingType} == "sell")
+				#*
+              <th>仓库名称：</th>
+              <td>$!{projectListing.storehouse}</td>
+			  *#
+              <th>地址：</th>
+              <td>$!{projectListing.deliveryPlace}</td>
+		#else
+			<th>收货地址：</th>
+              <td colspan="3">$!{projectListing.deliveryPlace}</td>
+		#end
+        </tr>
+	  </table>
+	</div>
+	
+	## 类型动态属性
+	#if($!{projectListing.breedStandardId})
+	#else
+	<div class="content">
+		<h5><span>动态属性</span></h5>
+		<table class="c5" style="width:80%">
+			<tr>
+		#foreach($item in $!{projectListing.attriMeta})
+			<th>$!{item.attr.keyTitle}：</th>
+			<td>
+				#if($!{item.attr.inputType}=="CHECKBOX" ||$!{item.attr.inputType}=="checkbox" || $!{item.attr.inputType}=="RADIO"|| $!{item.attr.inputType}=="radio"||$!{item.attr.inputType}=="SELECT"||$!{item.attr.inputType}=="select")
+					#foreach($valueItem in $!{item.attr.selectValues})
+						#if($projectDynamicUtils.contains($!{item.meta.metaValue},${valueItem.key}))
+							${valueItem.name}
+						#end
+					#end
+				#elseif($!{item.attr.inputType}=="DATE" ||$!{item.attr.inputType}=="date" )
+					$!{item.meta.metaValue}
+				#else
+					$!{item.meta.metaValue}
+				#end
+			</td>
+			#if($!{velocityCount}%3 == 0)</tr><tr>#end
+		#end
+			</tr>
+		</table>
+	</div>
+		#**
+		#if($!{projectListing.attriMeta} && $!{projectListing.attriMeta.size()} > 0)
+			#foreach($item in $!{projectListing.attriMeta})
+                  <th>$!{item.attr.keyTitle}：</th>
+                  <td>
+					#if($!{item.meta.metValueList} && $!{item.meta.metValueList.size()} > 0)
+    					#foreach($valueItem in $!{item.meta.metValueList})
+    						#if($!{item.attr.textMap.size()}>0)
+								$!{item.attr.textMap.get($valueItem)}
+							#else
+								$!{item.meta.metaValue}
+							#end
+						#end
+					#else
+						$!{item.meta.metaValue}
+					#end
+				  </td>
+                #if($!{velocityCount}%3 == 0)</tr><tr>#end
+			#end
+                </tr>
+                </table>
+            </div>
+		#end
+		*#
+	#end
+		
+	<div class="content">
+	  <h5><span>交易属性</span></h5>
+	  <table class="c5" style="width:80%">
+		<tr >
+		#foreach($item in $!{projectListing.tradeMeta})
+			#set($index = ${velocityCount} - 1)
+			<th> $!{item.attr.keyTitle}:</th>
+        	<td> 
+    			#if($!{item.attr.inputType}=="CHECKBOX" ||$!{item.attr.inputType}=="checkbox" || $!{item.attr.inputType}=="RADIO"|| $!{item.attr.inputType}=="radio"||$!{item.attr.inputType}=="SELECT"||$!{item.attr.inputType}=="select")
+    								#foreach($valueItem in $!{item.attr.selectValues})
+    									#if($projectDynamicUtils.contains($!{item.meta.metaValue},${valueItem.key}))
+    										${valueItem.name}
+    									#end
+        							#end
+    			#elseif($!{item.attr.inputType}=="DATE" ||$!{item.attr.inputType}=="date" )
+    								$!{item.meta.metaValue}
+    			#else
+    								$!{item.meta.metaValue}
+    			#end
+    		</td>
+            #if($velocityCount % 3 == 0 && $velocityCount!=${attriList.size()} ) </tr><tr> #end 
+		#end
+		</tr>
+      </table>
+    </div>
+	
+	<div class="content">
+	  <h5><span>支付信息</span></h5>
+	  <table class="c5" style="width:100%">
+		<tr>
+		  <th>支付支持：</th>
+          <td>$!{projectListing.paymentTypeDesc}</td>
+		  <th>交割时间：</th>
+          <td>$!{dateTool.format($!{projectListing.deliveryDate})}</td>
+		  ##<th>交收方式支持：</th>
+          ##<td>$!{projectListing.deliveryTypeDesc}</td>
+        </tr>
+		<tr>
+		  <th>发票支持：</th>
+          <td>$!{projectListing.invoiceDesc}</td>
+		  ##<th>交货地点：</th>
+          ##<td>$!{projectListing.deliveryPlace}</td>
+        </tr>
+      </table>
+    </div>
+	
+	<div class="content">
+	  <h5><span>联系方式</span></h5>
+	  <table class="c5" style="width:80%">
+		<tr>
+		  <th>联系人：</th>
+          <td>$!{projectListing.linkMan}</td>
+		  <th>联系电话：</th>
+          <td>$!{projectListing.phone}</td>
+        </tr>
+    		<tr>
+		  <th>邮编：</th>
+          <td colspan="3">$!{projectListing.zipCode}</td>
+        </tr>
+      </table>
+    </div>
+	<div class="content">
+	  <h5><span>项目图片</span></h5>
+	  <table class="c5" style="width:80%">
+		<tr>
+		  <th></th>
+          <td>
+			<div class="details">
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath}))
+						<img src="$!{uploadServer}/$!{projectListing.picturePath}" />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath1}))
+						<img src="$!{uploadServer}/$!{projectListing.picturePath1}" />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath2}))
+						<img src="$!{uploadServer}/$!{projectListing.picturePath2}"  />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath3}))
+						<img src="$!{uploadServer}/$!{projectListing.picturePath3}"  />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath4}))
+						<img src="$!{uploadServer}/$!{projectListing.picturePath4}" />
+					#end
+            </div>
+		  </td>
+        </tr>
+      </table>
+    </div>
+	<div class="content">
+	  <h5><span>项目描述</span></h5>
+	  <table class="c4" style="width:80%">
+		<tr>
+		  <th></th>
+          <td>
+			<div class="details">
+				#direct($!{projectListing.description})
+            </div>
+		  </td>
+        </tr>
+      </table>
+    </div>
+	
+    <!-- 表单按钮区 -->
+    <div class="form-but">
+	  #if($!{projectListing.isAudit()})
+		##<button type="button" class="button-s4" onclick="javascript:audit('$!{projectListing.id}')">审核</button>
+		<button type="button" class="button-s4" onclick="javascript:window.location.href='$!{appServer}/project/audit.htm?projectListingId=$!{projectListing.id}'">审核</button>
+	  #end
+	  #if($!{projectListing.isEdit()})
+		<button type="button" class="button-s4" onclick="javascript:window.location.href='$!{appServer}/project/edit.htm?projectListingId=$!{projectListing.id}'">修改</button>
+	  #end
+	  #if($!{projectListing.isTrade()})
+		<button type="button" class="button-s4" onclick="javascript:suspension('$!{projectListing.id}','$!{projectListing.title}','suspension')">停牌</button>
+	  #end
+	  #if($!{projectListing.isSuspension()})
+		<button type="button" class="button-s4" onclick="javascript:suspension('$!{projectListing.id}','$!{projectListing.title}','resumption')">复牌</button>
+	  #end
+      #if($!{projectListing.isTrade()}||$!{projectListing.isSuspension()})
+		<button type="button" class="button-s4" onclick="javascript:suspension('$!{projectListing.id}','$!{projectListing.title}','withdrawal')">撤牌</button>
+	  #end
+      <button type="button" class="button-s4" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}'#else history.go(-1)#end">返回</button>
+    </div>
+    <!-- 表单按钮区 END -->
+	<form id="suspensionForm" name="suspensionForm" action="$!{appServer}/project/suspension.htm"  method="post">
+		#springBind("announcement.title")<input type="hidden" id="announcementTitle" name="${status.expression}"/>
+		#springBind("announcement.content")<input type="hidden" id="announcementContent" name="${status.expression}"/>
+		#springBind("announcement.projectId")<input type="hidden" id="projectId" name="${status.expression}"/>
+    </form>
+  </div>
+  <!-- 表单模块 END -->
+</div>

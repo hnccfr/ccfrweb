@@ -1,0 +1,101 @@
+#set($layout = 'layout/default.vm')
+<div class="main">	
+	<h2>$!{projectType.name}->属性列表</h2>
+	<div class="tool">
+    	#if($!projectType.name.toString().length()>0)
+    	<span><a href="$!{appServer}/baseset/projecttype/addAttri.htm?tCode=$!{projectType.code}" hidefocus="true" class="bt_add" >新增属性</a></span>
+    	#end
+	</div>
+	<div class="clear"></div>
+    <!-- 列表模块 -->
+    <div class="listBox"> 
+		<h5><span>$!{projectType.name}->属性列表</span></h5> 
+		<table width="100%"> 
+            <tr>
+                <th>属性key</th> 
+                <th>属性title</th>
+                <th>属性类型</th>
+                <!-- <th>预设值</th>
+				<th>属性说明</th> -->
+				<th>是否必填</th>
+				<th>是否启用</th>
+				<!--<th>值验证</th> -->
+                <th>排序</th>
+                <th>操作栏</th>
+            </tr>
+			#foreach($item in $!{list})
+				
+            <tr  #if($velocityCount%2==0) class="bg" #end >
+				<td style="text-align:left;">
+                    $!{item.keyName}
+				</td>
+				
+            	<td style="text-align:left;">
+					<a href="$!{appServer}/baseset/projecttype/editAttri.htm?attriId=$!{item.id}">
+						#if($!item.keyTitle.toString().length()>15)
+						        $!{item.keyTitle}.toString().substring(0,15)
+						#else
+							    $!{item.keyTitle}
+						#end
+					</a>
+				</td>
+				<td style="text-align:left;">
+					$!{item.inputTypeName}
+				</td>
+				<!--
+				<td style="text-align:left;">
+					$!{item.text}
+				</td>
+				<td style="text-align:left;">
+					$!{item.remark}
+				</td>
+				-->
+				<td style="text-align:left;">
+					#if($!{item.isRequired} == 0)
+						非必填
+					#else
+						必填
+					#end
+				</td>
+				<td style="text-align:left;">
+					#if($!{item.enable} == 0)
+						启用
+					#else
+						禁用
+					#end
+				</td>
+				<!--
+				<td style="text-align:left;">
+					$!{item.valueValidate}
+				</td>
+				-->
+				<td style="text-align:left;">
+					$!{item.rank}
+				</td>
+				<td style="text-align:left;">
+					#if($!item.proTypeCode == $!{projectType.code})
+						<a href="$!{appServer}/baseset/projecttype/editAttri.htm?attriId=$!{item.id}">编辑</a>
+						##<a href="$!{appServer}/baseset/projecttype/viewAttri.htm?attriId=$!{item.id}">查看</a>
+						#if($!item.enable == 0)
+							<a href="$!{appServer}/baseset/projecttype/enableAttri.htm?attriId=$!{item.id}&enable=1&tCode=$!{item.proTypeCode}">禁用</a>
+						#else
+							<a href="$!{appServer}/baseset/projecttype/enableAttri.htm?attriId=$!{item.id}&enable=0&tCode=$!{item.proTypeCode}">启用</a>
+						#end
+					#else
+						<p>继承父类型</p>
+					#end
+				</td>
+               
+            </tr>
+            #end
+        </table> 
+		<div class="pages-box" >
+        </div>
+         
+    </div> <!-- 列表模块 END -->   
+        	
+           
+    </div>
+
+
+

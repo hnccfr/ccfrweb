@@ -1,0 +1,80 @@
+<div class="main">
+	<h2>用户信用等级积分信息</h2>
+	<div class="right-body">
+		<div class="clear"></div>
+		<div class="formBox">
+	            <div class="content">
+                	<table class="c2">
+						<tr>
+							<th>卖家信用积分：</th>							
+							<td>
+								$!{userCredit.sellerCreditNum}
+                            </td>
+							<th>买家信用积分：</th>							
+							<td>
+								$!{userCredit.buyCreditNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家信用等级：</th>							
+							<td>
+								$!{userCredit.sellerLevelName}
+								<img src="$!uploadServer/$!userCredit.sellerImgName"/>
+                            </td>
+							<th>买家信用等级：</th>							
+							<td>
+								$!{userCredit.buyLevelName}
+								<img src="$!uploadServer/$!userCredit.buyImgName"/>
+                            </td>
+                        </tr>
+					  <tr>
+							<th>卖家好评数：</th>							
+							<td>
+								$!{userCredit.sellerGoodNum}
+                            </td>
+							<th>买家好评数：</th>							
+							<td>
+								$!{userCredit.buyGoodNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家中评数：</th>							
+							<td>
+								$!{userCredit.sellerMiddNum}
+                            </td>
+							<th>买家中评数：</th>							
+							<td>
+								$!{userCredit.buyMiddNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家差评数：</th>							
+							<td>
+								$!{userCredit.sellerBadNum}
+                            </td>
+							<th>买家差评数：</th>							
+							<td>
+								$!{userCredit.buyBadNum}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家服务态度：</th>							
+							<td>
+								$!{userCredit.serviceAttitude}
+                            </td>
+                        </tr>
+						<tr>
+							<th>卖家交割速度：</th>							
+							<td>
+								$!{userCredit.logisticsSpeed}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+    	<div class="form-but">
+    		<button type="button" class="button-s4" onclick="JavaScript:history.go(-1);">返回</button>
+        </div>
+    </div>
+	<div class="b"></div>
+</div>

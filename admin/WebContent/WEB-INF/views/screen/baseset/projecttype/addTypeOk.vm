@@ -1,0 +1,5 @@
+#set($layout = 'layout/default.vm')
+<div class="r-success">
+    	<h3>#if($!{message})$!{message}#else 操作成功！#end</h3>
+        <button class="button-s10" type="button" onclick="javascript:window.parent.location.href='$!{appServer}/baseset/projecttype/listframe.htm'">确定</button>
+</div>

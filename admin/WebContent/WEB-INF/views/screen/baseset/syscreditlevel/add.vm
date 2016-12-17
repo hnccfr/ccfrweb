@@ -1,0 +1,78 @@
+#set($layout = 'layout/default.vm')
+<script src="$!{appServer}/scripts/jquery.validate.js" type="text/javascript"></script>
+<script src="$!{appServer}/scripts/baseset/syscreditlevelAdd.js" type="text/javascript"></script>
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/syscreditlevel/list.htm?dd="+new Date();
+}
+
+</script>
+<div class="main">
+<form action="$!{appServer}/baseset/syscreditlevel/add.htm" id="smlsAdd" name="smlsAdd" enctype="multipart/form-data" method="post" >
+  <h2>新增信用设置</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2" style="width:800px;">
+        <tr>
+          <th style="width:100px;"><span class="red">*</span>信用等级：</th>
+          <td>
+			#springBind("systemCreditLevel.creditLevel")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:200px;" maxLength="8"/>
+			<span class="red">#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr>
+          <th style="width:100px;"><span class="red">*</span>等级名称：</th>
+          <td>
+			#springBind("systemCreditLevel.levelName")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:200px;" maxLength="16"/>
+			<span class="red">#if($!{status.isError()})${status.errorMessage}#end</span>
+            </td>
+        </tr>
+        <tr>
+          <th style="width:100px;"><span class="red">*</span>积分开始值：</th>
+          <td>
+			#springBind("systemCreditLevel.integralStart")
+			<input type="text" class="inp" id="$!status.expression" name="$!status.expression" value="$!{status.value}" style="width:200px;" maxLength="8"/>
+			<span class="red">#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr>
+          <th style="width:100px;"><span class="red">*</span>积分结束值：</th>
+          <td>
+			#springBind("systemCreditLevel.integralEnd")
+			<input type="text" class="inp" id="$!status.expression" name="$!status.expression" value="$!{status.value}" style="width:200px;" maxLength="8"/>
+			<span class="red">#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr>
+          <th style="width:100px;">备注：</th>
+          <td>
+			#springBind("systemCreditLevel.remark")
+          <textarea id="$!status.expression" name="$!status.expression" class="textarea" style="height:200px;">$!status.value</textarea>
+		  <span class="red">#if($!{status.isError()})${status.errorMessage}#end</span>
+          </td>
+        </tr>
+		<tr>
+          <th style="width:100px;"><span class="red">*</span>图片：</th>
+          <td>
+			#springBind("systemCreditLevel.imgName")
+			<input type="file" class="inp" id="uploadFile" name="uploadFile" value="$!{status.value}"/>
+			<span class="red">$!{fileuploadError}#if($!{status.isError()})${status.errorMessage}#end</span>
+			(图片格式必须为jpg,jpeg,gif,png)
+		  </td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+	</div>
+	</div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="submit" class="button-s4">确定</button>
+	  <button type="button" class="button-s4" onclick="doback();">取消</button>
+    </div>
+</form>
+</div>

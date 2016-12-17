@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans >
+<!--  与定时器集群的有冲突,所以先注掉
+	<bean id="profilerInterceptor" class="com.hundsun.network.melody.common.profiler.MethodProfileInterceptor"></bean>
+
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>*Service,*DAO,*Dao</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>profilerInterceptor</value>
+			</list>
+		</property>
+	</bean>
+ -->
+	
+	<!--
+	<bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>remoteSystemUserService</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>serviceResultInterceptor</value>
+				<value>profilerInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="serviceResultInterceptor"
+		class="com.hundsun.network.greenlake.common.remote.interceptor.ServiceResultInterceptor"></bean> -->
+</beans>

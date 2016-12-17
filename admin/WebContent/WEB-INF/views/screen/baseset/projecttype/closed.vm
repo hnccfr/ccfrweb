@@ -1,0 +1,7 @@
+#set($layout = 'layout/default.vm')
+<div class="r-waring">
+    	<h3>项目类型已被禁用，不允许操作！<br />如果需要使用该项目类型，请先启用！</h3>
+        <!--
+			<button class="button-s10" type="button" onclick="javascript:window.location.href='$!{appServer}/baseset/projecttype/attriList.htm?tCode=$!{tCode}'">确定</button>
+		-->
+</div>

@@ -1,0 +1,109 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+<script >
+	function chooseProjectType(data){
+		jQuery("#sel_projectTypeCode").val(data.code);
+		jQuery("#sel_projectTypeName").val(data.name);
+
+	}
+	
+	//新增按钮
+    function doAdd(){
+    	location.href = "$!{appServer}/project/standard/add.htm?dd="+new Date();
+    }
+	
+</script>
+
+<div class="main">
+<h2>标准规格管理</h2>
+<!-- 搜索模块 -->
+<form id="standardList" action="$!{appServer}/project/standard/list.htm"  method="post">
+  <div class="searchBox">
+    <h5><span>搜索</span></h5>
+    <table>
+      <tr>
+		#springBind("query.standardName")
+        <th>规格名称：</th>
+        <td>
+			<input type="text" class="inp inp-w160" name="$!status.expression" value="$!{status.value}" maxlength="30"/>
+		</td>
+		<th>项目类型：</th>
+        <td>
+			#springBind("query.sleProTypeName")
+			<input type="text" id="sel_projectTypeName" readonly name="$!{status.expression}" value="$!{status.value}" style="width:130px;"  class="prjTypeName" onclick="showPrjTypeSel(this,chooseProjectType); return false;"/>
+			#springBind("query.projectTypeCode")
+			<input type="hidden" id="sel_projectTypeCode" name="$!{status.expression}"  value="$!{status.value}" />
+		</td>
+        <th>&nbsp;</th>
+        <td><button type="submit" class="btn">搜 索</button></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+</form>
+<div class="tool">
+	##if($!settlerAccess.has('S_B_MEMLEVSET_ADD'))
+	<span><a href="#" hidefocus="true" class="bt_add" onclick="doAdd();">新增</a></span>
+	##end
+</div>
+<!-- 搜索模块 END -->
+<div class="clear"></div>
+    <!-- 列表模块 -->
+    <div class="listBox"> 
+      <h5><span>标准规格列表</span></h5> 
+        <table width="100%"> 
+            <tr>
+                <th width="10%">名称</th> 
+                <th width="10%">项目类型</th>
+                ##<th>内容</th>
+                <th width="5%">状态</th>
+				<th width="10%">操作</th>
+            </tr>
+			#if($query && $query.getData().size() > 0)
+			#foreach($result in $query.getData())
+            <tr #if($velocityCount%2==0) class="bg" #end>
+              	<td><a href="$!{appServer}/project/standard/view.htm?id=$!result.id">$!result.name</a></td>
+                <td>$!result.proTypeName</td>
+                #*
+				<td>
+					#if($!result.contentDesc.toString().length()>80)
+					        $!result.contentDesc.toString().substring(0,80)...
+					#else
+						    $!{result.content}
+					#end
+				</td>*#
+				<td>#if($!result.enable == "Y")
+						启用
+					#else
+						禁用
+					#end
+				</td>
+                <td>
+					#if($!query.projectTypeCode.toString().length()>0 && $!{query.projectTypeCode}!=$!{result.proTypeCode})
+						继承父类
+					#else
+						<a href="$!{appServer}/project/standard/update.htm?id=$!result.id">修改</a>
+						<a href="$!{appServer}/project/standard/view.htm?id=$!result.id">查看</a>
+					#end
+					#if($!result.enable == "Y")
+						<a href="$!{appServer}/project/standard/enable.htm?id=$!{result.id}&enable=N">禁用</a>
+					#else
+						<a href="$!{appServer}/project/standard/enable.htm?id=$!{result.id}&enable=Y">启用</a>
+					#end
+				</td>
+            </tr>
+			#end
+			#end
+        </table> 
+		<div class="pages-box" >
+			<div class="pages">
+				#pager($query, "standardList")
+            </div> 
+        </div>
+    </div> <!-- 列表模块 END -->   
+  </div>
+</div>

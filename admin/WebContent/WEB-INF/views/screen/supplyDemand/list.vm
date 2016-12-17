@@ -1,0 +1,138 @@
+#set($layout = 'layout/default.vm')
+<script src="$!{imageServer}/scripts/jquery.datePicker.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.ui.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.validate.js" type="text/javascript"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script src="$!{imageServer}/scripts/supplyDemand/list.js" type="text/javascript"></script>
+<div class="main">
+	<h2>供求信息列表</h2>
+	<div class="clear"></div>
+    <!-- 搜索模块 -->
+	<form id="supplyListFrom" action="$!{appServer}/supplyDemand/list.htm" onsubmit="return equalTime('beginTime','endTime');" method="post">
+        <div class="searchBox">
+    		<h5><span>搜索供求信息</span></h5>
+    		<table>
+    			<tr>
+    				<th>项目名称：</th>
+    	
+    			#springBind("query.title")
+    				<td colspan="2">
+    					<input type="text" id="title" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th>&nbsp;&nbsp;发布会员：</th>
+    				#springBind("query.publisherAccount")
+    				<td colspan="2">
+    					<input type="text" id="publisher" name="$!{status.expression}" value="$!{status.value}" class="inp" />
+    				</td>
+    				<th>&nbsp;&nbsp;信息状态：</th>
+    				#springBind("query.status")
+    				<td colspan="2"><select class="select" id="supplyStatus" name="${status.expression}" value="$!{status.value}" style="width:125px;">
+				<option value="">请选择</option>
+				<option value="C" #if("$!{status.value}" == "C") selected #end>创建中</option>
+				<option value="A" #if("$!{status.value}" == "A") selected #end>待审核</option>
+				<option value="N" #if("$!{status.value}" == "N") selected #end>展示中</option>
+				<option value="F" #if("$!{status.value}" == "F") selected #end>审核不通过</option>
+				<option value="B" #if("$!{status.value}" == "B") selected #end>已禁用</option>
+				<option value="O" #if("$!{status.value}" == "O") selected #end>已过期</option>
+				<option value="D" #if("$!{status.value}" == "D") selected #end>已删除</option>
+            	</select></td>
+				</tr>
+    			<tr>
+    			<th>信息类型</th>
+                    <td colspan="2">
+                    #springBind("query.infoType")
+                    <select class="select" id="supplyType" name="${status.expression}" value="$!{status.value}" style="width:125px;">
+				<option value="">请选择</option>
+				<option value="supply" #if("$!{status.value}" == "supply") selected #end>供应信息</option>
+				<option value="demand" #if("$!{status.value}" == "demand") selected #end>求购信息</option>
+            	</select>
+                    </td>
+                    <th></th>
+    				<td colspan="2"></td>
+                    <!--
+    				<th>&nbsp;&nbsp;创建时间：</th>
+    				<td colspan="2">
+    				#springBind("query.gmtCreateFrom")
+    				<input type="text" id="beginTime" name="$!{status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+    				-
+    				#springBind("query.gmtCreateTo")
+    				<input type="text" id="endTime" name="$!{status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+    				</td>
+    				-->
+                     <th></th>
+    				<td colspan="2"><button type="submit" class="btn">查询</button><button type="button" class="btn" onclick="return resetSupplyForm()">重置</button></td>
+    			</tr>
+    		</table>
+    	</div>
+    </form>
+	<!-- 搜索模块 END -->
+	<!-- 会员列表BEGIN -->
+	<div class="listBox">
+		<h5><span>供求信息列表</span></h5>
+		<table width="100%" style="text-align:center;">
+			<tr>
+				<th width="10%" style="text-align:center;">项目编码</th>
+				<th width="22%" style="text-align:center;">项目名称</th>
+                <th width="10%" style="text-align:center;">项目类型</th>
+				<th width="8%" style="text-align:center;">信息类型</th>
+				<th width="12%" style="text-align:center;">发布者</th>
+				<th width="8%" style="text-align:center;">信息状态</th>
+				<th width="10%" style="text-align:center;">展示时间</th>
+				<th width="10%" style="text-align:center;">截止时间</th>
+				<th width="10%" style="text-align:center;">操作栏</th>
+            </tr>
+            #foreach($supplyDemandInfo in $!{query.data})
+						<tr  #if($velocityCount%2==1) class="bg" #end>
+                                <td>$!{supplyDemandInfo.projectCode}</td>
+                                <td title="$!{supplyDemandInfo.title}">
+                                        #if($!supplyDemandInfo.title.toString().length()>15)
+                                            $!supplyDemandInfo.title.toString().substring(0,13)..
+                                        #else
+                                            $!{supplyDemandInfo.title}
+                                        #end
+                                </td>
+                                <td>$!{supplyDemandInfo.projectTypeCodeDesc}</td>
+                                <td>$!{supplyDemandInfo.supplyTypeDesc}</td>
+								<td>$!{supplyDemandInfo.publisherAccount}</td>
+								<td>$!{supplyDemandInfo.supplyStatusDesc}</td>
+								<td>$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveStartDate})</td>
+                                <td>$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.endTime})</td>
+                                <td><a style="color:#0066CC" href="$!{appServer}/supplyDemand/showDetail.htm?sid=$!{supplyDemandInfo.id}"  title="查看">查看</a>
+										#if($!{supplyDemandInfo.status} == "A")
+											<a style="color:#0066CC" href="/supplyDemand/audit.htm?sid=$!{supplyDemandInfo.id}&status=$!{query.status}"  title="审核供求信息" onclick="audit($!{item.id});">审核</a>
+										#elseif($!{supplyDemandInfo.status} == "N")
+											<a style="color:#0066CC" href="#"  title="禁用供求信息" onclick="show($!{supplyDemandInfo.id});return false;">禁用</a>
+											
+										#end
+                                </td>
+						</tr>
+					#end
+        </table>
+		<div class="pages-box" >
+			<div class="pages">
+			#pager($!{query},'supplyListFrom')
+            </div> 
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+	<div id="showBox">
+		<form action="$!{appServer}/supplyDemand/forbid.htm" method="post" onsubmit="return submitCheck();">
+			<input type="hidden" name="sid" id="infoId" value=""/>
+			<table>
+				<tr>
+					<td colspan="2">
+						<textarea cols=40 rows=8 style="resize: none" id="reasonID" maxlength="300" name="reason"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="float:right">
+						<button type="submit" class="btn">确定</button>
+						<button type="button" class="btn" onclick="closeDialog()">取消</button>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

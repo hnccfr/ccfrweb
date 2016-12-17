@@ -1,0 +1,118 @@
+##对话框项目列表
+#set($layout = 'layout/blank.vm')
+<link rel="stylesheet" href="$!{imageServer}/styles/basic.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/admin.css" type="text/css">
+#* 
+<script type="text/javascript">
+$(function() {
+	$("#listingStartTimeL").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!lastDate)}"});  
+	$("#listingStartTimeR").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!lastDate)}"});
+	$("#listingEndTimeL").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!lastDate)}"});
+	$("#listingEndTimeR").datePicker({clickInput:true,startDate:"2010-06-03",endDate:"$!{dateTool.format($!lastDate)}"});
+});
+</script>
+*#
+<div id="project">
+<div class="main" style="width:98%;">
+##查询条件输入框(始)
+    <form name="projectDialogForm" id="projectDialogForm" action="$!{appServer}/project/dialog.htm"  method="post">
+        <div class="searchBox">
+        	<table>
+        		<tr>
+					<th>项目名称：</th>
+					#springBind("page.title")
+        			<td><input type="text" class="inp inp-w70" id="dialogProjectTitle" name="${status.expression}" value="$!{status.value}"/></td>
+                    <th>项目编号：</th>
+					#springBind("page.code")
+        			<td><input type="text" class="inp inp-w70" id="dialogProjectCode" name="${status.expression}" value="$!{status.value}"/></td>
+        			#* 
+					<th>挂牌开始日期范围：</th>
+                    <td>
+            			#springBind("page.listingStartTimeL")
+            			<input type="text" id="listingStartTimeL" name="${status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+            			-
+            			#springBind("page.listingStartTimeR")
+            			<input type="text" id="listingStartTimeR" name="${status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+            		</td>
+            		<th>挂牌结束日期范围：</th>
+                    <td>
+            			#springBind("page.listingEndTimeL")
+            			<input type="text" id="listingEndTimeL" name="${status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+            			-
+            			#springBind("page.listingEndTimeR")
+            			<input type="text" id="listingEndTimeR" name="${status.expression}" value="$!{status.value}" readonly="readonly" class="date-pick" style="width:65px"/>
+            		</td>
+                    *#
+            		<th>项目状态：</th>#springBind("page.status")
+                    <td>
+            			<select class="select" name="${status.expression}" id="dialogProjectStatus" value="$!{status.value}" style="width:95px;">
+            				<option value="">请选择</option>
+							#* 
+            				#foreach($item in $projectStatusList)
+            					<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>	
+							#end
+							*#
+							<option value="T" #if("$!{status.value}" == "T") selected #end>挂牌中</option>
+							<option value="S" #if("$!{status.value}" == "S") selected #end>停牌中</option>
+							<option value="W" #if("$!{status.value}" == "W") selected #end>已撤牌</option>
+							<option value="O" #if("$!{status.value}" == "O") selected #end>已结束</option>
+                        </select>
+            		</td>
+                    <th><td><input type="button" id="projectListQuery" name="projectListQuery" onclick="" class="btn" value="查询" /></td></th>
+                </tr>
+            </table>
+        </div>
+    </form>
+##查询条件输入框(终)
+
+##列表 数据(始)
+    	<div class="clear"></div>
+		<div class="listbox">
+			<table class="list-table" width="100%">
+				<tr>     
+					<th></th>
+					<th>项目ID</th>
+					<th>项目名称</th> 
+                    <th>项目编号</th>
+                    ##<th>挂牌价格</th>
+					<th>项目类型</th> 
+                    <th>交易方式</th>
+                    ##<th>挂牌开始时间</th>
+                    ##<th>挂牌结束时间</th>
+                    <th>项目状态</th>
+				</tr>
+				#if($!{page} && ${page.getData().size()} > 0)
+    				#foreach($projectListing in $page.getData())
+        				<tr #if($!{velocityCount}%2 == 0) class="bg" #end>
+							<td style="text-align:center;width:5%;">
+								<input type="radio" id="projectRadio" name="projectRadio" value="$!{projectListing.id}" class="radio"/>
+							</td>
+							<td>$!{projectListing.id}</td>
+							<td>
+								<a href="$!{appServer}/project/info.htm?projectListingId=$!{projectListing.id}" target="_blank">
+									$!{projectListing.title}
+								</a>
+							</td>
+                            <td>$!{projectListing.code}</td>
+                            ##<td>$!commonUtils.getValuationUnitDesc($!{projectListing.listingPrice},$!{projectListing.valuationUnit})/$!{projectListing.measureUnitDesc}</td>
+            				<td>$!{projectListing.projectTypeName}</td>
+            				<td>$!{projectListing.tradingTypeDesc}</td>
+            				##<td>$!{dateTool.format($!{projectListing.listingStartTime})}</td>
+            				##<td>$!{dateTool.format($!{projectListing.listingEndTime})}</td>
+            				<td>$!{projectListing.statusDesc}</td>
+                        </tr>
+					#end
+				#else
+                    ##<tr><td><p>没有找到符合条件的结果</p></td></tr>
+				#end
+            </table>
+			<div class="pages-box" style="width:100%;">
+    			<div class="pages">
+			#ajaxPager($page, "project", "projectDialogForm", "$!{appServer}/project/dialog.htm")
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+##列表 数据(终)
+</div>
+</div>

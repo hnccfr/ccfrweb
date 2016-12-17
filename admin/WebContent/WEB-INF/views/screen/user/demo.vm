@@ -1,0 +1,161 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+<script src="$!{appServer}/scripts/jquery.validate.js" type="text/javascript"></script>
+<script src="$!{appServer}/scripts/project/proBaseSet.js" type="text/javascript"></script>
+<script >
+	function chooseProjectType(data){
+		jQuery("#sel_projectTypeCode").val(data.code);
+		jQuery("#sel_projectTypeName").val(data.name);
+
+	}
+</script>
+
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/project/setting/list.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+<form action="$!{appServer}/project/setting/add.htm" id="addForm" name="addForm" method="post" enctype="multipart/form-data" >
+  <h2>新增审核流程--保证金</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+	<h4><span>设置条件</span></h4>
+      <table class="c2" style="width:800px;">
+		<tr>
+          <th style="width:150px;">项目类型：</th>
+          <td>
+			#springBind("bean.account")
+			<input type="text" id="sel_projectTypeName" readonly name="$!{status.expression}" value="$!{status.value}" style="width:150px;"  class="prjTypeName" onclick="showPrjTypeSel(this,chooseProjectType); return false;"/>
+			(权重:8)
+			#springBind("bean.id")
+			<input type="hidden" id="sel_projectTypeCode" name="$!{status.expression}"  value="$!{status.value}" />
+            <span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr>
+        <th >交易方式：</th>
+          <td>
+			#springBind("bean.tradingType")
+			<select class="select" name="${status.expression}" value="$!{status.value}" style="width:150px;">
+    			<option value="">请选择</option>
+    			#foreach($item in $transTypeList)
+    				<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>
+    			#end
+			</select>
+			(权重:4)
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr>
+		<th >会员级别：</th>
+          <td>
+			#springBind("bean.memberLevel")
+			<select class="select" name="${status.expression}" value="$!{status.value}" style="width:150px;">
+    			<option value="">请选择</option>
+    			#foreach($item in $memLevelList)
+    				<option value="$!{item.memberLevel}" #if($!{status.value} == $!{item.memberLevel}) selected #end>$!{item.levelName}</option>
+    			#end
+			</select>
+			(权重:2)
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr><th >好评数(大于)：</th>
+          <td>
+			#springBind("bean.goodComment")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			(权重:1)
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+        <tr><th >差评数(小于)：</th>
+          <td>
+			#springBind("bean.badComment")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			(权重:16)
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		</table>
+		<h4><span>设置值</span></h4>
+		<table class="c2" style="width:800px;">
+		 <tr><th >挂牌审核流程：</th>
+          <td>
+			#springBind("bean.listingCheckProcess")
+			<!--
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			-->
+			#foreach($item in $auditProcess)
+				<input type="checkbox" name="$!{status.expression}" value="$!{item.value}" />$!{item.name}&nbsp;&nbsp;
+    		#end
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		 <tr><th >意向单审核流程：</th>
+          <td>
+			#springBind("bean.intentionCheckProcess")
+			#foreach($item in $auditProcess)
+				<input type="checkbox" name="$!{status.expression}" value="$!{item.value}" />$!{item.name}&nbsp;&nbsp;
+			#end
+			##<font color='#C0C0C0'>说明：1、如果不需要设置审核流程，请直接勾选“审核流程结束”；2、如果需要</font>
+			<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		 <tr><th >挂牌方交易保证金：</th>
+          <td>
+			#springBind("bean.listingJyProportion")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			%<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		 <tr><th >挂牌方交收保证金：</th>
+          <td>
+			#springBind("bean.listingJsProportion")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			%<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		 <tr><th >下单方交易保证金：</th>
+          <td>
+			#springBind("bean.orderJyProportion")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			%<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		 <tr><th >下单方交收保证金：</th>
+          <td>
+			#springBind("bean.orderJsProportion")
+			<input type="text" class="inp" name="$!status.expression" value="$!{status.value}" style="width:300px;"/>
+			%<span class="red" >#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+		<tr>
+          <th >是否启用：</th>
+          <td>
+			#springBind("bean.enable")
+			<input type="radio" name="${status.expression}" id="radio" value="Y" #if($!{standard.enable} != "N")  checked #end /> 是
+            <input type="radio" name="${status.expression}" id="radio2" value="N" #if($!{standard.enable} == "N")  checked #end />  否
+			<span class="red">*#if($!{status.isError()})${status.errorMessage}#end</span>
+		  </td>
+        </tr>
+
+      </table>
+    </div>
+	</div>
+	</div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="submit" class="button-s4">确定</button>
+	  <button type="button" class="button-s4" onclick="doback();">取消</button>
+    </div>
+</form>
+</div>

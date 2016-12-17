@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SYSTEM_SERVICECHARGE_SPECIAL" >
+  <resultMap id="systemServicechargeSpecialResult" class="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemServicechargeSpecial" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="PRO_TYPE_CODE" property="proTypeCode" jdbcType="VARCHAR" />
+    <result column="PRO_TYPE_NAME" property="proTypeName" jdbcType="VARCHAR" />
+    <result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+    <result column="HAVE_AUCTIONEER" property="haveAuctioneer" jdbcType="VARCHAR" />
+    <result column="TURNOVER_AMOUNT" property="turnoverAmount" jdbcType="DECIMAL" />
+    <result column="LIST_UNTURNOVER" property="listUnturnover" jdbcType="DECIMAL" />
+    <result column="LIST_TURNOVER" property="listTurnover" jdbcType="DECIMAL" />
+    <result column="ORDER_UNTURNOVER" property="orderUnturnover" jdbcType="DECIMAL" />
+    <result column="ORDER_TURNOVER" property="orderTurnover" jdbcType="DECIMAL" />
+    <result column="IS_DEL" property="isDel" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="IS_SYSTEM" property="isSystem" jdbcType="CHAR" />
+  </resultMap>
+  
+	<sql id="Where_Clause" >
+		<dynamic>
+		<isNotEmpty prepend="and" property="userAccount" >
+			t_sss.USER_ACCOUNT = #userAccount:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="proTypeCode" >
+			t_sss.PRO_TYPE_CODE = #proTypeCode:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="tradingType" >
+			t_sss.TRADING_TYPE = #tradingType:VARCHAR# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="haveAuctioneer" >
+			t_sss.HAVE_AUCTIONEER = #haveAuctioneer:VARCHAR# 
+		</isNotEmpty>
+		<isNotNull prepend="and" property="turnoverAmount" >
+			<![CDATA[ t_sss.TURNOVER_AMOUNT <= #turnoverAmount:DECIMAL#*100 ]]> 
+		</isNotNull>
+		<isNotEmpty prepend="and" property="noneId" >
+			<![CDATA[ t_sss.id <> #noneId# ]]>
+		</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<!-- 查询分页条数 -->
+	<select id="selectPageList-count" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemServicechargeSpecialQuery"
+			resultClass="java.lang.Integer" >
+		select count(*) from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+		where t_sss.IS_SYSTEM = 'N'
+		<include refid="SYSTEM_SERVICECHARGE_SPECIAL.Where_Clause" />
+	</select>
+	
+	<!-- 查询分页结果集 -->
+	<select id="selectPageList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemServicechargeSpecialQuery"
+			resultMap="systemServicechargeSpecialResult">
+		<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+			select t_sss.ID, t_sss.USER_ACCOUNT, t_sss.PRO_TYPE_CODE,t_sss.TRADING_TYPE,t_sss.HAVE_AUCTIONEER,t_sss.TURNOVER_AMOUNT/100 TURNOVER_AMOUNT,
+			 t_sss.LIST_UNTURNOVER/100 LIST_UNTURNOVER, t_sss.LIST_TURNOVER/100 LIST_TURNOVER, t_sss.ORDER_UNTURNOVER/100 ORDER_UNTURNOVER,
+				t_sss.ORDER_TURNOVER/100 ORDER_TURNOVER, t_sss.IS_DEL, t_sss.GMT_CREATE, t_sss.GMT_MODIFY, t_sss.OPERATOR ,t_sss.IS_SYSTEM,
+				t_pt.name  PRO_TYPE_NAME
+			from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+			left join project_type t_pt on t_sss.PRO_TYPE_CODE=t_pt.code 
+			where t_sss.IS_SYSTEM = 'N'
+		]]>
+		<include refid="SYSTEM_SERVICECHARGE_SPECIAL.Where_Clause" />
+		<![CDATA[
+			order by GMT_MODIFY desc
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+		]]>
+	</select>
+	
+	<!-- 根据条件查询列表 -->
+	<select id="selectConditionList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemServicechargeSpecialQuery"
+			resultMap="systemServicechargeSpecialResult">
+		<![CDATA[
+			select t_sss.ID, t_sss.USER_ACCOUNT, t_sss.PRO_TYPE_CODE, t_sss.TRADING_TYPE,t_sss.HAVE_AUCTIONEER,t_sss.TURNOVER_AMOUNT/100 TURNOVER_AMOUNT,
+			    t_sss.LIST_UNTURNOVER/100 LIST_UNTURNOVER, t_sss.LIST_TURNOVER/100 LIST_TURNOVER, t_sss.ORDER_UNTURNOVER/100 ORDER_UNTURNOVER,
+				t_sss.ORDER_TURNOVER/100 ORDER_TURNOVER, t_sss.IS_DEL, t_sss.GMT_CREATE, t_sss.GMT_MODIFY, t_sss.OPERATOR ,t_sss.IS_SYSTEM,
+				t_pt.name  PRO_TYPE_NAME
+			from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+			left join project_type t_pt on t_sss.PRO_TYPE_CODE=t_pt.code
+			where t_sss.IS_SYSTEM = 'N'
+		]]>
+        <include refid="SYSTEM_SERVICECHARGE_SPECIAL.Where_Clause" />
+	</select>
+	
+	<select id="selectComSpecial" resultMap="systemServicechargeSpecialResult">
+		<![CDATA[
+			select t_sss.ID, t_sss.USER_ACCOUNT, t_sss.PRO_TYPE_CODE,t_sss.TRADING_TYPE,t_sss.HAVE_AUCTIONEER,t_sss.TURNOVER_AMOUNT/100 TURNOVER_AMOUNT,
+			    t_sss.LIST_UNTURNOVER/100 LIST_UNTURNOVER, t_sss.LIST_TURNOVER/100 LIST_TURNOVER, t_sss.ORDER_UNTURNOVER/100 ORDER_UNTURNOVER,
+				t_sss.ORDER_TURNOVER/100 ORDER_TURNOVER, t_sss.IS_DEL, t_sss.GMT_CREATE, t_sss.GMT_MODIFY, t_sss.OPERATOR ,t_sss.IS_SYSTEM,
+				t_pt.name  PRO_TYPE_NAME
+			from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+			left join project_type t_pt on t_sss.PRO_TYPE_CODE=t_pt.code
+			where t_sss.IS_SYSTEM = 'Y'
+		]]>
+	</select>
+	
+	<!-- 根据userAccount、proTypeCode、交易方式、是否有拍卖师和交易金额查询重复配置 -->
+	<select id="selectRepeatConfig" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.SystemServicechargeSpecialQuery"
+			resultMap="systemServicechargeSpecialResult">
+		<![CDATA[
+			select t_sss.ID, t_sss.USER_ACCOUNT, t_sss.PRO_TYPE_CODE,t_sss.TRADING_TYPE,t_sss.HAVE_AUCTIONEER,t_sss.TURNOVER_AMOUNT/100 TURNOVER_AMOUNT,
+			    t_sss.LIST_UNTURNOVER/100 LIST_UNTURNOVER, t_sss.LIST_TURNOVER/100 LIST_TURNOVER, t_sss.ORDER_UNTURNOVER/100 ORDER_UNTURNOVER,
+				t_sss.ORDER_TURNOVER/100 ORDER_TURNOVER, t_sss.IS_DEL, t_sss.GMT_CREATE, t_sss.GMT_MODIFY, t_sss.OPERATOR ,t_sss.IS_SYSTEM,
+				t_pt.name  PRO_TYPE_NAME
+			from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+			left join project_type t_pt on t_sss.PRO_TYPE_CODE=t_pt.code
+			where t_sss.IS_SYSTEM = 'N'
+		]]>
+		<isNotEmpty prepend="and" property="userAccount" >
+			t_sss.USER_ACCOUNT = #userAccount:VARCHAR#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="userAccount" >
+			t_sss.USER_ACCOUNT is null
+		</isEmpty>
+		<isNotEmpty prepend="and" property="proTypeCode" >
+			t_sss.PRO_TYPE_CODE = #proTypeCode:VARCHAR#
+		</isNotEmpty>
+		<isEmpty prepend="and" property="proTypeCode" >
+			t_sss.PRO_TYPE_CODE is null
+		</isEmpty>
+		<isNotEmpty prepend="and" property="tradingType" >
+			t_sss.TRADING_TYPE = #tradingType:VARCHAR# 
+		</isNotEmpty>
+		<isEmpty prepend="and" property="tradingType" >
+			t_sss.TRADING_TYPE is null
+		</isEmpty>
+		<isNotEmpty prepend="and" property="haveAuctioneer" >
+			t_sss.HAVE_AUCTIONEER = #haveAuctioneer:VARCHAR# 
+		</isNotEmpty>
+		<isEmpty prepend="and" property="haveAuctioneer" >
+			t_sss.HAVE_AUCTIONEER is null
+		</isEmpty>
+		<isNotNull prepend="and" property="turnoverAmount" >
+			<![CDATA[ t_sss.TURNOVER_AMOUNT = #turnoverAmount:DECIMAL#*100 ]]> 
+		</isNotNull>
+		<isNull prepend="and" property="turnoverAmount" >
+			t_sss.TURNOVER_AMOUNT is null
+		</isNull>
+		<isNotEmpty prepend="and" property="noneId" >
+			<![CDATA[ t_sss.id <> #noneId# ]]>
+		</isNotEmpty>
+	</select>
+	
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemServicechargeSpecial" >
+	<selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT seq_SYS_SER_CHARGE_SPECIAL.Nextval AS VALUE FROM DUAL   
+    </selectKey>
+	insert into SYSTEM_SERVICECHARGE_SPECIAL (ID, USER_ACCOUNT, PRO_TYPE_CODE,TRADING_TYPE,HAVE_AUCTIONEER,TURNOVER_AMOUNT,
+	    LIST_UNTURNOVER,LIST_TURNOVER, ORDER_UNTURNOVER, ORDER_TURNOVER, IS_DEL, GMT_CREATE, GMT_MODIFY, OPERATOR)
+	values (#id:DECIMAL# , #userAccount:VARCHAR#, #proTypeCode:VARCHAR#,#tradingType:VARCHAR#,#haveAuctioneer:VARCHAR#,#turnoverAmount:DECIMAL#*100,
+	    #listUnturnover:DECIMAL#*100,
+		#listTurnover:DECIMAL#*100, #orderUnturnover:DECIMAL#*100, #orderTurnover:DECIMAL#*100, 0,
+		sysdate, sysdate, #operator:VARCHAR#)
+	</insert>
+	
+	<!-- 根据ID更新 -->
+	<update id="updateByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemServicechargeSpecial" >
+    update SYSTEM_SERVICECHARGE_SPECIAL
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="proTypeCode" >
+        PRO_TYPE_CODE = #proTypeCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="tradingType" >
+        TRADING_TYPE = #tradingType:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="haveAuctioneer" >
+        HAVE_AUCTIONEER = #haveAuctioneer:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="turnoverAmount" >
+        TURNOVER_AMOUNT = #turnoverAmount:DECIMAL#*100
+      </isNotNull>
+      <isNotNull prepend="," property="listUnturnover" >
+        LIST_UNTURNOVER = #listUnturnover:DECIMAL#*100
+      </isNotNull>
+      <isNotNull prepend="," property="listTurnover" >
+        LIST_TURNOVER = #listTurnover:DECIMAL#*100
+      </isNotNull>
+      <isNotNull prepend="," property="orderUnturnover" >
+        ORDER_UNTURNOVER = #orderUnturnover:DECIMAL#*100
+      </isNotNull>
+      <isNotNull prepend="," property="orderTurnover" >
+        ORDER_TURNOVER = #orderTurnover:DECIMAL#*100
+      </isNotNull>
+      <isNotNull prepend="," property="isDel" >
+        IS_DEL = #isDel:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+	</update>
+	
+	<!-- 根据ID查询 -->
+	<select id="selectByPrimaryKey" resultMap="systemServicechargeSpecialResult" parameterClass="java.lang.Long" >
+    select t_sss.ID, t_sss.USER_ACCOUNT, t_sss.PRO_TYPE_CODE,t_sss.TRADING_TYPE,t_sss.HAVE_AUCTIONEER,t_sss.TURNOVER_AMOUNT/100 TURNOVER_AMOUNT,
+        t_sss.LIST_UNTURNOVER/100 LIST_UNTURNOVER, t_sss.LIST_TURNOVER/100 LIST_TURNOVER, t_sss.ORDER_UNTURNOVER/100 ORDER_UNTURNOVER,
+		t_sss.ORDER_TURNOVER/100 ORDER_TURNOVER, t_sss.IS_DEL, t_sss.GMT_CREATE, t_sss.GMT_MODIFY, t_sss.OPERATOR ,t_sss.IS_SYSTEM,
+		t_pt.name  PRO_TYPE_NAME
+	from SYSTEM_SERVICECHARGE_SPECIAL t_sss
+	left join project_type t_pt on t_sss.PRO_TYPE_CODE=t_pt.code
+	where t_sss.ID = #id:DECIMAL#
+	</select>
+
+	<!-- 根据ID更新 -->
+	<update id="updateDelByPrimaryKey" parameterClass="com.hundsun.network.gates.genshan.biz.domain.baseset.SystemServicechargeSpecial" >
+    update SYSTEM_SERVICECHARGE_SPECIAL 
+    set IS_DEL = #isDel:DECIMAL# ,GMT_MODIFY = sysdate , OPERATOR = #operator:VARCHAR#
+    where where ID = #id:DECIMAL#
+	</update>
+	
+</sqlMap>

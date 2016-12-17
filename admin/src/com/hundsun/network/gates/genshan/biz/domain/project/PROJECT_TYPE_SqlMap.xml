@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ProjectType" >
+<typeAlias alias="ProjectType" type="com.hundsun.network.gates.genshan.biz.domain.project.ProjectType"/>
+  
+  <resultMap id="BaseResultMap" class="ProjectType" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="PAR_CODE" property="parCode" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="ENABLE" property="enable" jdbcType="DECIMAL" />
+    <result column="RANK" property="rank" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    ID, CODE, PAR_CODE, NAME, ENABLE, RANK, REMARK, GMT_CREATE, GMT_MODIFY, OPERATOR
+  </sql>
+ 
+  <update id="updateByPrimaryKeySelective" parameterClass="ProjectType" >
+    update PROJECT_TYPE
+    <dynamic prepend="set" >
+    	<!-- 
+      <isNotNull prepend="," property="code" >
+        CODE = #code:VARCHAR#
+      </isNotNull>
+       -->
+      <isNotNull prepend="," property="parCode" >
+        PAR_CODE = #parCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="name" >
+        NAME = #name:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="enable" >
+        ENABLE = #enable:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="rank" >
+        RANK = #rank:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <!-- <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull> -->
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = sysdate
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+
+  <select id="queryProjectTypeAllChild" resultMap="BaseResultMap"
+		parameterClass="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_TYPE
+		where ENABLE = 0
+		<isNotNull prepend="and" property="parCode">
+			regexp_like(PAR_CODE,'(^$parCode$\|)|(\|$parCode$\|)|(\|$parCode$$$)|(^$parCode$$$)')
+		</isNotNull>
+		order by RANK asc
+	</select>
+	
+	<select id="getProjectTypeByCode" resultMap="BaseResultMap" parameterClass="ProjectType" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from PROJECT_TYPE
+	    where CODE = #code:VARCHAR#
+  </select>
+  
+  <sql id="queryProjectType_where">
+	    <dynamic prepend="where">
+			<isNotEmpty prepend="and" property="code">
+				<![CDATA[ t_pt.CODE = #code:VARCHAR# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="parCode">
+				<![CDATA[ t_pt.PAR_CODE = #parCode:VARCHAR# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="enable">
+				<![CDATA[ t_pt.ENABLE = #enable:DECIMAL# ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+  <select id="queryProjectTypeCount" parameterClass="ProjectType" resultClass="int">
+		select  count(1) from 
+			 PROJECT_TYPE t_pt
+		<include refid="queryProjectType_where"/>
+  </select>
+  
+  <!-- 根据查询条件返回列表，添加、修改时验证name是否已经存在 -->
+   <select id="selectConditionList" parameterClass="ProjectType" resultMap="BaseResultMap">
+		select  <include refid="Base_Column_List" />
+		from  PROJECT_TYPE t_pt
+		where t_pt.PAR_CODE = #parCode:VARCHAR#
+		<isNotEmpty prepend="and" property="name">
+			<![CDATA[ t_pt.NAME = #name:VARCHAR# ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="id">
+			<![CDATA[ t_pt.ID != #id:DECIMAL# ]]>
+		</isNotEmpty>
+  </select>
+  
+  <insert id="insert" parameterClass="ProjectType" >
+    insert into PROJECT_TYPE (ID, CODE, PAR_CODE, NAME, ENABLE, 
+      RANK, REMARK, GMT_CREATE, GMT_MODIFY, 
+      OPERATOR)
+    values (seq_PROJECT_TYPE.NextVal , #code:VARCHAR#, #parCode:VARCHAR#, #name:VARCHAR#, #enable:DECIMAL#, 
+      #rank:DECIMAL#, #remark:VARCHAR#, sysdate, sysdate, 
+      #operator:VARCHAR#)
+  </insert>
+  
+  <update id="updateEnable" parameterClass="java.util.Map">
+		update PROJECT_TYPE t_pt set t_pt.ENABLE = #enable:DECIMAL# where CODE like #code:VARCHAR# || '%'
+  </update>
+   
+   <select id="getProjectTypeForScreen" resultMap="BaseResultMap" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from PROJECT_TYPE
+	    where ENABLE = 0
+  	</select>
+</sqlMap>

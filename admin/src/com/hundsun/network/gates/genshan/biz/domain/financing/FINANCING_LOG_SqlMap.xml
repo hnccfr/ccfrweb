@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANCING_LOG" >
+	<typeAlias alias="FinancingLog" type="com.hundsun.network.gates.genshan.biz.domain.financing.FinancingLog"/>
+	<resultMap id="BaseResultMap" class="FinancingLog" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="FINANCING_ID" property="financingId" jdbcType="DECIMAL" />
+		<result column="AUDIT_NODE" property="auditNode" jdbcType="VARCHAR" />
+		<result column="AUDIT_RESULT" property="auditResult" jdbcType="VARCHAR" />
+		<result column="LOG_REMARK" property="logRemark" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+	</resultMap>
+  
+	<insert id="insert" parameterClass="FinancingLog" >
+    insert into FINANCING_LOG (ID,FINANCING_ID,AUDIT_NODE,AUDIT_RESULT,LOG_REMARK,GMT_CREATE,GMT_MODIFY,OPERATOR)
+    values (SEQ_FINANCING_LOG.nextval, #financingId:DECIMAL#, #auditNode:VARCHAR#, #auditResult:VARCHAR#, 
+    		#logRemark:VARCHAR#, sysdate, sysdate, #operator:VARCHAR#)
+	</insert>
+  
+	<select id="getByFinancingId" resultMap="BaseResultMap" parameterClass="java.lang.Long">
+		select
+		t_f.ID, t_f.FINANCING_ID, t_f.AUDIT_NODE, t_f.AUDIT_RESULT, t_f.LOG_REMARK, t_f.GMT_CREATE, t_f.GMT_MODIFY, t_f.OPERATOR
+		from FINANCING_LOG t_f 
+		where t_f.FINANCING_ID = #value#
+		order by t_f.ID
+	</select>
+	
+</sqlMap>

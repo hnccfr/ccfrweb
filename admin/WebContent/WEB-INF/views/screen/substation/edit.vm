@@ -1,0 +1,33 @@
+<div class="main">
+<form id="substationEdit" name="substationEdit" action="$!{appServer}/substation/edit.htm"  method="post">
+  <div class="formBox">
+    <h3><i></i><span>修改交易分中心</span></h3>
+    <div class="content">
+      <table class="c4">
+		<tr><th></th><td></td></tr>
+		<tr>
+          <th><span class="red">*</span>分中心ID：</th>
+          <td>#springBind("tradeSubstation.id")
+			<input type="hidden" id="id" name="${status.expression}" value="$!{status.value}" />
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" disabled/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+		  </td>
+        </tr>
+		<tr><th></th><td></td></tr>
+		<tr>
+          <th><span class="red">*</span>分中心名称：</th>
+          <td>#springBind("tradeSubstation.name")
+			<input type="text" class="inp inp-w300" style="width:300px" id="name" name="${status.expression}" value="$!{status.value}" maxlength="16"/>
+			<font color="red"><label class="error">${status.errorMessage}</label></font>
+		  </td>
+        </tr>
+		<tr><th></th><td></td></tr>
+      </table>
+    </div>
+    <div class="form-but">
+	  <button type="submit" class="button-s4">保存</button>
+      <button type="button" class="button-s4" onclick="javascript:window.location.href='$!{appServer}/substation/list.htm'">取消</button>
+    </div>
+  </div>
+</form>
+</div>

@@ -1,0 +1,112 @@
+#set($title = '投诉单处理')
+#set($layout = 'layout/default.vm')
+<script src="$!{imageServer}/scripts/complain/punish.js" type="text/javascript"></script>
+<div>
+    <div class="main">
+		<h2>投诉单处理</h2>
+		<div class="formBox" id="deal">
+    	 <form action="$!{appServer}/complain/punish.htm" id="punishForm" method="post" onsubmit="return validate();" >
+                <div class="content">
+                    <table class="c2" >
+						 #springBind("tradeOrderCc.orderCcNum")
+                        <input type="hidden" id="num" name="${status.expression}" value="$!{status.value}" />
+						 #springBind("tradeOrderCc.ccType")
+                        <input type="hidden" id="ccType" name="${status.expression}" value="$!{status.value}" />
+                        <tr>
+							<th style="vertical-align:top;">投诉类型：</th>
+                            <td>
+								$!{tradeOrderCc.ccTypeDesc}
+							</td>
+					    </tr>
+						<tr>
+							<th style="vertical-align:top;">处理方式：</th>
+                            <td>
+								#springBind("tradeOrderCc.dealType")
+								#foreach($item in $!{dealTypes})
+								<label>
+								<input type="radio" class="_dealType" name="${status.expression}" value="$item.value" #if($!{tradeOrderCc.dealType} == $item.value ) checked="checked" #elseif($velocityCount ==1)checked="checked" #end  />$item.name<br /> 
+								</label>
+								#end 
+                            </td>
+					    </tr>
+						<tr>
+							<th style="vertical-align:top;">处理内容：</th>
+                            <td>
+								<p id="dealTypeDetail"></p>
+							</td>
+					    </tr>
+						##买家未确认到货投诉
+						#if($!{tradeOrderCc.ccType} == "goodsUncheck")
+						<tr id="replay">
+							<th  style="vertical-align:top;"></th>
+                            <td>
+								<p><a style="color:#0066CC" href="$!{appServer}/complain/detail.htm?orderCcNum=$!{tradeOrderCc.orderCcNum}" title="去回复">去回复</a> </p>
+							</td>
+					    </tr>
+						<tr id="general1">
+							<th style="vertical-align:top;">订单交割款：</th>
+                            <td>
+								<p id="balance">$!commonUtils.getValuationUnitDesc($!{tradeOrderCc.amount},$!{tradeOrderCc.moneyUnite})</p>
+								#springBind("tradeOrderCc.amount")
+								<input type="hidden" id="money_amount" name="$!{status.expression}" value="$!{status.value}" />
+								#springBind("tradeOrderCc.moneyUnite")
+								<input type="hidden" id="money_unite" name="$!{status.expression}" value="$!{status.value}" />
+							</td>
+					    </tr>
+						<tr id="general2">
+							<th style="vertical-align:top;">扣除货款：</th>
+							#springBind("tradeOrderCc.dealMoney")
+                            <td>
+								<input type="text" id="dealMoney" name="${status.expression}" value="$!{status.value}" />$!{tradeOrderCc.moneyUniteDesc}
+								<span class="error">${status.errorMessage}</span>
+								<br /><span id="m_error" name="m_error" class="error"></span>
+								<br /><span>违约扣除货款的金额大于0且不能超过订单交割款</span>
+							</td>
+					    </tr>
+						#end
+						##买家未确认倒票投诉
+						#if($!{tradeOrderCc.ccType} == "receiptUncheck")
+						<tr id="general1">
+							<th style="vertical-align:top;">订单剩余货款：</th>
+                            <td>
+								<p id="balance">$!commonUtils.getValuationUnitDesc($!{tradeOrderCc.amount},$!{tradeOrderCc.moneyUnite})</p>
+								#springBind("tradeOrderCc.amount")
+								<input type="hidden" id="money_amount" name="$!{status.expression}" value="$!{status.value}" />
+								#springBind("tradeOrderCc.moneyUnite")
+								<input type="hidden" id="money_unite" name="$!{status.expression}" value="$!{status.value}" />
+							</td>
+					    </tr>
+						<tr id="general2">
+							<th style="vertical-align:top;">扣除货款：</th>
+							#springBind("tradeOrderCc.dealMoney")
+                            <td>
+								<input type="text" id="dealMoney" name="${status.expression}" value="$!{status.value}" />$!{tradeOrderCc.moneyUniteDesc}
+								<span class="error">${status.errorMessage}</span>
+								<br /><span id="m_error" name="m_error" class="error"></span>
+								<br /><span>违约扣除货款的金额大于0且不能超过订单剩余货款</span>
+							</td>
+					    </tr>
+						#end
+                        <tr id="deal_reason">
+                            <th style="vertical-align:top;">处理备注：</th>
+                            <td>
+								 #springBind("tradeOrderCc.reason")
+                                <textarea id="reason" name="${status.expression}"  style="width:300px;height:50px;resize:none;font-size: 12px;">$!{status.value}</textarea>
+								<span class="error">${status.errorMessage}</span>
+								<br /><span>备注的内容不要超过340个字</span>
+								<span id="msgRrror" class="error">$!msgError</span><br />
+                            </td>
+                        </tr>
+                        <tr id="deal_btn">
+                            <th>&nbsp;</th>
+                            <td style="text-align:left;">
+								 <input type="submit"  class="btn"   value="保存" />
+								 <input type="button" class="btn" onclick="javascript:window.location.href='$!{appServer}/complain/list.htm'" value="取消" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+	    </div>
+	</div>
+</div>

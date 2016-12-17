@@ -1,0 +1,8 @@
+#set($layout = 'layout/default.vm')
+<div class="r-success">
+    	<h3>#if($!{message})$!{message}#else 操作成功！#end</h3>
+        <button class="button-s10" type="button" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}.htm'#else history.go(-1)#end">返回</button>
+		#if($!{announcementId})
+			<button class="button-s10" type="button" onclick="javascript:window.location.href='$!{appServer}/operation/announcement/normal.htm?id=$!{announcementId}'">发布</button>
+		#end
+</div>

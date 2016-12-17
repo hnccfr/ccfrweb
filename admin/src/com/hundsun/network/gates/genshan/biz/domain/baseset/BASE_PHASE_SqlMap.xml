@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BASE_PHASE" >
+	<typeAlias alias="BasePhase"
+		type="com.hundsun.network.gates.genshan.biz.domain.baseset.BasePhase" />
+	<typeAlias alias="BasePhaseQuery"
+		type="com.hundsun.network.gates.genshan.biz.domain.query.BasePhaseQuery" />
+	<resultMap id="BaseResultMap" class="BasePhase" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PHASE_CODE" property="phaseCode" jdbcType="VARCHAR" />
+		<result column="PHASE_NAME" property="phaseName" jdbcType="VARCHAR" />
+		<result column="GMT_START_HOUR" property="gmtStartHour" jdbcType="DECIMAL" />
+		<result column="GMT_START_MINUTE" property="gmtStartMinute" jdbcType="DECIMAL" />
+		<result column="GMT_END_HOUR" property="gmtEndHour" jdbcType="DECIMAL" />
+		<result column="GMT_END_MINUTE" property="gmtEndMinute" jdbcType="DECIMAL" />
+		<result column="STATE" property="state" jdbcType="CHAR" />
+		<result column="GMT_VALID" property="gmtValid" jdbcType="TIMESTAMP" />
+		<result column="GMT_INVALID" property="gmtInvalid" jdbcType="TIMESTAMP" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="END_HOUR_NEXT" property="endHourNext" jdbcType="CHAR" />
+		<result column="UNIQUE_MARK" property="uniqueMark" jdbcType="DECIMAL" />
+	</resultMap>
+  
+	<sql id="base_Column_List" >
+    ID, PHASE_CODE, PHASE_NAME, GMT_START_HOUR, GMT_START_MINUTE, GMT_END_HOUR, GMT_END_MINUTE, 
+    STATE, GMT_VALID, GMT_INVALID, GMT_CREATE, GMT_MODIFY, END_HOUR_NEXT, UNIQUE_MARK
+	</sql>
+  	<!--
+	<sql id="where_Clause">
+			<isNotEmpty property="tradeDay" prepend="and">
+						<![CDATA[ TRUNC(GMT_VALID) <= TRUNC(#tradeDay#) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseName" prepend="and">
+						<![CDATA[ PHASE_NAME like '%$phaseName$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseCode" prepend="and">
+						<![CDATA[ PHASE_CODE like '%$phaseCode$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend="and">
+						STATE = #state#
+			</isNotEmpty>
+	</sql>
+	-->
+	<select id="getBasePhaseById" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="base_Column_List"/>
+		from BASE_PHASE
+		where id=#id#
+	</select>
+
+	<insert id="insert" parameterClass="BasePhase" >
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_base_phase.nextval as id from dual
+		</selectKey>
+    	insert into 
+    	BASE_PHASE (ID, PHASE_CODE, PHASE_NAME, GMT_START_HOUR, 
+      				GMT_START_MINUTE, GMT_END_HOUR, GMT_END_MINUTE,STATE,  
+      				GMT_VALID, GMT_INVALID, GMT_CREATE, GMT_MODIFY,
+      				 END_HOUR_NEXT, UNIQUE_MARK)
+    		values (#id:DECIMAL#, #phaseCode:VARCHAR#, #phaseName:VARCHAR#, #gmtStartHour:DECIMAL#,
+    				#gmtStartMinute:DECIMAL#, #gmtEndHour:DECIMAL#, #gmtEndMinute:DECIMAL#, #state:CHAR#, 
+    				#gmtValid:TIMESTAMP#, #gmtInvalid:TIMESTAMP#, sysdate, sysdate, 
+      				#endHourNext:CHAR#, #id:DECIMAL#)
+	</insert>
+	
+	<insert id="businessAdd" parameterClass="BasePhase" >
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_base_phase.nextval as id from dual
+		</selectKey>
+    	insert into 
+    	BASE_PHASE (ID, PHASE_CODE, PHASE_NAME, GMT_START_HOUR, 
+      				GMT_START_MINUTE, GMT_END_HOUR, GMT_END_MINUTE,STATE,  
+      				GMT_VALID, GMT_INVALID, GMT_CREATE, GMT_MODIFY,
+      				 END_HOUR_NEXT, UNIQUE_MARK)
+    		values (#id:DECIMAL#, #phaseCode:VARCHAR#, #phaseName:VARCHAR#, #gmtStartHour:DECIMAL#,
+    				#gmtStartMinute:DECIMAL#, #gmtEndHour:DECIMAL#, #gmtEndMinute:DECIMAL#, #state:CHAR#, 
+    				#gmtValid:TIMESTAMP#, #gmtInvalid:TIMESTAMP#, sysdate, sysdate, 
+      				#endHourNext:CHAR#, #uniqueMark:DECIMAL#)
+	</insert>
+	
+	<!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="queryPhase" parameterClass="BasePhaseQuery" resultMap="BaseResultMap">
+		<include refid="pageSQLHead"/>
+		select * from 
+		(
+			select t_temp.*,ROW_NUMBER() OVER (PARTITION BY t_temp.UNIQUE_MARK ORDER BY t_temp.GMT_CREATE DESC ) rn
+			from (SELECT t_bp.ID,
+				    t_bp.PHASE_CODE,
+				    t_bp.PHASE_NAME,
+				    t_bp.GMT_START_HOUR,
+				    t_bp.GMT_START_MINUTE,
+				    t_bp.GMT_END_HOUR,
+				    t_bp.GMT_END_MINUTE,
+				    t_bp.STATE,
+				    t_bp.GMT_VALID,
+				    t_bp.GMT_INVALID,
+				    t_bp.GMT_CREATE,
+				    t_bp.GMT_MODIFY,
+				    t_bp.END_HOUR_NEXT,
+				    t_bp.UNIQUE_MARK
+				    from base_phase t_bp
+				    where 
+				    <![CDATA[ t_bp.STATE <> 'D' ]]>
+				    	and 
+				    <![CDATA[ TRUNC(t_bp.GMT_VALID) <= TRUNC(#tradeDay#) ]]>
+				  )t_temp
+		)r 
+		where r.rn = 1
+			<isNotEmpty property="phaseName" prepend="and">
+						<![CDATA[ PHASE_NAME like '%$phaseName$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseCode" prepend="and">
+						<![CDATA[ PHASE_CODE like '%$phaseCode$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend="and">
+						STATE = #state#
+			</isNotEmpty>
+		order by r.GMT_CREATE desc
+		<include refid="pageSQLFoot" />
+	</select>
+	
+	<select id="queryPhaseCount" parameterClass="BasePhaseQuery" resultClass="int">
+		select count(1) from 
+		(
+			select t_temp.*,ROW_NUMBER() OVER (PARTITION BY t_temp.UNIQUE_MARK ORDER BY t_temp.GMT_CREATE DESC ) rn
+			from (SELECT t_bp.ID,
+				    t_bp.PHASE_CODE,
+				    t_bp.PHASE_NAME,
+				    t_bp.GMT_START_HOUR,
+				    t_bp.GMT_START_MINUTE,
+				    t_bp.GMT_END_HOUR,
+				    t_bp.GMT_END_MINUTE,
+				    t_bp.STATE,
+				    t_bp.GMT_VALID,
+				    t_bp.GMT_INVALID,
+				    t_bp.GMT_CREATE,
+				    t_bp.GMT_MODIFY,
+				    t_bp.END_HOUR_NEXT,
+				    t_bp.UNIQUE_MARK
+				    from base_phase t_bp
+				    where 
+				    <![CDATA[ t_bp.STATE <> 'D' ]]>
+				    	and 
+				    <![CDATA[ TRUNC(t_bp.GMT_VALID) <= TRUNC(#tradeDay#) ]]>
+				  )t_temp
+		)r 
+		where r.rn = 1
+			<isNotEmpty property="phaseName" prepend="and">
+						<![CDATA[ PHASE_NAME like '%$phaseName$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseCode" prepend="and">
+						<![CDATA[ PHASE_CODE like '%$phaseCode$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend="and">
+						STATE = #state#
+			</isNotEmpty>
+	</select>
+	
+	<select id="queryPhaseNext" parameterClass="BasePhaseQuery" resultMap="BaseResultMap">
+		<include refid="pageSQLHead"/>
+		select * from 
+		(
+			select t_temp.*,ROW_NUMBER() OVER (PARTITION BY t_temp.UNIQUE_MARK ORDER BY t_temp.GMT_CREATE DESC ) rn
+			from (SELECT t_bp.ID,
+				    t_bp.PHASE_CODE,
+				    t_bp.PHASE_NAME,
+				    t_bp.GMT_START_HOUR,
+				    t_bp.GMT_START_MINUTE,
+				    t_bp.GMT_END_HOUR,
+				    t_bp.GMT_END_MINUTE,
+				    t_bp.STATE,
+				    t_bp.GMT_VALID,
+				    t_bp.GMT_INVALID,
+				    t_bp.GMT_CREATE,
+				    t_bp.GMT_MODIFY,
+				    t_bp.END_HOUR_NEXT,
+				    t_bp.UNIQUE_MARK
+				    from base_phase t_bp
+				    where 
+				    <![CDATA[ t_bp.STATE <> 'D' ]]>
+				    	and 
+				    <![CDATA[ TRUNC(t_bp.GMT_VALID) > TRUNC(#tradeDay#) ]]>
+				  )t_temp
+		)r 
+		where r.rn = 1
+			<isNotEmpty property="phaseName" prepend="and">
+						<![CDATA[ PHASE_NAME like '%$phaseName$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseCode" prepend="and">
+						<![CDATA[ PHASE_CODE like '%$phaseCode$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend="and">
+						STATE = #state#
+			</isNotEmpty>
+		order by r.GMT_CREATE desc
+		<include refid="pageSQLFoot" />
+	</select>
+	
+	<select id="queryPhaseNextCount" parameterClass="BasePhaseQuery" resultClass="int">
+		select count(1) from 
+		(
+			select t_temp.*,ROW_NUMBER() OVER (PARTITION BY t_temp.UNIQUE_MARK ORDER BY t_temp.GMT_CREATE DESC ) rn
+			from (SELECT t_bp.ID,
+				    t_bp.PHASE_CODE,
+				    t_bp.PHASE_NAME,
+				    t_bp.GMT_START_HOUR,
+				    t_bp.GMT_START_MINUTE,
+				    t_bp.GMT_END_HOUR,
+				    t_bp.GMT_END_MINUTE,
+				    t_bp.STATE,
+				    t_bp.GMT_VALID,
+				    t_bp.GMT_INVALID,
+				    t_bp.GMT_CREATE,
+				    t_bp.GMT_MODIFY,
+				    t_bp.END_HOUR_NEXT,
+				    t_bp.UNIQUE_MARK
+				    from base_phase t_bp
+				    where 
+				    <![CDATA[ t_bp.STATE <> 'D' ]]>
+				    	and 
+				    <![CDATA[ TRUNC(t_bp.GMT_VALID) > TRUNC(#tradeDay#) ]]>
+				  )t_temp
+		)r 
+		where r.rn = 1
+			<isNotEmpty property="phaseName" prepend="and">
+						<![CDATA[ PHASE_NAME like '%$phaseName$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="phaseCode" prepend="and">
+						<![CDATA[ PHASE_CODE like '%$phaseCode$%' ]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend="and">
+						STATE = #state#
+			</isNotEmpty>
+	</select>
+	
+	<update id="logicalDeletePhase" parameterClass="BasePhase">
+		update
+		BASE_PHASE t_bp
+		set
+		t_bp.STATE = #state# ,
+		gmt_invalid = #gmtInvalid#
+		where
+		t_bp.UNIQUE_MARK = #uniqueMark# and t_bp.GMT_INVALID is null
+	</update>
+	
+	<delete id="physicalDeletePhase" parameterClass="BasePhase">
+		delete from
+			BASE_PHASE t_bp
+		where
+			t_bp.UNIQUE_MARK = #uniqueMark# and t_bp.GMT_INVALID is null
+	</delete>
+	
+	<select id="getValidPhase" parameterClass="java.lang.Long" resultMap="BaseResultMap">
+		select * from(
+		select t_bp.ID,t_bp.PHASE_CODE,t_bp.PHASE_NAME,t_bp.GMT_START_HOUR,t_bp.GMT_START_MINUTE,
+			t_bp.GMT_END_HOUR,t_bp.GMT_END_MINUTE,t_bp.STATE,t_bp.GMT_VALID,t_bp.GMT_INVALID,
+			t_bp.GMT_CREATE,t_bp.GMT_MODIFY,t_bp.END_HOUR_NEXT,t_bp.UNIQUE_MARK
+		from  BASE_PHASE t_bp
+		where t_bp.UNIQUE_MARK = #uniqueMark#
+		order by t_bp.GMT_CREATE desc)
+		where rownum = 1
+	</select>
+</sqlMap>

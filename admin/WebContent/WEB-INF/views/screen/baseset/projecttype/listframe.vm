@@ -1,0 +1,26 @@
+#set($layout = 'layout/blank.vm')
+#**
+<frameset cols="150,*"  id="frame">
+		<frame src="$!{appServer}/baseset/projecttype/listleft.htm" name="prjTypeList" noresize="noresize" marginwidth="0" marginheight="0" frameborder="0" 
+        	style="overflow-x:auto; overflow-y:scroll;" scrolling-y="auto"  />
+		<frame src="$!{appServer}/baseset/projecttype/listright.htm" name="prjTypeMetaList" marginwidth="0" marginheight="0" frameborder="0" scrolling="auto" target="_self" />
+</frameset>
+<noframes>
+<body>
+</body>
+</noframes>
+*#
+
+<frameset cols="250,*"  id="frame">
+	<frame src="$!{appServer}/baseset/projecttype/listleft.htm" name="listleft" noresize="noresize" marginwidth="0" marginheight="0" frameborder="0" 
+    	style="overflow-x:hidden;overflow-y:scroll;" scrolling-y="auto" target="main" />
+	<frame src="$!{appServer}/baseset/projecttype/attriList.htm?tCode=0" name="listright" marginwidth="0" marginheight="0" frameborder="0" scrolling="auto" target="_self" />
+</frameset>
+<noframes>
+<body>
+</body>
+</noframes>
+
+
+
+

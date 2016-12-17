@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BASE_DAY">
+	<typeAlias alias="BaseDay"
+		type="com.hundsun.network.gates.genshan.biz.domain.baseset.BaseDay" />
+	<resultMap id="BaseResultMap"
+		class="com.hundsun.network.gates.genshan.biz.domain.baseset.BaseDay">
+		<result column="ID" property="id" />
+		<result column="YEAR" property="year" />
+		<result column="MONTH" property="month" />
+		<result column="DAY" property="day" />
+		<result column="GMT_CREATE" property="gmtCreate" />
+		<result column="GMT_MODIFY" property="gmtModify" />
+		<result column="OPERATOR" property="operator" />
+	</resultMap>
+
+	<insert id="addBaseDay" parameterClass="BaseDay">
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_base_day.nextval as id from dual
+	  	</selectKey>
+		insert into base_day
+		(
+		id,
+		year,
+		month,
+		day,
+		gmt_create,
+		gmt_modify,
+		operator
+		)
+		values
+		(
+		#id#,
+		#year#,
+		#month#,
+		#day#,
+		sysdate,
+		sysdate,
+		#operator#
+		)
+	</insert>
+
+	<select id="getBaseDay" parameterClass="BaseDay" resultMap="BaseResultMap">
+		select 
+		t.id,
+		t.year,
+		t.month,
+		trunc(t.day) as day,
+		t.gmt_create,
+		t.gmt_modify,
+		t.operator
+		from base_day t
+		<dynamic prepend="where">
+			<isNotEmpty property="year" prepend="and">
+				t.year = #year#
+			</isNotEmpty>
+			<isNotEmpty property="month" prepend="and">
+				t.month = #month#
+			</isNotEmpty>
+		</dynamic>
+		order by day asc
+	</select>
+	
+	<delete id="removeBaseDayByYear" parameterClass="BaseDay">
+		delete from base_day where year = #year# 
+		<isNotEmpty property="day" prepend="and">
+				day &gt; #day#
+		</isNotEmpty>
+	</delete>
+	
+</sqlMap>

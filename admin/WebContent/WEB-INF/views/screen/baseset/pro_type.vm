@@ -1,0 +1,5 @@
+#set($layout = 'layout/default.vm')
+
+<div class="main">
+		aaaaaaaaaa
+</div>

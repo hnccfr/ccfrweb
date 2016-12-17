@@ -1,0 +1,101 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/usercredit/list.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+  <h2>查看会员信用</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2" style="width:800px;">
+        <tr>
+          <th style="width:100px;">会员：</th>
+          <td style="width:300px;">$!smls.userAccount</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">卖家信用等级：</th>
+          <td>
+			#foreach($ml in $systemCreditLevelList)
+				#if("$ml.creditLevel"=="$smls.sellerCreditLevel")
+					$ml.levelName
+				#end
+			#end
+		  </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">卖家信用值：</th>
+          <td>$!smls.sellerCreditNum</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">好评：</th>
+          <td>$!smls.sellerGoodNum</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">中评：</th>
+          <td>$!smls.sellerMiddNum</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">差评：</th>
+          <td>$!smls.sellerBadNum</td>
+		  <td>&nbsp;</td>
+        </tr>
+		
+		<tr>
+          <th style="width:100px;">服务态度：</th>
+          <td>$!smls.serviceAttitude</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">物流速度：</th>
+          <td>$!smls.logisticsSpeed</td>
+		  <td>&nbsp;</td>
+        </tr>
+		
+		<tr>
+          <th style="width:100px;">买家信用等级：</th>
+          <td>
+			#foreach($ml in $systemCreditLevelList)
+				#if("$ml.creditLevel"=="$smls.buyCreditLevel")
+					$ml.levelName
+				#end
+			#end
+		  </td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">买家信用值：</th>
+          <td>$!smls.buyCreditNum</td>
+          <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">好评：</th>
+          <td>$!smls.buyGoodNum</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">中评：</th>
+          <td>$!smls.buyMiddNum</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">差评：</th>
+          <td>$!smls.buyBadNum</td>
+		  <td>&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+    </div>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>

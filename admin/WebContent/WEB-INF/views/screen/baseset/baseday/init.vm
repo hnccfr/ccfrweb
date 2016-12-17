@@ -1,0 +1,28 @@
+#set($layout = 'layout/default.vm')
+<script type="text/javascript" src="$!{imageServer}/scripts/baseset/baseday-init.js" ></script>
+<input id="result" type="hidden" value="$!{message}" />
+#if($!{message} == "success")
+	<div class="r-success">
+    	<h3>交易日期初始化成功！</h3>
+		<br />
+        <p style="margin-left:18px;bottom:auto;"><span id="time-count-down">3</span>秒后进入交易日管理...</p>
+		<form id="tradeDayList" action="$!{appServer}/baseset/baseday/list.htm" method="post">
+		</form>
+	</div>
+#elseif($!{message} == "fail")
+	<div class="r-error">
+    	<h3>初始化交易日期失败！</h3>
+        <button class="button-s9" style="" type="button" onclick="javascript:$('#setCurrentTradeDay').submit();">重试一次</button>
+        <form id="setCurrentTradeDay" action="$!{appServer}/baseset/baseday/init.htm" method="post">
+		</form>
+	</div>
+#else
+	<div class="r-error">
+    	<h3>#if($!{message})$!{message}#else 操作失败！#end</h3>
+        <button class="button-s9" style="" type="button" onclick="javascript:$('#setCurrentTradeDay').submit();" title="初始化当前交易日">初始化</button>
+		<br />
+		<p style="color:red;bottom:auto;">提示：点击“初始化”按钮将当前日期初始化为当前交易日，当前日期的下一个日期将作为下一个交易日！</p>
+		<form id="setCurrentTradeDay" action="$!{appServer}/baseset/baseday/init.htm" method="post">
+		</form>
+	</div>
+#end

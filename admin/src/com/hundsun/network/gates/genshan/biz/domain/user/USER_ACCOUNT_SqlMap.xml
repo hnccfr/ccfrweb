@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="userAccount" >
+  <typeAlias alias="UserAccount" type="com.hundsun.network.gates.genshan.biz.domain.user.UserAccount"/>
+  <resultMap id="BaseResultMap" class="UserAccount" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_TYPE" property="certificateType" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_NUM" property="certificateNum" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_PATH" property="certificatePath" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+    <result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="AREA" property="area" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR" />
+    <result column="INTRO" property="intro" jdbcType="VARCHAR" />
+    <result column="HOME_PAGE" property="homePage" jdbcType="VARCHAR" />
+    <result column="SCOPE" property="scope" jdbcType="VARCHAR" />
+    <result column="TAX_NUM" property="taxNum" jdbcType="VARCHAR" />
+    <result column="USER_CLASS" property="userClass" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="CREDIT_CLASS" property="creditClass" jdbcType="DECIMAL" />
+    <result column="ACTIVE_CODE" property="activeCode" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="LAST_LOGIN_IP" property="lastLoginIp" jdbcType="VARCHAR" />
+    <result column="LAST_LOGIN_TIME" property="lastLoginTime" jdbcType="TIMESTAMP" />
+    <result column="USER_ROLE" property="userRole" jdbcType="VARCHAR" />
+	<result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR" />
+	<result column="FUND_PASSWORD" property="fundPassword" jdbcType="VARCHAR" />
+	<result column="BANK" property="bank" jdbcType="VARCHAR" />
+	<result column="BANK_CARD" property="bankCard" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    t_ua.ID, t_ua.ACCOUNT, t_ua.TYPE, t_ua.NAME, t_ua.PASSWORD, t_ua.PHONE, t_ua.MOBILE, t_ua.CERTIFICATE_TYPE, t_ua.CERTIFICATE_NUM, 
+    t_ua.CERTIFICATE_PATH, t_ua.EMAIL, t_ua.ZIP_CODE, t_ua.PROVINCE, t_ua.CITY, t_ua.AREA, t_ua.ADDRESS, t_ua.FULL_NAME, t_ua.INTRO, 
+    t_ua.HOME_PAGE, t_ua.SCOPE, t_ua.TAX_NUM, t_ua.USER_CLASS, t_ua.STATUS, t_ua.CREDIT_CLASS, t_ua.ACTIVE_CODE, t_ua.GMT_CREATE, 
+    t_ua.GMT_MODIFY, t_ua.OPERATOR, t_ua.LAST_LOGIN_IP, t_ua.LAST_LOGIN_TIME, t_ur.NAME AS USER_ROLE, t_ua.FUND_ACCOUNT,
+    t_ua.FUND_PASSWORD, t_ua.BANK, t_ua.BANK_CARD
+  </sql>
+   
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="int" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_ACCOUNT t_ua, USER_ROLE t_ur
+    where t_ua.ID = #id:DECIMAL# and t_ur.id = (select role_id from user_role_relationship where user_id = t_ua.id)
+  </select>
+  
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterClass="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_ACCOUNT t_ua, USER_ROLE t_ur
+    where t_ua.ACCOUNT = #account# and t_ur.id = (select role_id from user_role_relationship where user_id = t_ua.id)
+  </select>
+    
+  <!-- 查询用户的条件 -->
+  <sql id="Where_Clause">
+  	<isNotEmpty prepend="and" property="userRole">
+  		t_ur.name = #userRole#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="account">
+  		t_ua.account like #account:VARCHAR#||'%'
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="name">
+  		t_ua.name like #name:VARCHAR#||'%'
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="type">
+  		t_ua.type = #type#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="status">
+  		t_ua.status = #status#
+  	</isNotEmpty>
+  	<isNotEmpty prepend="and" property="fundAccount">
+  		t_ua.fund_account like #fundAccount:VARCHAR#||'%'
+  	</isNotEmpty>
+  </sql>
+  
+  <!-- 获取用户列表 --> 
+  <select id="selectUserList" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.UserAccountQuery" resultMap="BaseResultMap">
+		<![CDATA[
+		SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   ( 
+			select 
+		]]><include refid="Base_Column_List"/>
+    		from user_account t_ua,user_role t_ur
+			where t_ur.id = (select role_id from user_role_relationship where user_id = t_ua.id) and t_ua.status != 'D'
+				and t_ur.name in  (
+							    <iterate property="roleList" conjunction=",">
+						             #roleList[]#
+						        </iterate>)		
+		<include refid="userAccount.Where_Clause" />
+		order by t_ua.gmt_create desc
+		<![CDATA[
+		) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+		]]>
+	</select>
+	
+  
+  <!-- 获取满足条件的用户的总数 -->
+  <select id="selectUserList_count" parameterClass="com.hundsun.network.gates.genshan.biz.domain.query.UserAccountQuery" resultClass="java.lang.Integer">
+  	select count(t_ua.id) from user_account t_ua, user_role t_ur
+  	where t_ur.id = (select role_id from user_role_relationship where user_id = t_ua.id) and t_ua.status != 'D'
+  		and t_ur.name in (
+					    <iterate property="roleList" conjunction=",">
+				             #roleList[]#
+				        </iterate>)
+  	<include refid="Where_Clause"/>		
+  </select>
+  
+  <!-- 改变用户的状态（目前主要是启用禁用用户要用到） -->
+  
+  <update id="updateUserStatus" parameterClass="UserAccount">
+  	update user_account set status = #status:VARCHAR# where account = #account:VARCHAR# and status != #status:VARCHAR#
+  </update>
+  
+  <!-- 根据传入的用户组查询系统存在的用户(站内信用此去掉不存在的用户) parameterClass="java.util.List" -->
+  <select id="selectExitAccountList" resultClass="java.lang.String" parameterClass="java.util.Map" >
+  	select ACCOUNT from user_account 
+  	where account in (
+	    <iterate property="accountList" conjunction=",">
+             #accountList[]#
+        </iterate>)
+  </select>
+  
+  	<!-- 检测是否已经存在 -->
+  	<select id="uniqueUser" resultClass="java.lang.Long" parameterClass="java.util.Map" >
+    select count(*) from USER_ACCOUNT
+		<dynamic prepend="where">
+			<isNotEmpty prepend="or" property="account">
+					ACCOUNT = #account#
+			</isNotEmpty>
+			<isNotEmpty prepend="or" property="certificateNum">
+					CERTIFICATE_NUM = #certificateNum#
+			</isNotEmpty>
+			<isNotEmpty prepend="or" property="email">
+					EMAIL = #email#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getUserByFundAccount" resultMap="BaseResultMap" parameterClass="java.lang.String" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from USER_ACCOUNT t_ua, USER_ROLE t_ur
+	    where t_ua.FUND_ACCOUNT = #fundAccount# and t_ur.id = (select role_id from user_role_relationship where user_id = t_ua.id)
+  </select>
+</sqlMap>

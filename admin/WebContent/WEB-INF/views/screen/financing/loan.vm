@@ -1,0 +1,178 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript" type="text/javascript" src="$!{imageServer}/scripts/My97DatePicker/WdatePicker.js"></script>
+<div class="main">
+<form id="financingForm" name="financingForm" action="$!{appServer}/financing/$!{formGuade}.htm" method="post">
+  <div class="formBox">
+    <h3><i></i><span>融资放款</span></h3>
+    <div class="content">
+	  <h5><span>基本信息</span></h5>
+      <table class="c5" style="width:80%">
+        <tr>
+          <th>融资编号：</th>
+          <td>#springBind("financing.code")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+		  <th>状态：</th>
+		  <td>#springBind("financing.status")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{financing.statusDes}" readonly/>
+			#springBind("financing.auditNode")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+		  </td>
+		</tr>
+		<tr>
+          <th>融资项目名称：</th>
+          <td cols="3">#springBind("financing.title")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" style="width:300px" value="$!{status.value}" readonly/>
+		  </td>
+		</tr>
+		<tr>
+          <th>贷款利率(%)：</th>
+		  <td>#springBind("financing.loanRateDes")
+			<input type="text" class="inp inp-w160" id="loanRateDes" name="${status.expression}" value="$!{status.value}"/>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+          <th><span class="red">*</span>借款期限：</th>
+		  <td>#springBind("financing.applyLimitDes")
+			<input type="text" class="inp inp-w160" id="applyLimitDes" name="${status.expression}" value="$!{status.value}"/>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+        </tr>
+		<tr>
+		  <th><span class="red">*</span>申请金额(元)：</th>
+		  <td>#springBind("financing.applyAmountDes")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+          <th><span class="red">*</span>申请时间：</th>
+		  <td>#springBind("financing.gmtApply")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+		</tr>
+		<tr>
+		  <th><span class="red">*</span>实际放款(元)：</th>
+		  <td>#springBind("financing.loanAmountDes")
+			<input type="text" class="inp inp-w160" id="loanAmountDes" name="${status.expression}" value="$!{status.value}"/>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+		  <th><span class="red">*</span>放款时间：</th>
+		  <td>#springBind("financing.gmtLoan")
+			<input type="text" class="inp inp-w160" id="gmtLoan" name="${status.expression}"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01 00:00:00'})" value="$!{status.value}" readonly="readonly" class="date-pick"/>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+		</tr>
+		<tr>
+		  <th>到期时间：</th>
+		  <td>#springBind("financing.gmtLimit")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!dateTool.format('yyyy-MM-dd HH:mm:ss',$!{financing.gmtLimit})" readonly/>
+          </td>
+		  <th>还款时间：</th>
+		  <td>#springBind("financing.gmtRepay")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+        </tr>
+		<tr>
+          <th><span class="red">*</span>融资人：</th>
+		  <td>#springBind("financing.userName")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+          <th>融资人联系电话：</th>
+		  <td>#springBind("financing.userTel")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+		</tr>
+		<tr>
+          <th>融资人地址：</th>
+		  <td cols="3">#springBind("financing.userAddress")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w300" style="background:#D3D3D3;" value="$!{status.value}" readonly/>
+		  </td>
+		</tr>
+		<tr>
+          <th>担保人：</th>
+		  <td>#springBind("financing.guaranteeName")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+          <th>担保人联系电话：</th>
+		  <td>#springBind("financing.guaranteeTel")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w160-readonly" value="$!{status.value}" readonly/>
+		  </td>
+		</tr>
+		<tr>
+          <th>担保人地址：</th>
+		  <td cols="3">#springBind("financing.guaranteeAddress")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<input type="text" class="inp inp-w300" style="background:#D3D3D3;" value="$!{status.value}" readonly/>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+        </tr>
+		<tr>
+		  <th>备注：</th>
+		  <td cols="3">#springBind("financing.remark")
+			<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+			<textarea style="width:300px;height:100px;background:#D3D3D3;" readonly>$!{status.value}</textarea>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+        </tr>
+	  </table>
+	</div>
+	<div class="content">
+	  <h5><span>流程审核信息</span></h5>
+	  <table class="c4" style="width:80%">
+			#if($!{financing.financingLogList} && $!{financing.financingLogList.size()} > 0)
+			<tr>
+				<td>审核节点</td>
+				<td>审核结果</td>
+				<td>审核备注</td>
+				<td>时间</td>
+				<td>操作人</td>
+            </tr>
+				#foreach($!list in $!{financing.financingLogList})
+					<tr>
+                        <td>$!{list.auditNodeDes}</td>
+						<td>#if($!{list.auditResult}=='Y')通过#elseif($!{list.auditResult}=='N')不通过#end</td>
+                        <td>$!{list.logRemark}</td>
+						<td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{list.gmtCreate})</td>
+						<td>$!{list.operator}</td>
+                    </tr>
+				#end
+			#else
+				<tr><td></td><td></td><td>无</td></tr>
+			#end
+      </table>
+    </div>
+	
+	<div class="content">
+	  <h5><span>放款信息</span></h5>
+	  <table class="c4" style="width:80%">
+		<tr>
+		  <th><span class="red">*</span>放款备注：</th>
+		  <td cols="3">#springBind("financingLog.logRemark")
+			<textarea style="width:300px;height:100px" name="${status.expression}" >$!{status.value}</textarea>
+			<font color="red">${status.errorMessage}</font>
+		  </td>
+        </tr>
+      </table>
+    </div>
+	
+    <div class="form-but">
+		#springBind("financingLog.auditResult")
+		<input type="hidden" id="auditResult" name="${status.expression}" value="$!{status.value}"/>
+		#springBind("financing.id")
+		<input type="hidden" name="${status.expression}" value="$!{status.value}"/>
+		<input type="button" class="button-s4" onclick="javascript:$('#auditResult').val('Y');$('#financingForm').submit();" value="通过"/>
+		<input type="button" class="button-s4" onclick="javascript:$('#auditResult').val('N');$('#financingForm').submit();" value="不通过"/>
+		<input type="button" class="button-s4" onclick="javascript:#if($!{url})window.location.href='$!{appServer}$!{url}.htm'#else history.go(-1)#end" value="返回"/>
+    </div>
+  </div>
+</form>
+</div>

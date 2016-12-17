@@ -1,0 +1,109 @@
+#set($layout = 'layout/default.vm')
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/screen/diyScreen.js"></script>
+    <script >
+		var doWhat = "add";
+        var screenDiy_id = "";
+        var diyCfgJson =[];
+		//var projectTypeList = "$!{projectTypeList}";
+		var ajaxUrl = "$!{appServer}/project/attri.htm";
+    </script>
+<body>
+    <div class="main">
+		<div class="formBox">
+        <h3><i></i><span>添加大屏展示</span></h3>
+        <div class="content">
+			#*
+        	<table class="c4">
+                <tr>
+					##<th><span>项目类型：</span></th>
+					<td>
+    					<input type="hidden" id="projectTypeCode" name="parMap.projectTypeCode" value="$!{parMap.projectTypeCode}" style="width:80px;"/>
+                        <input type="hidden" id="projectTypeCodeText" name="parMap.projectTypeCodeText" value="$!{parMap.projectTypeCodeText}" style="width:130px;"/>
+                    </td>
+                    ##<th><span>交易方式：</span></th>
+					<td>
+    					<input type="hidden" id="tradingType" name="parMap.tradingType" value="$!{parMap.tradingType}" style="width:80px;"/>
+                        <input type="hidden" id="tradingTypeText" name="parMap.tradingTypeText" value="$!{parMap.tradingTypeText}" style="width:130px;"/>
+                    </td>
+					##<th><span>状态：</span></th>
+					<td>
+    					<input type="hidden" id="status" name="parMap.status" value="$!{parMap.status}" style="width:80px;"/>
+                        <input type="hidden" id="statusText" name="parMap.statusText" value="$!{parMap.statusText}" style="width:130px;"/>
+                    </td>
+                    ##<th><input type="button" class="but-62" value="添 加" onclick="diyTable();" /></th>
+                </tr>
+				<div class="clear"></div>
+            </table>
+        	*#
+            <div class="diy-title">
+				<table class="c4">
+                <tr>
+                    <th><h5>大屏名称：</h5></th>
+					<td>
+						<input type="text" id="screenDiy_name_tmp" maxlength="80" value="$!{screenDiy.name}" />
+					</td>
+					<th>项目类型：</th>
+					<td>
+    					##<input type="hidden" id="projectTypeCode" name="parMap.projectTypeCode" value="$!{parMap.projectTypeCode}" style="width:80px;"/>
+						<select class="select" id="projectTypeCode" name="parMap.projectTypeCode" style="width:80px;" onchange="javascript:$('#projectTypeCodeText').val($('#projectTypeCode option:selected').text());">
+							<option value=""></option>
+							#foreach($item in $!{projectTypeList})
+							<option value="$!{item.code}" >$!{item.name}</option>
+							#end
+						</select>
+                        <input type="hidden" id="projectTypeCodeText" name="parMap.projectTypeCodeText" value="$!{parMap.projectTypeCodeText}" style="width:130px;"/>
+                    </td>
+					<th>交易方式：</th>
+					<td>
+						<select class="select"  id="tradingType" name="parMap.tradingType" style="width:80px;" onchange="javascript:$('#tradingTypeText').val($('#tradingType option:selected').text());">
+							<option value=""></option>
+							#foreach($item in $!{tradingTypeList})
+							<option value="$!{item.value}" >$!{item.name}</option>
+							#end
+						</select>
+                        <input type="hidden" id="tradingTypeText" name="parMap.tradingTypeText" value="$!{parMap.tradingTypeText}" style="width:130px;"/>
+                    </td>
+					<th>&nbsp;</th>
+					<td>
+						<input type="button" class="button-s17" value="添加分类" onclick="diyTable();" />
+					</td>
+					#if($!{errorMsg})
+                    <td>
+        				<font color="red"><label class="error">$!{errorMsg}</label></font>
+                    </td>
+        			#end
+				</tr>
+                </table>
+			</div>
+			
+            <div class="formbox">
+                <div class="clear"></div>
+                <ul class="ul-diy" id="ul-diy"></ul>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+		</div>
+		
+		<form action="$!{appServer}/screen/add.htm" method="post" onsubmit="return submitForm()" >
+			<div class="form-but">
+				#springBind("screenDiy.id")
+            	<input type="hidden" name="${status.expression}" id="screenDiy_id" value="$!{status.value}" />
+				#springBind("screenDiy.name")
+            	<input type="hidden" name="${status.expression}" id="screenDiy_name" value="$!{status.value}" />
+				#springBind("screenDiy.diyCfg")
+            	<input type="hidden" name="${status.expression}" id="screenDiy_diyCfg" value="$!{status.value}" />
+            	<input type="submit" class="button-s4" value="保存" />
+				<input type="button" class="button-s4" onclick="javascript:window.location.href='$!{appServer}/screen/list.htm'" value="取消" />
+            </div>
+		</form>
+		## <div id="screenDiy_diyCfg_test"></div>
+    </div>
+          
+    <div class="clear"></div>
+    </div>
+</body>
+	

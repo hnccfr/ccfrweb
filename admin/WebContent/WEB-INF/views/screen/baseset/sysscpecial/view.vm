@@ -1,0 +1,92 @@
+#set($layout = 'layout/default.vm')
+<script language="javascript">
+//取消按钮
+function doback(){
+	location.href = "$!{appServer}/baseset/sysscpecial/list.htm?dd="+new Date();
+}
+</script>
+<div class="main">
+  <h2>查看特殊服务费设置</h2>
+  <div class="formBox">
+    <div id="div-1">
+    <div class="content">
+      <table class="c2" style="width:800px;">
+		<tr>
+		  <th style="width:100px;">交易方式：</th>
+          <td style="width:300px;">$!smls.tradingTypeName</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+		  <th style="width:100px;">项目类型：</th>
+          <td >$!smls.proTypeName</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">会员帐号：</th>
+          <td >$!smls.userAccount</td>
+		  <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th >成交金额(<=)：</th>
+          <td>$!smls.turnoverAmount#if($!{smls.turnoverAmount} > 0) 元#end</td>
+          <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th >是否有拍卖师：</th>
+          <td>$!smls.haveAuctioneerCon</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">挂牌未成交：</th>
+          <td>$!smls.listUnturnover#if($!{smls.listUnturnover} > 0)%#end</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">挂牌已成交：</th>
+          <td>$!smls.listTurnover#if($!{smls.listTurnover} > 0)%#end</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <th style="width:100px;">下单未成交：</th>
+          <td>$!smls.orderUnturnover#if($!{smls.orderUnturnover} > 0)%#end</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">下单已成交：</th>
+          <td>$!smls.orderTurnover#if($!{smls.orderTurnover} > 0)%#end</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">状态：</th>
+          <td>
+		    #if($!{smls.isDel} != "1") 启用
+			#else	禁用     #end
+		  </td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">创建时间：</th>
+          <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{smls.gmtCreate})</td>
+		  <td>&nbsp;</td>
+        </tr>
+		<tr>
+          <th style="width:100px;">修改时间：</th>
+          <td>$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{smls.gmtModify})</td>
+		  <td>&nbsp;</td>
+        </tr>
+		#*
+		<tr>
+          <th style="width:100px;">操作者：</th>
+          <td>$!smls.operator</td>
+		  <td>&nbsp;</td>
+        </tr>
+		*#
+      </table>
+    </div>
+    </div>
+    </div>
+    <div class="form-but">
+      <!-- 表单按钮区 -->
+      <button type="button" class="button-s4" onclick="doback();">返回</button>
+    </div>
+</div>
