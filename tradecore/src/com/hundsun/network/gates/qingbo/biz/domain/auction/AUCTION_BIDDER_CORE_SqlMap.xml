@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="AUCTION_BIDDER_CORE" >
+  <typeAlias alias="AuctionBidder" type="com.hundsun.network.gates.qingbo.biz.domain.auction.AuctionBidder"/>
+  <resultMap id="BaseResultMap" class="AuctionBidder" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="BIDDER_ACCOUNT" property="bidderAccount" jdbcType="VARCHAR" />
+    <result column="IS_PRIORITY" property="isPriority" jdbcType="VARCHAR" />
+    <result column="BIDDER_TRADEMARK" property="bidderTrademark" jdbcType="VARCHAR" />
+    <result column="BROKER_ACCOUNT" property="brokerAccount" jdbcType="VARCHAR" />
+    <result column="BID_STATUS" property="bidStatus" jdbcType="VARCHAR" />
+    <result column="SERVICE_CODE" property="serviceCode" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PROJECT_CODE, BIDDER_ACCOUNT, IS_PRIORITY, BIDDER_TRADEMARK, BROKER_ACCOUNT, 
+    BID_STATUS, SERVICE_CODE, GMT_CREATE, GMT_MODIFY, OPERATOR
+  </sql>
+  
+  <select id="selectBidderByBidAccountAndProjectCode" resultMap="BaseResultMap" parameterClass="AuctionBidder">
+		select
+		<include refid="Base_Column_List" />
+		from AUCTION_BIDDER
+		where 
+			PROJECT_CODE = #projectCode# 
+			and BIDDER_ACCOUNT = #bidderAccount# and BID_STATUS = 'A'
+  </select>
+  
+  <select id="selectBidderByBidderTrademarkAndProjectCode" resultMap="BaseResultMap" parameterClass="AuctionBidder">
+		select
+		<include refid="Base_Column_List" />
+		from AUCTION_BIDDER
+		where 
+			PROJECT_CODE = #projectCode# 
+			and BIDDER_TRADEMARK = #bidderTrademark# and BID_STATUS = 'A'
+  </select>
+  
+  <!-- 根据项目编号，获取非优先权阶段最后一次出价人信息 -->
+   <select id="selectLatestBidder" resultMap="BaseResultMap" parameterClass="AuctionBidder">
+		select t_ab.ID, t_ab.PROJECT_CODE, t_ab.BIDDER_ACCOUNT, t_ab.IS_PRIORITY, 
+			t_ab.BIDDER_TRADEMARK, t_ab.BROKER_ACCOUNT, t_ab.BID_STATUS, t_ab.SERVICE_CODE, 
+			t_ab.GMT_CREATE, t_ab.GMT_MODIFY, t_ab.OPERATOR
+		from AUCTION_BIDDER t_ab,auction_latest_bid t_alb
+		where  t_alb.project_code=#projectCode:VARCHAR#
+		 and t_ab.project_code=t_alb.project_code
+		 and t_ab.bidder_trademark=t_alb.bidder_trademark
+  </select>
+  
+  <select id="selectBidderNumProjectCode" resultClass="int" parameterClass="AuctionBidder">
+		select count(1)
+		from AUCTION_BIDDER
+		where 
+			PROJECT_CODE = #projectCode#
+			and  BID_STATUS = 'A'
+  </select>
+  
+  <delete id="deleteByProjectCode" parameterClass="java.lang.String" >
+    delete from AUCTION_BIDDER
+    where PROJECT_CODE = #projectCode:VARCHAR#
+  </delete>
+  
+</sqlMap>
