@@ -1,4 +1,4 @@
-/*     */ package com.hundsun.eclp.web.action;
+/*     */ package com.hundsun.eclp.web.action.auth;
 /*     */ 
 /*     */ import com.hundsun.eclp.biz.dao.AuthorityDAO;
 /*     */ import com.hundsun.eclp.biz.domain.auth.Authority;

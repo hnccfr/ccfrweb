@@ -1,4 +1,4 @@
-package com.hundsun.eclp.web.action;
+package com.hundsun.eclp.web.action.users;
 
 import com.hundsun.eclp.biz.dao.RoleSystemDAO;
 import com.hundsun.eclp.biz.domain.auth.Authority;
@@ -513,8 +513,3 @@ public class UsersAction extends BaseAction
     row2.createCell(2).setCellValue("权限code");
   }
 }
-
-/* Location:           E:\__安装归档\linquan-20161112\deploy15\eclp\webroot\WEB-INF\classes\
- * Qualified Name:     com.hundsun.eclp.web.action.UsersAction
- * JD-Core Version:    0.6.0
- */
