@@ -1,0 +1,366 @@
+	#set($layout = 'layout/default.vm')
+	#set($title = '新增供求信息')
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<script language="javascript" type="text/javascript" src="$!{imageServer}/scripts/My97DatePicker/WdatePicker.js" ></script>
+<link href="${imageServer}/scripts/zTree/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/zTree/jquery.ztree-2.6.min.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/project/prjTypeMeta.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/area.js"></script>
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/validate.css" />
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.validate.js" ></script>
+<script type="text/javascript" src="${imageServer}/scripts/supplydemand/add.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/user/getAddress.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.ui.js"></script>
+
+<script language="JavaScript">
+	$(function() {
+		var area = new Area("$!{appServer}/ajax","$!{supplyDemandInfo.province}","$!{supplyDemandInfo.city}","$!{supplyDemandInfo.area}",'pe_province','pe_city','pe_area');
+	});
+</script>
+
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+		<ul>
+			<li>
+				<a class="curser" href="#">发布供求信息</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="right-body">
+		<div class="formBox">
+			<form id="infoForm" name="infoForm" action="$!{appServer}/supplydemand/add.htm" method="post" enctype="multipart/form-data" >
+                <div class="content">
+                   <fieldset>
+                        <legend>基本信息：</legend>
+						<table class="c2">
+                            <tr>
+								<th>
+                                    <span class="error">*</span>项目名称：
+								</th>
+								<td >
+                                    #springBind("supplyDemandInfo.title")
+									<input type="text" id="title" name="${status.expression}" value="${status.value}" class="inp" style="width:400px;"/>
+									<span class="error">${status.errorMessage}</span>
+								</td>
+                            </tr>
+							<tr>
+								<th>
+									<span class="error">*</span>项目类型：
+                                </th>
+								<td>
+									#springBind("supplyDemandInfo.projectTypeCodeDesc")
+									<input type="text" id="projectTypeName" name="projectTypeCodeDesc" value="$!{supplyDemandInfo.projectTypeCodeDesc}" class="inp" onclick="showPrjTypeSel(this,'','projectTypeCode','projectTypeName');" />
+									#springBind("supplyDemandInfo.projectTypeCode")
+									<input type="hidden" id="projectTypeCode"  name="projectTypeCode" value="$!{supplyDemandInfo.projectTypeCode}" class="inp" />
+									##<input type="text" id="projectTypeCode" name="${status.expression}" value="${status.value}" class="inp"/>
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+                            </tr>
+							#*
+							<tr>
+								<th>标准规格：</th>
+								<td>
+									#springBind("supplyDemandInfo.breadStandard")
+                                    <input type="hidden" id="breedStandard"  name="breedStandard"   value="$!{status.value}" readonly  />
+									#springBind("supplyDemandInfo.breadStandardId")
+									<select class="select" id="breedStandardSelect" name="breadStandardId"  style="width:130px;" >
+                                       <option value="">请选择</option>
+                                    </select>
+									<input type="hidden" id="breedStandardId"  name="breedStandardId"   value="$!{status.value}" readonly  />
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+							</tr>
+							*#
+							<tr>
+								<th>
+									<span class="error">*</span>信息类型：</th>
+								<td>
+									#springBind("supplyDemandInfo.infoType")
+										#foreach($selectItem in $!{infoTypes})
+											<input id="infoType" onchange="changeType();" class="infoType" type="radio" #if($velocityCount == 1) checked="checked"#end value="$!{selectItem.value}" name="${status.expression}" /> $selectItem.name
+										#end
+									<span class="error">${status.errorMessage}</span>
+								</td>
+                            </tr>
+							<tr>
+                                <th>
+									<span class="error">*</span>数量：</th>
+								<td colspan="3">
+									#springBind("supplyDemandInfo.quantity")
+									<input id="quantity" class="inp" type="text" value="$!{status.value}" name="${status.expression}" />
+                                    <span id="quantity_remind_show_message" class="error">${status.errorMessage}</span>
+                                </td>
+                            </tr>
+							<tr>
+								<th>
+									<span class="error">*</span>计量单位：</th>
+								<td>
+									#springBind("supplyDemandInfo.measureUnit")
+									<select class="select" id="measureUnit" name="measureUnit"  style="width:130px;" >
+                                        #foreach($selectItem in $!{measureUnits})
+										    <option value="$!{selectItem.value}">  $!{selectItem.name} </option>
+                    					#end
+                                     </select>
+                                     <span class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							#springBind("supplyDemandInfo.valuationUnit")
+							<input type="hidden" id="valuationUnit" name="valuationUnit" value="yuan" class="inp" />
+							<span id="valuationUnit_remind_show_message" class="error">${status.errorMessage}</span>
+							#springBind("supplyDemandInfo.priceDesc")
+							<input type="hidden" id="price" name="priceDesc" value="1" class="inp" />
+							<span id="price_remind_show_message" class="error">${status.errorMessage}</span>
+							#* 
+							<tr>
+								<th><span class="error">*</span>计价单位：</th>
+								<td>
+									#springBind("supplyDemandInfo.valuationUnit")
+									<select class="select" id="valuationUnit" name="valuationUnit"  style="width:130px;" >
+                                        #foreach($selectItem in $!{valuationUnits})
+											<option value="$!{selectItem.value}">  $!{selectItem.name} </option>
+										#end
+									</select>
+									<span id="valuationUnit_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							<tr>
+								<th><span class="error">*</span>单价：</th>
+								<td>
+									#springBind("supplyDemandInfo.priceDesc")
+									<input id="price" class="inp" type="text" value="$!{status.value}" name="priceDesc" />
+									<span id="price_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							*#
+							<tr>
+								<th><span class="error">*</span>总价：</th>
+                                <td>
+                                    #springBind("supplyDemandInfo.amount")
+									 <input type="text" id="amount" name="${status.expression}" value="$!{status.value}" class="inp" />
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+                            </tr>
+							<tr>
+								<th><span class="error">*</span>开始时间：</th>
+								<td>
+									#springBind("supplyDemandInfo.effectiveStartDate")
+									<input type="text" id="effectiveStartDate" name="effectiveStartDate" value="$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveStartDate})" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'effectiveEndDate\')}'})" readonly="readonly" class="inp" />
+									<span id="effectiveStartDate_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							<tr>
+                                <th><span class="error">*</span>截止时间：</th>
+								<td>
+									#springBind("supplyDemandInfo.effectiveEndDate")
+									<input type="text" id="effectiveEndDate" name="effectiveEndDate" value="$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveEndDate})" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'effectiveStartDate\')}'})" readonly="readonly" class="inp" />
+									<span id="effectiveEndDate_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							<tr>
+                                <th ><span class="error">*</span>是否零售：</th>
+								<td>
+									#springBind("supplyDemandInfo.retail")
+                                        #foreach($selectItem in $!{infoRetails})
+											<input class="retail" id="retail" type="radio" #if($velocityCount == 2) checked="checked"#end value="$!{selectItem.value}" name="${status.expression}" /> $selectItem.name
+										#end
+									<span class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							<tr>
+                                <th ><span class="error">*</span>发票支持：</th>
+								<td>
+									#springBind("supplyDemandInfo.invoice")
+									#foreach($selectItem in $!{infoInvoices})
+										<input class="invoice" type="checkbox"  checked="checked" value="$!{selectItem.value}" name="${status.expression}" /> $selectItem.name
+									#end
+									<span class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							#springBind("supplyDemandInfo.deliveryType")
+                                    #foreach( $item in $!{deliveryTypes})
+                                        <input type="hidden" id=$velocityCount name="${status.expression}" value="$!{item.value}" />
+									#end
+									<span class="error">${status.errorMessage}</span>
+                            <tr>
+								<th><span class="error">*</span>交易时间：</th>
+								<td>
+									#springBind("supplyDemandInfo.deliveryDate")
+									<input type="text" id="deliveryDate" name="deliveryDate" value="$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.deliveryDate})" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'effectiveEndDate\')}',minDate:'#F{$dp.$D(\'effectiveStartDate\')}'})" readonly="readonly" class="inp" />
+									<input type="hidden" id="deliveryPlace" name="deliveryPlace" value=" " />
+									<span id="deliveryDate_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>				
+							</tr>
+							<tr>
+                                <th><span class="error">*</span>交割地址：</th>
+                                <td  colspan="3">
+                                    #springBind("supplyDemandInfo.province")
+									<select  class="select" id="pe_province" name="${status.expression}" style="width:120px;"></select>
+									<span class="error">${status.errorMessage}</span>
+									#springBind("supplyDemandInfo.city")
+									<select class="select"  id="pe_city" name="${status.expression}" style="width:120px;"></select>
+									<span class="error">${status.errorMessage}</span>
+									#springBind("supplyDemandInfo.area")
+									<select class="select"  id="pe_area" name="${status.expression}" style="width:120px;"></select>
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+                            </tr>
+							<tr>
+                                <th><span class="error">*</span>详细地址：</th>
+                                <td colspan="3">
+                                    #springBind("supplyDemandInfo.address")
+									 <input type="text" id="address" name="${status.expression}" value="$!{status.value}" class="inp" style="width:400px" />
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+                            </tr>
+						</table>
+					</fieldset>
+                    <fieldset>
+						<legend>联系方式：</legend>
+                        <table class="c2">
+                            <tr>
+                                <th><span class="error">*</span>联系电话：</th>
+                                <td>
+                                    #springBind("supplyDemandInfo.phone")
+									 <input type="text" id="phone" name="${status.expression}" value="$!{status.value}" class="inp" />
+									<span id="phone_remind_show_message" class="error">${status.errorMessage}</span>
+									##<input id="deliveryS" type="button"  class="button" onclick="chooseAddress('S','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择" />
+									##<input id="takedeliveryS" type="button"  class="button" onclick="chooseAddress('P','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择" />
+									<input id="deliveryS" type="hidden"  class="button" onclick="chooseAddress('S','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择" />
+									<input id="takedeliveryS" type="hidden"  class="button" onclick="chooseAddress('P','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择" />
+								</td>
+								#*
+                                <th>邮编：</th>
+                                <td>
+                                    #springBind("supplyDemandInfo.zipCode")
+									 <input type="text" id="zipCode" name="${status.expression}" value="$!{status.value}" class="inp" />
+									<span id="zipCode_remind_show_message" class="error">${status.errorMessage}</span>
+                                </td>
+								<th id="storehouse1">仓库名称：</th>
+								<td id="storehouse2">
+									#springBind("supplyDemandInfo.storehouse")
+									<input type="text" id="storehouse" name="${status.expression}" value="$!{status.value}" class="inp" />
+									<span class="error">${status.errorMessage}</span>
+									
+								</td>
+								*#
+								#springBind("supplyDemandInfo.zipCode")
+								<input type="hidden" id="zipCode" name="${status.expression}" value="$!{status.value}" class="inp" />
+								<span id="zipCode_remind_show_message" class="error">${status.errorMessage}</span>
+								#springBind("supplyDemandInfo.storehouse")
+								<input type="hidden" id="storehouse" name="${status.expression}" value="$!{status.value}" class="inp" />
+								<span class="error">${status.errorMessage}</span>
+								
+								<th><span class="error">*</span>联系人：</th>
+                                <td>
+                                    #springBind("supplyDemandInfo.linkMan")
+									 <input type="text" id="linkMan" name="${status.expression}" value="$!{status.value}" class="inp" />
+									<span class="error">${status.errorMessage}</span>
+                                </td>
+							</tr>
+						</table>
+					</fieldset>
+					<fieldset>
+						<legend>展示图片：</legend>
+						<table class="c2">
+				        	 <tr>
+                                <th>主图片：</th>
+                                <td colspan="5"> 
+									<input id="fileChoose0"   name="uploadFile0" type="file"  value=""  onkeypress= "return false;"   onpaste= "return false;"/>
+									<input type="button" style="width:60px" value="清除" onclick="clearPic();"/>
+									#springBind("supplyDemandInfo.picturePath")
+									<input type="hidden" id="picturePath" name="picturePath" value="$!{status.value}"  />
+									<span id="fileChoose0_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							 </tr>
+							 <tr>
+								 <th>图片1：</th>
+                                <td>
+									<input id="fileChoose1"   name="uploadFile1" type="file"   value="" onkeypress= "return false;"   onpaste= "return false;"/>
+									<input type="button" style="width:60px" value="清除" onclick="clearPic1();"/>
+									#springBind("supplyDemandInfo.picturePath1")
+									<input type="hidden" id="picturePath1" name="picturePath1" class="inp-w400"  value="$!{status.value}"  />
+									<span id="fileChoose1_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							 </tr>
+							 <tr>
+								 <th>图片2：</th>
+                                <td>
+									<input id="fileChoose2"   name="uploadFile2" type="file"   value="" onkeypress= "return false;"   onpaste= "return false;"/>
+									<input type="button" style="width:60px" value="清除" onclick="clearPic2();"/>
+									#springBind("supplyDemandInfo.picturePath2")
+									<input type="hidden" id="picturePath2" name="picturePath2" class="inp-w400"   value="$!{status.value}" />
+									<span id="fileChoose2_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							 </tr>
+							 <tr>
+								 <th>图片3：</th>
+                                <td>
+									<input id="fileChoose3"   name="uploadFile3" type="file"   value="" onkeypress= "return false;"   onpaste= "return false;"/>
+            						<input type="button" style="width:60px" value="清除" onclick="clearPic3();"/>
+									#springBind("supplyDemandInfo.picturePath3")
+            						<input type="hidden" id="picturePath3" name="picturePath3" class="inp-w400"  value="$!{status.value}"  />
+									<span id="fileChoose3_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							</tr>
+							 <tr>
+								 <th>图片4：</th>
+                                <td>
+									<input id="fileChoose4"   name="uploadFile4" type="file"   value="" onkeypress= "return false;"   onpaste= "return false;"/>
+									<input type="button" style="width:60px" value="清除" onclick="clearPic4();"/>
+									#springBind("supplyDemandInfo.picturePath4")
+									<input type="hidden" id="picturePath4" name="picturePath4" class="inp-w400"  value="$!{status.value}" />
+									<span id="fileChoose4_remind_show_message" class="error">${status.errorMessage}</span>
+								</td>
+							 </tr>
+							 <tr >
+                                <th></th>
+                                <td><span class="error" id="fileErrorDiv_remind_show_message" >（最大支持200K的图片上传，支持图片格式： jpg, jpeg, gif, png）</span></td>
+                            </tr>
+                        </table>
+						#**
+                        #springBind("supplyDemandInfo.picturePath")
+						<input type="hidden" id="picturePath" name="picturePath" value="$!{status.value}"  />
+						#springBind("supplyDemandInfo.picturePath1")
+						<input type="hidden" id="picturePath1" name="picturePath1" class="inp-w400"  value="$!{status.value}"  />
+						#springBind("supplyDemandInfo.picturePath2")
+						<input type="hidden" id="picturePath2" name="picturePath2" class="inp-w400"   value="$!{status.value}" />
+						#springBind("supplyDemandInfo.picturePath3")
+						<input type="hidden" id="picturePath3" name="picturePath3" class="inp-w400"  value="$!{status.value}"  />
+						#springBind("supplyDemandInfo.picturePath4")
+						<input type="hidden" id="picturePath4" name="picturePath4" class="inp-w400"  value="$!{status.value}" />
+						**#
+                    </fieldset>
+    				  <fieldset>
+                        <legend>项目描述：</legend>
+                        <table class="c2">
+        					<tr>                           			
+                                <td ></td>
+                            </tr>
+        					<tr>                           			
+        						<td>
+        							#springBind("supplyDemandInfo.remark")
+        							<textarea  id="description" name="${status.expression}" style="width:100%;height:300px;">$!{status.value}</textarea>
+        							<p class="red">${status.errorMessage}</p>
+        						</td>
+        					</tr>
+                        </table>
+                       </fieldset> 
+					   <div class="form-but"><!-- 表单按钮区 -->
+							<button type="submit" class="button-t3">保存</button>
+							<input type="button" class="button-t3" onclick="clearMsg();" value="重置"/>
+							##<button type="reset" class="button-t3">重置</button>
+						</div>
+					</div>
+			</form>
+		</div>
+	</div>
+	<div class="b"></div>
+</div>
+<div id="addressList">
+</div>
+
+   

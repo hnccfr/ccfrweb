@@ -1,0 +1,97 @@
+
+<table class="c2">
+    <tr>
+        <th>意向单编号：</th>
+        <td>${tradeWishOrder.wishOrderNum}</td>
+		 <th>意向单状态：</th>
+        <td>${tradeWishOrder.statusDesc}</td>
+    </tr>
+    <tr>
+		<th>项目名称：</th>
+        <td>
+			<a style="color:#0066CC;text-decoration:none;" target="_blank" href="$!{appServer}/home/detail.htm?projectCode=$!{tradeWishOrder.projectCode}" title="$!{tradeWishOrder.projectName}">
+			${tradeWishOrder.projectName}
+			</a>
+		</td>
+        <th>项目编号：</th>
+        <td>$!{tradeWishOrder.projectCode}</td>
+    </tr>
+    <tr>
+		
+        <th>交易方式：</th>
+        <td>$!{tradeWishOrder.tradeTypeDesc}</td>
+		<th>交易方向：</th>
+        <td>$!{tradeWishOrder.tradeDictorDesc}</td>
+    </tr>
+    <tr>
+        <th>参与人：</th>
+        <td>$!{tradeWishOrder.userAccount}</td>
+		<th>报名时间：</th>
+        <td> $!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{tradeWishOrder.gmtCreate})</td>
+	</tr>
+    <tr>
+        <th>评估价：</th>
+        <td>$!commonUtils.getValuationUnitDesc($!{bidStartPrice},$!tradeWishOrder.getValuationUnit())</td>
+        <th>交易保证金：</th>
+        <td>$!commonUtils.getValuationUnitDesc($!tradeWishOrder.deposit,$!tradeWishOrder.getValuationUnit())</td>
+    </tr> 
+	<tr>
+        <th>支付方式：</th>
+        <td>$!{tradeWishOrder.paymentTypeDesc}</td>	
+		<th>是否需要发票：</th>
+		<td>
+			#if($!{tradeWishOrder.isInvoice} == 'Y')
+				是
+			#else
+				否
+			#end
+		</td>
+    </tr>	
+    <tr>
+		<th>交收时间：</th>
+        <td> $!dateTool.format("yyyy-MM-dd",$!{tradeWishOrder.expectTime})</td>
+        <th>交货方式：</th>
+        <td>$!{tradeWishOrder.deliveryTypeDesc}</td>
+    </tr>
+	#if($!{tradeWishOrder.deliveryType} == "sellerSend")
+        <tr>
+    		<th>收货人：</th>
+            <td>$!{tradeWishOrder.linkMan}</td>
+            <th>收货人电话：</th>
+            <td>$!{tradeWishOrder.phone}</td>
+        </tr>
+    	<tr>
+            <th>收货地址：</th>
+            <td>$!{areaTool.getAreaFullName($!{tradeWishOrder.area})}</td>
+    		<th>邮政编码：</th>
+            <td>$!{tradeWishOrder.zipCode}</td>	
+        </tr>
+	#else
+        <tr>
+    		<th>联系人：</th>
+            <td>$!{tradeWishOrder.linkMan}</td>
+            <th>联系人电话：</th>
+            <td>$!{tradeWishOrder.phone}</td>
+        </tr>
+		#*
+		<tr>
+            <th>仓库名称：</th>
+            <td colspan="3">$!{tradeWishOrder.storehouse}</td>
+        </tr>
+		*#
+    	<tr>
+            <th>地址：</th>
+            <td>$!{areaTool.getAreaFullName($!{tradeWishOrder.area})}</td>
+    		<th>邮政编码：</th>
+            <td>$!{tradeWishOrder.zipCode}</td>	
+        </tr>
+	#end
+    <tr>
+		<th>详细地址：</th>
+		<td colspan="3">$!{tradeWishOrder.address}</td>        
+    </tr>
+	<tr>
+        <th>备注：</th>
+        <td colspan="3">$!{tradeWishOrder.comments}</td>
+    </tr>
+</table>

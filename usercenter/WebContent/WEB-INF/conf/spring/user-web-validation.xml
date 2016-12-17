@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+	<bean id="userAccountLoginValidator" class="com.hundsun.network.gates.fengshan.web.validator.user.UserAccountLoginValidator" parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{account : ? has text : '' : 'common.error.required'}
+				{password : ? has text : '' : 'common.error.required'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	<bean id="userAccountValidator" class="com.hundsun.network.gates.fengshan.web.validator.user.UserAccountValidator" parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+				{account : ? has text : '' : 'common.error.required'}
+				{account : length(?) <=10 : '' : 'common.error.maxlength':10}
+				{account : length(?) >=2 : '' : 'common.error.minlength':2}
+				{password : ? has text : '' : 'common.error.required'}
+				{password : length(?) <=32 : '' : 'common.error.maxlength':32}
+				{password : length(?) >=6 : '' : 'common.error.minlength':6}
+				
+				{fundPassword : ? has text : '' : 'common.error.required'}
+				{fundPassword : length(?) <=32 : '' : 'common.error.maxlength':32}
+				{fundPassword : length(?) >=6 : '' : 'common.error.minlength':6}
+				
+				{email :  ?  has text : '' : 'common.error.required'}
+				{email :  ?  has no text or email(?) is true : '' : 'common.error.matches'}
+				
+				{mobile :  ?  has text : '' : 'common.error.required'}
+				{mobile : length(?) <=20 : '' : 'common.error.maxlength':20}
+				
+												
+				{address : ? has no text or length(?) <= 80: '' : 'common.error.maxlength':80}
+				{zipCode : ? has no text or match('^\\d{6}$',?) is true : '' : 'common.error.matches'}
+				
+				{name : ? has text : '' : 'common.error.required'}
+				{name : length(?) <=30 : '' : 'common.error.maxlength':30}
+				
+				{certificateNum : ? has text : '' : 'common.error.required'}
+				{certificateNum : length(?) <=30 : '' : 'common.error.maxlength':30}
+				
+				
+				]]>
+				<!--
+				{bank : ? has text : '' : 'common.error.required'}
+				
+				{bankCard : ? has text : '' : 'common.error.required'}
+				{bankCard : length(?) <=30 : '' : 'common.error.maxlength':30}
+				-->
+			</value>
+		</property>
+	</bean>
+	
+	<bean id="userAddressValidator" class="com.hundsun.network.gates.fengshan.web.validator.user.UserAddressValidator" parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+					{linkman	: ? has text       : '' : 'common.error.required'}
+					{linkman	: ? has no text or length(?) <= 32 : '' : 'common.error.maxlength':32}
+					{linkman	: ? has no text or length(?) >= 2  : '' : 'common.error.maxlength':2}
+					{phone      : ? has text 	   : '' : 'common.error.required'}
+					{phone      : ? has no text or length(?) <=20 : '' : 'common.error.maxlength':20}
+					{area		: ? has text	   : '' : 'common.error.required'}
+					{address	: ? has text	   : '' : 'common.error.required'}
+					{address    : ? has no text or length(?) <= 80: '' : 'common.error.maxlength':80}
+					{zipCode 	: ? has no text or match('^\\d{6}$',?) is true : '' : 'common.error.matches'}
+				]]>
+			</value>
+		</property>
+	</bean>
+	<bean id="supplyDemandInfoValidator" class="com.hundsun.network.gates.fengshan.web.validator.supplydemand.SupplyDemandInfoValidator" parent="valangValidator">
+		<property name="valang">
+			<value>
+				<![CDATA[
+					{title		: ? has text : '' : 'common.error.required'}
+					{title		: ? has no text or length(?) <= 40 :'' : 'common.error.maxlength':40}
+					{projectTypeCode : ? has text : '' : 'common.error.required'}
+					{quantity	: ? is not null and ? has text : '此项为必填项'}
+					{quantity	: ? has no text or match('^[0-9]*$',?) is true : '' : 'common.error.matches'}
+					{priceDesc : ? has text : '' : 'common.error.required'}
+					{effectiveStartDate	: ? is not null and ? has text : '开始时间为必填项'}
+					{effectiveEndDate	: ? is not null and ? has text : '截止时间为必填项'}
+					{deliveryDate: ? is not null and ? has text : '交货时间为必填项'}
+					{deliveryPlace: ? is not null and ? has text : '仓库地址为必填项'}
+					{linkMan	: ? has text : '' : 'common.error.required'}
+					{linkMan	: ? has no text or length(?) <= 32 : '' : 'common.error.maxlength':32}
+					{phone      : ? has text 	   : '' : 'common.error.required'}
+					{phone      : ? has no text or length(?) <=20 : '' : 'common.error.maxlength':20}
+					{province		: ? has text	   : '' : 'common.error.required'}
+					{address	: ? has text	   : '' : 'common.error.required'}
+					{address    : ? has no text or length(?) <= 80: '' : 'common.error.maxlength':80}
+					{zipCode 	: ? has no text or match('^\\d{6}$',?) is true : '' : 'common.error.matches'}
+				]]>
+			</value>
+		</property>
+	</bean>
+</beans>

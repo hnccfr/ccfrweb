@@ -1,0 +1,140 @@
+#set($title = '我的销售意向单')
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<script src="$!{imageServer}/scripts/jquery.datePicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script>
+    var appServer = "$!{appServer}";
+	var clientServer = "$!{clientServer}";
+</script>
+<script type="text/javascript" src="$!{imageServer}/scripts/order/tradeWishOrder.js"></script>
+<div class="wrapperRight">
+	  <div id="rightTab" class="t">
+            <ul>
+                <li>
+                    <a class="cursor" href="#">销售意向单</a>
+                </li>
+            </ul>
+        </div>
+    <div class="right-body">
+        ##项目搜索区
+        <div class="formBox" id="div_content">
+            <form action="$!{appServer}/tradeWishOrder/sell.htm" id="searchForm" method="post" >
+                <div class="content">
+                  <table class="c2" >
+						<tr>
+                            <td >&nbsp;
+								<label>意向单编号:</label>
+								<input type="text" class="inp" id="query_wishOrderNum"  name="wishOrderNum" value="$!{query.wishOrderNum}" style="width:120px;" />
+								&nbsp;&nbsp;
+								<label>项目名称:</label>
+								<input type="text" class="inp" id="query_projectName"  name="projectName" value="$!{query.projectName}" style="width:120px;"/>
+								&nbsp;&nbsp;
+								<label>下单时间:</label>
+								<input type="text" class="inp" id="place_start_from" name="gmtCreateFrom"  value="$!dateTool.format("yyyy-MM-dd",$!{query.gmtCreateFrom})" style="width:80px;" readonly="readonly" />
+								<label>-</label>
+								<input type="text" class="inp" id="place_start_to" name="gmtCreateTo" value="$!dateTool.format("yyyy-MM-dd",$!{query.gmtCreateTo})" style="width:80px;" readonly="readonly" />
+								
+								
+							</td>
+                        </tr>
+                        <tr>
+							<td >&nbsp;
+								<label>意向单状态:</label>
+								<select name="status"  id="query_status" class="select" style="width:100px;">
+                                    <option value=""  >请选择</option>
+                                    #foreach($status in $!{twoStatus})
+                                        <option value="$status.value" #if($!{query.status} == $status.value)  selected #end >$status.name</option>
+                                    #end 
+                                </select> 
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<label>&nbsp;支付方式:</label>
+								<select name="paymentType"  id="query_paymentType" class="select" style="width:100px;">
+                                    <option value=""  >请选择</option>
+                                    #foreach($type in $!{payTypes})
+                                        <option value="$type" #if($!{query.paymentType} == $type.value)  selected #end >$type.name</option>
+                                    #end 
+                                </select>  
+								
+								&nbsp;
+								<input type="submit" class="button-t3" value="搜索" />
+								<input type="button"  class="button-t3" onclick="clearMsg()" value="清 空" />
+							</td>
+						</tr>
+					</table>
+					
+				</div>
+			</form>
+		</div>
+		
+		 ##项目数据展示
+		<div class="listBox">
+			<div>
+				<table style="width:100%;">
+					<tr>
+                         <th class="list-order-field" id="number" title="点击排序">编号</th>
+                        <th class="list-order-field" id="prjName" style="width:25%;" title="点击排序">项目名称</th>
+                        <th class="list-order-field" id="tradeType" title="点击排序">交易方式</th>
+						<th class="list-order-field" id="paymentType" title="点击排序">支付方式</th>
+                        <th class="list-order-field" id="placeTime" title="点击排序">下单时间</th>
+                        <th class="list-order-field" id="wishOrderStatus" title="点击排序">状态</th>
+                        <th >操作</th>
+					</tr>
+					#foreach($item in $!{query.data})
+						<tr    style="height:40px;">
+                                <td style="text-align:center;font-weight:600; #if($item.waitOpt) background-color:#FFF999;color:red; #end">
+                                     &nbsp;$!{item.wishOrderNum}
+                                </td>
+                                <td style="text-align:center;">
+                                  <a style="color:#0066CC" target="_blank" href="$!{appServer}/home/detail.htm?projectCode=$!{item.projectCode}" title="$!{item.projectName}">
+                                        #if($!item.projectName.toString().length()>14)
+                                            $!item.projectName.toString().substring(0,12)<span>..</span>
+                                        #else
+                                             &nbsp;$!{item.projectName}
+                                        #end
+                                    </a>
+                                </td>
+								<td style="text-align:center;">
+                                     &nbsp;$!{item.tradeTypeDesc}
+                                </td>
+								<td style="text-align:center;">
+                                     &nbsp;$!{item.paymentTypeDesc}
+                                </td>
+								<td style="text-align:center;">
+                                     &nbsp;$!dateTool.format("yyyy-MM-dd",$!{item.gmtCreate})
+                                </td>
+                                <td style="text-align:center;">
+                                     &nbsp;$!{item.statusDesc}
+                                </td>
+								
+                                <td style="text-align:center;">
+                                     &nbsp;<a style="color:#0066CC" target="_blank" href="$!{appServer}/tradeWishOrder/detail.htm?wishOrderNum=$!{item.wishOrderNum}"  title="查看">查看</a>
+									 #if($item.bidRecordHis)
+									 &nbsp;<a style="color:#0066CC" href="$!{appServer}/auction/wishorder/bidrecordhis.htm?projectCode=$!item.projectCode&returnUrl=tradeWishOrder/sell.htm" title="查看报价列表">历史报价</a>
+									 #end
+									 #if($!{item.status}=='create')
+										|<a style="color:#0066CC" href="JavaScript:checkWishOrder('$!{item.wishOrderNum}','$!commonUtils.getValuationUnitDesc($!{item.deposit},$!item.valuationUnit)');">提交</a>
+									 #end
+									#if($!{item.status}=="audit" || $!{item.status}=="trading" || $!{item.status}=="create")
+										|<a style="color:#0066CC" href="javascript:loginOutTrade('$!{item.wishOrderNum}')"  title="退出">退出</a>
+									#end
+									 #if($!{item.tradeType} == 'mulitBidOrder' && $!{item.status} =="trading")
+										|<a style="color:#0066CC"  href="javascript:void(0);" onclick="bid('$!{item.wishOrderNum}','$!{item.valuationUnit}','$!{item.trademark}','$!{item.projectCode}');"  title="多次报价转拍卖-报价阶段报价">报价</a>
+									 #end
+									 #if($item.waitHall)
+										|<a href="$!{clientServer}/auction/join.htm?projectCode=$!{item.projectCode}" title="进入大厅" >进入大厅</a>
+									 #end									
+                                </td>
+						</tr>
+					#end
+				</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{query},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+</div>
+

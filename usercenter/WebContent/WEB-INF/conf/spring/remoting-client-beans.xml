@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<!-- 此配置文件包括所有通过远程调用import来的service -->
+<beans>
+	
+	<bean id="remoteUserService"
+		class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteUserService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteUserService" />
+	</bean>
+	<bean id="remoteProjectListingService"
+		class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteProjectListingService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteProjectListingService" />
+	</bean>
+	<bean id="remoteProjectTypeService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${wulin.remoteProjectTypeService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteProjectTypeService" />
+	</bean>
+    
+	<!-- 系统基础配置 -->
+	<bean id="remoteSystemBaseService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${wulin.remoteSystemBaseService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteSystemBaseService" />
+	</bean>
+	<bean id="remoteProjectBaseSettingService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${wulin.remoteProjectBaseSettingService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteProjectBaseSettingService" />
+	</bean>
+	<!--投诉工单接口配置-->
+	<bean id="remoteTradeOrderCcService"
+		class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteTradeOrderCcService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteTradeOrderCcService" />
+	</bean>
+	<!--账务接口配置-->
+	<bean id="remoteFundService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${houchao.remoteFundService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.houchao.reomte.service.RemoteFundService" />
+	</bean>
+	
+	<!--账务资金查询接口配置-->
+	<bean id="remoteFundQueryService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${houchao.remoteFundQueryService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.houchao.reomte.service.RemoteFundQueryService" />
+	</bean>
+	
+	<!-- 订单接口-->
+	<bean id="remoteTradeOrderService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteTradeOrderService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteTradeOrderService" />
+	</bean>
+	<!-- 接口-->
+	<bean id="remoteProjectStandardService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteProjectStandardService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteProjectStandardService" />
+	</bean>	
+	
+	<!-- 多次竞价转拍卖接口 -->
+	<bean id="remoteMulitAuctionService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteMulitAuctionService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteMulitAuctionService" />
+	</bean>
+	
+	<bean id="remoteTradeService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${qingbo.remoteTradeService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.wangjiang.reomte.service.RemoteTradeService" />
+	</bean>
+	
+	<bean id="remotetradeTypePropConfigService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${wulin.remoteTradeService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.taiping.reomte.service.RemoteTradeTypePropConfigService" />
+	</bean>
+	<!-- 获得所有商品基本属性-包括动态、标准属性等 -->
+	<bean id="remoteProjectService"
+		class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl" value="${wulin.remoteProjectService.hessian.url}" />
+		<property name="serviceInterface"
+			value="com.hundsun.network.gates.luosi.wulin.reomte.service.RemoteProjectService" />
+	</bean>
+	
+	<!-- 拍卖接口 -->
+	<bean id="remoteAuctionService" class="com.hundsun.network.melody.common.rpc.hessian.HessianProxyFactoryBean">
+		<property name="serviceUrl"  value="${qingbo.remoteAuctionService.hessian.url}" />
+		<property name="serviceInterface"  value="com.hundsun.network.gates.luosi.wangjiang.reomte.service.RemoteAuctionService" />
+	</bean>
+</beans>

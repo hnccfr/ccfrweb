@@ -1,0 +1,97 @@
+#set($layout = 'layout/blank.vm') 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+	<link rel="stylesheet" href="$!{imageServer}/styles/home/common.css" />
+	<script type="text/javascript" src="$!{imageServer}/scripts/jquery-1.4.4.min.js"></script>
+    <script src="$!{imageServer}/scripts/common.js" type="text/javascript"></script>
+	<script src="$!{imageServer}/scripts/home/cms.js" type="text/javascript"></script>
+</head>
+<script>
+$(function(){
+	scrollUp("type3");
+})
+</script>
+<style>
+			.tabbox th {
+                background: url("$!{imageServer}/images/cms/vbg.gif") 0 -460px repeat-x;
+                height: 33px;
+                border-bottom: solid 1px #EFC5C5;
+                text-align: center;
+                ##text-align: left;
+                padding-left: 10px;
+				border-spacing: 2px;
+				border-collapse:separate;
+				vertical-align:inherit;
+            }
+			.tabbox td {
+    			height: 27px;
+                padding-left: 10px;
+				margin: 0;
+				padding: 0;
+				color: #3D3D3D;
+				border-collapse: separate;
+				border-spacing: 2px;
+				vertical-align:inherit;
+            }
+</style>
+<body style="background: none repeat scroll 0 0 #FFFFFF;">
+##<div class="infor mt10" id="gpinfor">
+      ##<div class="infor_con">
+        <ul>
+		  <table width="100%"  class="tabbox">
+            <thead >
+              ##<th style="text-align:center;width:16%;">项目编号</th>
+              <th style="text-align:center;width:15%;">项目编号</th>
+              ##<th style="text-align:center;width:18%;">项目名称</th>
+              <th style="text-align:center;width:50%;">项目名称</th>
+              ##<th style="text-align:center;width:10%;">方向</th>
+              <th style="text-align:center;width:10%;">数量</th>
+              <th style="text-align:center;width:25%;">挂牌参考价</th>
+              ##<th style="text-align:center;width:14%;">挂牌参考价</th>
+              ##<th style="text-align:center;width:16%;">挂牌时间</th>
+              ##<th style="text-align:center;width:16%;">交收时间</th>
+            </thead>
+		  </table>
+		<div id="type3" style="overflow:hidden;height:250px;border:#aaccee 1px soilid;width:100%">
+			<div id="type3-demo1">
+				<table width="100%" class="tabbox">
+			<tbody>
+			#if($!{proListType3} && ${proListType3.size()} > 0)
+				#foreach($projectListing in $proListType3)
+					<tr #if($velocityCount%2==0) style="background-color:#F6F6F6;color:#3D3D3D;" #end>
+						<td style="text-align:center;width:15%;">$!{projectListing.code}</td>
+						<td style="text-align:center;width:50%;">
+							<a href="$!{appServer}/home/detail.htm?projectCode=$!{projectListing.code}" title="$!{projectListing.title}" target="_blank">$!{projectListing.title}</a>
+						</td>
+						##<td style="text-align:center;width:10%;">$!{projectListing.listingTypeDesc}</td>
+						#if("$!{projectListing.projectTypeCode}"=="0|3")
+							<td style="text-align:center;width:10%;">$!{projectListing.forestryQuantityDes}</td>
+						#else
+							<td style="text-align:center;width:10%;">$!{projectListing.quantity}$!{projectListing.measureUnitDesc}</td>
+						#end
+						<td style="text-align:center;width:25%;">
+							#if($!{projectListing.listingPrice})
+								#if("$!{projectListing.projectTypeCode}"=="0|3")
+									$commonUtils.getValuationUnit($!{projectListing.listingPrice},$!{projectListing.valuationUnit})$!{projectListing.valuationUnitDesc}(总价)##/$!{projectListing.measureUnitDesc}
+								#else
+									$commonUtils.getValuationUnit($!{projectListing.listingPrice},$!{projectListing.valuationUnit})$!{projectListing.valuationUnitDesc}/$!{projectListing.measureUnitDesc}
+								#end
+							#end
+						</td>
+						##<td style="text-align:center;width:16%;">$!{dateTool.format($!{projectListing.listingStartTime})}</td>
+						##<td style="text-align:center;width:16%;">$!{dateTool.format($!{projectListing.deliveryDate})}</td>
+                    </tr>
+				#end
+			#end
+            </tbody>
+          </table>
+		  </div>
+				<div id="type3-demo2"></div>
+            </div>
+        </ul>
+      ##</div>
+    ##</div>
+</body>
+</html>

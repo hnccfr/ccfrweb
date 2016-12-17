@@ -1,0 +1,259 @@
+#set($title = '商品详情')
+#set($layout = 'layout/blank.vm') 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Pragma" content="no-cache"/>        
+<meta http-equiv="Expires" content="0"/>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>$!{title}</title>
+##<link rel="stylesheet" href="$!{imageServer}/styles/base.css" type="text/css">
+##<link rel="stylesheet" href="$!{imageServer}/styles/manage.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/validate.css" type="text/css">
+<script src="$!{imageServer}/scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/common.js" type="text/javascript"></script>
+<script >
+ var appServer = "$!{appServer}";
+ var imageServer = "$!{imageServer}";
+ var clientServer="$!{clientServer}";
+ var orgProvince = "$!{userAddress.province}";
+ var orgCity = "$!{userAddress.city}";
+ var orgArea = "$!{userAddress.area}";
+</script>
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/common.css" type="text/css">
+<link rel="stylesheet" href="$!{imageServer}/styles/manage.css" type="text/css">
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.ui.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.datePicker.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.validate.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/area.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/common.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/trade/trade.js" ></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/user/getAddress.js" ></script>
+<script type="text/javascript">
+    $(function(){
+		var area = new Area("$!{appServer}/ajax","$!{userAddress.province}","$!{userAddress.city}","$!{userAddress.area}",'pe_province','pe_city','pe_area');
+    });
+</script>
+</head>
+<body>
+<div class="main w700">
+	<form id="tradeFrom" name="tradeFrom"  action="$!{appServer}/placeOrder/trade.htm" method="post" enctype="multipart/form-data" >
+	<div class="order_con mt10">
+		<div class="clear"></div>
+        <table width="100%" class="tb1">
+            <tr>
+                <td colspan="4" class="bg"><strong>项目信息</strong></td>
+                </tr>
+             <tr>
+                <th class="w100">项目名称：</th>
+                <td class="w170">
+            		$!{placeOrderInput.projectName}
+            	</td>
+                <th class="w100">项目编号：</th>
+                <td class="w170">
+					$!{placeOrderInput.projectCode}
+					<input type="hidden" id="projectCode" name="projectCode" value="$!{placeOrderInput.projectCode}" />
+					<input type="hidden" id="retail" name="retail" value="$!{placeOrderInput.retail}" />
+				</td>
+                </tr>
+              <tr>
+                <th>挂牌价格：</th>
+                <td class="co3">
+            		<input type="hidden" id="listingPrice" name="listingPrice" value="$!{placeOrderInput.listingPrice}" />
+					<input type="hidden" id="listingPriceDesc" name="listingPriceDesc" value="$commonUtils.getValuationUnit($!{placeOrderInput.listingPrice},$!{placeOrderInput.valuationUnit})" />
+					<input type="hidden" id="ListingValuationUnit" name="ListingValuationUnit" value="$!{placeOrderInput.valuationUnit}"/>
+            		<strong> $commonUtils.getValuationUnitDesc($!{placeOrderInput.listingPrice},$!{placeOrderInput.valuationUnit})/$!{placeOrderInput.measureUnitDesc}
+					</strong>
+            	</td>
+                <th>剩余库存：</th>
+                <td>
+            		$!{placeOrderInput.quantity}$!{placeOrderInput.measureUnitDesc}
+            		<input type="hidden" id="leaveQuantity" name="leaveQuantity" value="$!{placeOrderInput.quantity}"  />
+            	</td>
+                </tr>
+              <tr>
+                <th>最大下单量：</th>
+                <td>
+            		$!{placeOrderInput.maxQuantity}$!{placeOrderInput.measureUnitDesc}
+            		<input type="hidden" id="maxQuantity" name="maxQuantity" value="$!{placeOrderInput.maxQuantity}"  />
+					
+            	</td>
+                <th>最小下单量：</th>
+                <td>
+            		$!{placeOrderInput.minQuantity}$!{placeOrderInput.measureUnitDesc}
+            		<input type="hidden" id="minQuantity" name="minQuantity" value="$!{placeOrderInput.minQuantity}"  />
+					
+            	</td>
+                </tr>
+              <tr>
+                <th>下单基数：</th>
+                <td>
+            		$!{placeOrderInput.multipleBase}$!{placeOrderInput.measureUnitDesc}
+            		<input type="hidden" id="multipleBase" name="multipleBase" value="$!{placeOrderInput.multipleBase}"  />
+					
+            	</td>
+                <th>仓库名称：</th>
+                <td>
+            		$!{placeOrderInput.storehouse}
+            	</td>
+                </tr>
+              <tr>
+                <td colspan="4" class="bg"><strong>交易信息</strong></td>
+                </tr>
+              <tr>
+                <th ><span class="co3">*</span>下单数量：</th>
+                <td >
+            		<input type="text" id="quantity" name="quantity" class="inpt co3" />
+					$!{placeOrderInput.measureUnitDesc}
+            		<span class="co3" id="quantity_remind_show_message"></span>
+                </td>
+                <th>货款金额：</th>
+                <td>
+					<input type="text" id="totalPay"  name="totalPay"   disabled="disabled"   class="inpt" />
+					$!{placeOrderInput.valuationUnitDesc}
+				</td>
+                </tr>
+              <tr>
+                <th>交易保证金额：</th>
+                <td>
+					<input type="text"  id="deposit" name="deposit" class="inpt" disabled="disabled" />
+					<input type="hidden" id="tradeDeposit" name="tradeDeposit"  class="inpt co3"     value="$!{tradeDeposit}" />
+					<input type="hidden" id="valuationUnitDesc"   value="$!{placeOrderInput.valuationUnitDesc}" />
+					$!{placeOrderInput.valuationUnitDesc}
+				</td>
+                <th>&nbsp;</th>
+                <td></td>
+                </tr>
+				<tr>
+                <td colspan="4" class="bg"><strong>资金信息</strong></td>
+                </tr>
+				<tr>
+                <th>资金账户：</th>
+				<td  colspan="3" >#fundmsg()</td>
+                </tr>
+				 
+              <tr>
+                <td colspan="4" class="bg"><strong>交收信息</strong></td>
+              </tr>
+			  <tr>
+                <td colspan="4">&nbsp;&nbsp;<span class="co3">
+					说明： #if($!{placeOrderInput.listingType} == "buy")该牌为买牌，如果选择“买家自提”将会以您所选择的仓库地址作为交收地址#else 该牌为卖牌，如果选择“卖家交割”将会以您所选择的收货地址作为交收地址#end ，否则以挂牌人的地址作为交收地址</td>
+				</span>
+			  </tr>
+              <tr>
+                <th>支付方式：</th>
+                <td>
+            		#foreach( $item in $!{paymentTypes})
+            			<input type="radio" id="paymentTypes$velocityCount" name="paymentType" #if( $velocityCount==1  ) checked=true #end    value="$!{item.value}" />
+            			<label for="paymentTypes$velocityCount">$!{item.name}</label>		
+            		#end
+            	</td>
+                <th>交货方式：</th>
+                <td>
+            		#foreach( $item in $!{deliveryTypes})
+            			<input type="radio" id="deliveryTypes$velocityCount" name="deliveryType" #if( $velocityCount==1   ) checked=true #end    value="$!{item.value}" />
+            			<label for="deliveryTypes$velocityCount">$!{item.name}</label>		
+            		#end
+            	</td>
+              </tr>
+              <tr>
+                <th>开发票：</th>
+                <td>
+            		#foreach( $item in $!{invoices})
+            			<input type="radio" id="invoices$velocityCount" name="invoice" #if( $velocityCount==1  ) checked=true #end    value="$!{item.value}" />
+            			<label for="invoices$velocityCount">$!{item.name}</label>		
+            		#end	
+            	</td>
+                <th>期望交收时间：</th>
+                <td>
+            		<input type="text" id="deliveryDate" name="deliveryDate" value="" class="inp" readonly/>
+            		<span class="co3" id="deliveryDate_remind_show_message"></span>
+            		<script >
+                    		 $(function(){
+                                  	$("#deliveryDate").datePicker({
+                             	clickInput : true,
+                             	startDate:"1970-01-01"
+                            	});
+                              });
+            		</script>
+            	</td>
+                </tr>
+    			<div id="address1">
+    				<tr>
+                    <th><span class="co3">*</span>联系人：</th>
+                    <td colspan="3">
+    					<input id="linkMan" name="linkMan" type="text"  value="$!{userAddress.linkman}"  class="inpt"/>
+						##<input type="button"  class="button" onclick="chooseAddress('$!{addressType}','linkMan','phone','pe_province','pe_city','pe_area','address','zipCode','storehouse');" value="选择"/ >
+						<p class="error"></p>
+    				</td>
+    			   </tr>
+                   <tr>
+                    <th><span class="co3">*</span>联系电话：</th>
+                    <td>
+                		<input id="phone" name="phone" type="text"  value="$!{userAddress.phone}" class="inpt" />
+    					<p class="error"></p>
+                	</td>
+                    <th>邮编：</th>
+                    <td>
+    					<input id="zipCode" name="zipCode" type="text"  value="$!{userAddress.zipCode}"  class="inpt"/>
+    					<p class="error"></p>
+    				</td>
+                  </tr>
+				  #if($!{placeOrderInput.listingType} == "buy")
+					<tr id="storehouseShow">
+                        <th>仓库名称：</th>
+                        <td colspan="3">
+        					<input id="storehouse" name="storehouse" type="text"  value="$!{userAddress.storehouse}"  class="inpt"/>
+        					<p class="error"></p>
+        				</td>
+					</tr>
+				  #end
+    			  <tr>
+                    <th id="addressShow"><span class="co3">*</span>联系地址：</th>
+                    <td colspan="3" ><label for="select"></label>
+                      <select name="province" id="pe_province">
+                        <option >选择省</option>
+                      </select>
+                      <select name="city" id="pe_city">
+						<option>选择市</option>
+                      </select>
+                      <select name="area" id="pe_area">
+						<option>选择区</option>
+    				  <p class="error"></p>
+                      </select>
+                	  </td>	
+    			  </tr>
+                  <tr>
+                    <th><span class="co3">*</span>详细地址：</th>
+                    <td colspan="3">
+                		<input type="text" id="address" name="address"  value="$!{userAddress.address}" class="inpt w400"/>
+                		<span class="co3" id="address_remind_show_message"></span>
+                	</td>
+				  </tr>
+        		</div>
+                <tr>
+                    <th>备注：</th>
+                    <td colspan="3">
+                      <textarea name="comments" id="comments" class="w500 h100" style="width:505px;" ></textarea>
+    				  <span class="co3" id="comments_remind_show_message"></span>
+                    </td>
+                </tr>
+          </table>
+		</div>
+        <div class="qianm mt20">
+            <p class="tc">
+            	<button type="submit" class="button-2">提　交</button>
+            	<button type="reset" class="button-2 ml20" onclick="resetDo();return false;">重　置</button>
+				<button type="button" onclick="goUrl('$!{fengshanAppServer}/home/list.htm');return false;" class="button-2 ml20">放     弃</button>
+            </p>
+        </div>
+	</form>
+</div>               
+
+<div id="addressList">
+</div>
+</body>
+</html>

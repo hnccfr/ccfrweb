@@ -1,0 +1,22 @@
+#set($layout = '')
+        <!--页脚-->
+<link rel="stylesheet" href="$!{imageServer}/styles/foot.css" />
+
+<div class="foot">
+    <p>
+        <a href="$!{cmsServer}">返回首页</a>
+        | <a href="$!{cmsServer}/html/aboutUsCorp.html">关于我们</a>
+        | <a href="$!{cmsServer}/html/employ/">诚聘英才</a>
+        | <a href="$!{cmsServer}/html/adv/">广告服务</a>
+        | <a href="$!{cmsServer}/html/aboutUsLink.html">联系我们</a>
+    </p>
+    <p>
+        <img src="$!{imageServer}/images/home/index01.png"/>
+        <span>中部林业产权服务（湖南）有限责任公司<br>
+	          长沙市雨花区城南中路232号HNAFI大楼<br>
+		电话：0731-85365478 传真： 0731-85365479<br>
+		EMAIL：ccfrt@ccfrt.com.cn 湘ICP备13011572号
+        </span >
+        <img src="$!{imageServer}/images/home/index02.png"/>
+    </p>
+</div>

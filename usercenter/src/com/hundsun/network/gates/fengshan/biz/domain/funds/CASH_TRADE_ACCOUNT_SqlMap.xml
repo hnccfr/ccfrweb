@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CASH_TRADE_ACCOUNT" >
+  <resultMap id="BaseResultMap" class="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="TRADE_PWD" property="tradePwd" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="FROZEN_MONEY" property="frozenMoney" jdbcType="DECIMAL" />
+    <result column="FREE_MONEY" property="freeMoney" jdbcType="DECIMAL" />
+    <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="TAID" property="taid" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_TYPE" property="certificateType" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_NUM" property="certificateNum" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="CASH_TRADE_ACCOUNT.Base_Column_List" >
+    ID, BALANCE, TRADE_PWD, STATE, USER_ACCOUNT, FROZEN_MONEY, FREE_MONEY, BANK_NAME, BANK_ACCOUNT
+  </sql>
+  
+  <select id="CASH_TRADE_ACCOUNT.selectByUserAccount" parameterClass="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="CASH_TRADE_ACCOUNT.Base_Column_List" />
+    from CASH_TRADE_ACCOUNT
+    where USER_ACCOUNT = #userAccount:VARCHAR#  	
+  </select>
+  
+  
+  
+  
+  
+
+  <select id="CASH_TRADE_ACCOUNT.selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    select 
+    <include refid="CASH_TRADE_ACCOUNT.Base_Column_List" />
+    from CASH_TRADE_ACCOUNT
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="CASH_TRADE_ACCOUNT.deleteByPrimaryKey" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    delete from CASH_TRADE_ACCOUNT
+    where ID = #id:DECIMAL#
+  </delete>
+  <insert id="CASH_TRADE_ACCOUNT.insert" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    insert into CASH_TRADE_ACCOUNT (ID, BALANCE, TRADE_PWD, STATE, USER_ACCOUNT, 
+      FROZEN_MONEY, FREE_MONEY)
+    values (#id:DECIMAL#, #balance:DECIMAL#, #tradePwd:VARCHAR#, #state:VARCHAR#, #userAccount:VARCHAR#, 
+      #frozenMoney:DECIMAL#, #freeMoney:DECIMAL#)
+  </insert>
+  <insert id="CASH_TRADE_ACCOUNT.insertSelective" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    insert into CASH_TRADE_ACCOUNT
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="balance" >
+        BALANCE
+      </isNotNull>
+      <isNotNull prepend="," property="tradePwd" >
+        TRADE_PWD
+      </isNotNull>
+      <isNotNull prepend="," property="state" >
+        STATE
+      </isNotNull>
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="frozenMoney" >
+        FROZEN_MONEY
+      </isNotNull>
+      <isNotNull prepend="," property="freeMoney" >
+        FREE_MONEY
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="balance" >
+        #balance:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="tradePwd" >
+        #tradePwd:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="state" >
+        #state:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userAccount" >
+        #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="frozenMoney" >
+        #frozenMoney:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="freeMoney" >
+        #freeMoney:DECIMAL#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  
+  <update id="CASH_TRADE_ACCOUNT.updateByPrimaryKeySelective" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    update CASH_TRADE_ACCOUNT
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="balance" >
+        BALANCE = #balance:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="tradePwd" >
+        TRADE_PWD = #tradePwd:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="state" >
+        STATE = #state:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="frozenMoney" >
+        FROZEN_MONEY = #frozenMoney:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="freeMoney" >
+        FREE_MONEY = #freeMoney:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="CASH_TRADE_ACCOUNT.updateByPrimaryKey" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.funds.CashTradeAccount" >
+    update CASH_TRADE_ACCOUNT
+    set BALANCE = #balance:DECIMAL#,
+      TRADE_PWD = #tradePwd:VARCHAR#,
+      STATE = #state:VARCHAR#,
+      USER_ACCOUNT = #userAccount:VARCHAR#,
+      FROZEN_MONEY = #frozenMoney:DECIMAL#,
+      FREE_MONEY = #freeMoney:DECIMAL#
+    where ID = #id:DECIMAL#
+  </update>
+</sqlMap>

@@ -1,0 +1,10 @@
+<table class="right-table">
+	<tbody id="bidList">
+    	<tr id="bidListHead">    
+        	<th>序号</th>
+            <th>牌号</th>
+            <th>报价(<label id="bideUnite"></label>)</th>
+            <th>报价时间</th>
+        </tr>
+	 </tbody>
+</table>

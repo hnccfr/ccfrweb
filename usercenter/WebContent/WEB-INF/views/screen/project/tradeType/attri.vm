@@ -1,0 +1,52 @@
+	#set($layout="")
+	## 动态交易属性 START  2011-7-14
+  <TABLE  class="c2">
+	#if($!{attriList} && $!{attriList.size()} > 0)
+		<tr >
+		#foreach($item in $!{attriList})
+			#set($index = ${velocityCount} - 1)
+			<th>
+				#if($!{item.key} != "bidRate" && $!{item.key} != "watchPassword" )
+					<span style="color:red;">*</span>
+				#end
+				$!{item.name}:
+			</th>
+        	<td> 
+    			<input type="hidden" name="tradeMetas[$index].key" value="$!{item.key}" />
+				<input type="hidden" name="tradeMetas[$index].name" value="$!{item.name}" />
+    			#if($!{item.showType} == "free" ||$!{item.showType} == "TEXT" )
+    				<input type="text" id="$!{item.key}" bdEventName="$!{item.key}" showtype="TEXT" name="tradeMetas[$index].inputValue" value='$!projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas})' class="inp"    />
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+    			#elseif($!{item.showType} == "select" ||$!{item.showType} == "SELECT" )
+    				<select id="$!{item.key}" name="tradeMetas[$index].inputValue" style="width:130px;" showtype="SELECT">
+						#foreach($selectItem in $!{item.selectValues})
+						<option value="$!{selectItem.key}" #if($projectDynamicUtils.contains($projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas}),$!{selectItem.key}))selected#end>  $!{selectItem.name} </option>
+						#end
+                    </select>	
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+				#elseif($!{item.showType} == "checkbox" ||$!{item.showType} == "CHECKBOX" )
+					#foreach($selectItem in $!{item.selectValues})
+						<input type="checkbox" id="$!{item.key}"  name="tradeMetas[$index].inputValue"  showtype="CHECKBOX" value="$!{selectItem.key}" #if($projectDynamicUtils.contains($projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas}),$!{selectItem.key}))checked=true#end />$!{selectItem.name}
+					#end
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+				#elseif($!{item.showType} == "radio" ||$!{item.showType} == "RADIO")
+					#foreach($selectItem in $!{item.selectValues}) 
+						 <input type="radio" id="$!{item.key}" name="tradeMetas[$index].inputValue"  showtype="RADIO" #if($projectDynamicUtils.contains($projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas}),$!{selectItem.key}))checked=true#end  value="$!{selectItem.key}" />$!{selectItem.name}
+					#end
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+				#elseif($!{item.showType} == "date" ||$!{item.showType} == "DATE")
+					#foreach($selectItem in $!{item.selectValues})
+						 <input type="text" id="$!{item.key}" name="tradeMetas[$index].inputValue" value='$!projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas})' readonly class="dateInput inp"   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01'})"     />
+						 <span class="error" id="$!{item.key}_remind_show_message" ></span>
+					#end
+				#else
+					<input type="text" id="$!{item.key}"  bdEventName="$!{item.key}"   showtype="TEXT"  name="tradeMetas[$index].inputValue" value='$!projectDynamicUtils.getKeyInputValue($!{item.key}, $!{tradeBo.tradeMetas})'  class="inp"   />
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+				#end
+    		</td>
+            #if($velocityCount % 2 == 0 && $velocityCount!=${attriList.size()} ) </tr><tr> #end 
+		#end
+        </tr>
+	#end
+
+</TABLE>

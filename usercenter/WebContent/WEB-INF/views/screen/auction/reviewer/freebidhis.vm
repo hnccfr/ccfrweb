@@ -1,0 +1,79 @@
+#set($title = '自由报价列表'+$!listing.code)
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/common.css" />
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+            <li><a class="cursor" href="#">自由报价列表</a></li>
+        </ul>
+    </div>
+    <div class="right-body">
+		<form id="searchForm" action="$!{appServer}/auction/reviewer/freebidhis.htm" method="post">
+		#springBind("brhquery.projectCode")
+		<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+		#springBind("brhquery.returnUrl")
+		<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+		#springBind("brhquery.from")
+		<input type="hidden" name="${status.expression}" value="$!{status.value}" />
+        </form>
+		<div class="searchBox">
+    		<table>
+				<tr>
+                    <th>项目编号：</th>
+                    <td>$!listing.code</td>
+					<th>项目名称：</th>
+                    <td>$!listing.title</td>
+				</tr>
+            </table>
+        </div>
+
+		 ##项目数据展示
+		<div class="listBox">
+			<div>
+				<table style="width:100%;">
+					<tr>
+                        <th>竞价人牌号</th>
+						<th>报价人</th>
+						<th>自由报价</th>
+						<th>评审状态</th>
+						<th>原因</th>
+						<th>操作人</th>
+                        <th>操作时间</th>
+					</tr>
+					#foreach($item in $!{brhquery.data})
+						<tr  #if($velocityCount%2==1) class="bg"   #end style="text-align:center;">
+							<td> &nbsp;$!{item.bidderTrademark}</td>
+							<td> &nbsp;$!{item.bidderAccount}</td>
+							<td> &nbsp;
+								#if($item.price && $!{item.price} != "")
+									$!commonUtils.getValuationUnitDesc($!{item.price},$!{listing.getValuationUnit()})
+								#else
+										-
+								#end
+							</td>
+							<td> &nbsp;$!EnumBidCheckStatusMap.get($!item.checkStatus)</td>
+							<td> &nbsp;
+								#if($item.checkRemark && $!{item.checkRemark} != "")
+									$!{item.checkRemark}
+								#else
+										-
+								#end
+							</td>
+							<td> &nbsp;$!{item.operatorDesc}</td>
+							<td> &nbsp;$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{item.gmtCreate})</td>
+						</tr>
+					#end
+				</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{brhquery},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+	<div class="qianm mt20">
+    <p class="tc">
+    	<button class="button-t3" type="button" onclick="javascript:#if($!{brhquery.returnUrl})window.location.href='$!{appServer}/$!{brhquery.returnUrl}'#else history.go(-1)#end">返回</button>
+    </p>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+<title>激活邮件-中部林业产权交易服务系统</title>
+</head>
+
+<body>
+
+<p>亲爱的$!{userAccount.name}</p>
+<p><font color="red">您的登录名为: </font>$!{userAccount.account}</p>
+<p>感谢您注册中部林业产权交易服务系统</p>
+<p>请点击以下链接,完成激活</p>
+<a href="$!{appServer.get('/user/activate.htm').addQueryData('a',$userAccount.id).addQueryData('c', $userAccount.activeCode)}" target="_blank">
+	$!{appServer.get('/user/activate.htm').addQueryData('a',$userAccount.id).addQueryData('c', $userAccount.activeCode)}</a>
+<p>(如果无法打开,请将链接复制到浏览器的地址栏中进行激活)</p>
+<br />
+<p>中部林业产权交易服务系统<br /></p>
+<br/>网址:$!{appServer.get('/index.htm')}
+</body>
+</html>

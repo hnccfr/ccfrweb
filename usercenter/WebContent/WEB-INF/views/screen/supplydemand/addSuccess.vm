@@ -1,0 +1,32 @@
+#set($layout = 'layout/default.vm')
+#set($title = '发布成功')
+
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/jquery.artDialog.source.js?skin=aero"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/artDialog/artDialog.iframeTools.js"></script>
+<script type="text/javascript" src="$!{imageServer}/scripts/supplydemand/list.js"></script>
+
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+        <ul>
+            <li>
+                <a class="cursor" href="#">新增结果</a>
+            </li>
+        </ul>
+	</div>
+    <div class="right-body">
+    	<div class="formBox">
+    		<input type="hidden" id="supplyDemandInfoId" name="supplyDemandInfoId" value="$!{supplyDemandInfoId}">
+    		<input type="hidden" id="reURL" name="reURL" value="$!{reURL}">
+            <div id="auditDiv" class="mag-t2">
+                <span>保存成功!</span>
+    			##提交审核
+				&nbsp;
+    			<a style="color:#0066CC" href="#" onclick="audit3();" title="提交审核">提交审核</a>
+				&nbsp;
+				<a style="color:#0066CC" href="$!{appServer}$!{reURL}" title="返回">返回</a>
+    		</div>
+    	</div>
+		<div>&nbsp;</div>
+    </div>
+	<div class="b"></div>
+</div>

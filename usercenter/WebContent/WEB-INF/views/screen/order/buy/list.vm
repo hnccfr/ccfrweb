@@ -1,0 +1,117 @@
+#set($title = '我的采购订单')
+<link rel="stylesheet" href="$!{imageServer}/styles/personal/common.css" />
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/datePicker.css" />
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/ui.css" />
+<script src="$!{imageServer}/scripts/jquery.datePicker.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.ui.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.bgiframe.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/order/list.js" type="text/javascript"></script>
+<div class="wrapperRight">
+	<div id="rightTab" class="t">
+                <ul>
+                    <li><a class="cursor" href="#">采购订单</a></li>
+                </ul>
+    </div>
+    <div class="right-body">
+        <form id="searchForm" action="$!{appServer}/order/buy/list.htm" method="post" onsubmit="return equalTime('startDate','endDate');">
+        <div class="searchBox">
+    		<table>
+                <tr>
+					#springBind("query.orderNo")
+                    <th>订单编号：</th>
+                    <td><input type="text" class="inp" name="${status.expression}" 
+						value="$!{status.value}" style="width:140px"/></td>
+                    #springBind("query.status")
+					<th>订单状态：</th>
+                    <td colspan=2>
+						<select class="select" id="state" name="${status.expression}" value="$!{status.value}">
+							<option value="" #if($!{status.value} == "") selected #end>请选择</option>
+							#foreach($item in $orderStatusList)
+							<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>	
+							#end
+						</select>
+					</td>
+                </tr>
+                <tr>
+                    <th>创建日期：</th>
+						#springBind("query.startDate")
+                    <td><input type="text" class="inp" id="startDate" name="${status.expression}" readonly="readonly" value='$!dateTool.format("yyyy-MM-dd",$!{status.value})'/> - 
+						#springBind("query.endDate")
+						<input type="text" class="inp" id="endDate" name="${status.expression}" readonly="readonly" value='$!dateTool.format("yyyy-MM-dd",$!{status.value})' />
+                    </td>
+					#springBind("query.tradingType")
+                    <th>订单类型：</th>
+                    <td>
+						<select class="select" name="${status.expression}" value="$!{status.value}" style="width:148px">
+							<option value="">请选择</option>
+							#foreach($item in $tradingTypeList)
+							<option value="$!{item.value}" #if($!{status.value} == $!{item.value}) selected #end>$!{item.name}</option>	
+							#end
+						</select>
+					</td>
+					<td><button type="submit" class="button-t3">查 询</button></td>
+                </tr>
+				 
+    		</table>
+		</div> <!-- 查询模块 END -->
+        </form>
+		
+		 ##项目数据展示
+		<div class="listBox">
+			<div>
+				<table style="width:100%;">
+					<tr>
+						<th class="list-order-field" id="orderNo">订单号</th>
+                        <th class="list-order-field" id="projectName">项目名称</th>
+                        <th class="list-order-field" id="tradingType">类型</th>
+						<th class="list-order-field" id="sellerAccount">卖家</th>
+						<th class="list-order-field" id="quantity">数量</th>
+						<th class="list-order-field" id="orderAmount">总金额</th>
+						<th class="list-order-field" id="status">订单状态</th>
+                        <th class="list-order-field" id="gmtCreate">下单时间</th>
+                        <th >操作</th>
+					</tr>
+					#foreach($item in $!{query.data})
+						<tr   style="text-align:center;">
+                                <td #if($item.waitOpt) style="background-color:#FFF999;" #end> &nbsp;<a style="text-align:center;font-weight:600; #if($item.waitOpt) background-color:#FFF999;color:red; #end" target="_blank" href="$!{appServer}/order/buy/detail.htm?orderNo=$!{item.orderNo}">$!{item.orderNo}</a></td> 
+                                <td> &nbsp;<a style="color:#0066CC" target="_blank" href="$!{appServer}/home/detail.htm?projectCode=$!{item.projectCode}">$!{item.projectName}</a></td> 
+								<td> &nbsp;$!{item.tradingTypeDesc}</td>
+								<td> &nbsp;$!{item.sellerAccount}</td>
+								<td> &nbsp;$!{item.quantity}$!{item.measureUnitDesc}</td>
+								<td> &nbsp;$!{item.orderAmountDesc}</td>
+								<td> &nbsp;$!{item.statusDesc}</td>
+								<td> &nbsp;$!dateTool.format("yyyy-MM-dd HH:mm:ss",$!{item.gmtCreate})</td>
+                                <td > &nbsp;
+                                    <a style="color:#0066CC" target="_blank" href="$!{appServer}/order/buy/detail.htm?orderNo=$!{item.orderNo}"  title="查看">查看</a>
+									#if($!item.isCouldConfirm($userAgent.account))
+										<a style="color:#0066CC"   href="JavaScript:orderBuyConfirm('$!{item.orderNo}');"  title="订单确认">订单确认</a>
+									#end
+									#if("$!item.status"=="wait_paygoods" && "$!item.hasSellerConfirm"=="Y" && "$!item.hasBuyerConfirm"=="Y")
+									<a style="color:#0066CC" href="JavaScript:orderPaygoodsConfirm('$!{item.orderNo}');" title="待买家付款">付款</a>
+									#end
+									#if("$!item.status"=="wait_checkgoods")
+									<a style="color:#0066CC" href="JavaScript:orderCheckGoods('$!{item.orderNo}')"  title="待买家确认交割">确认交割</a>
+									#end
+									#if("$!item.status"=="wait_checkticket")
+									<a style="color:#0066CC" href="JavaScript:orderCheckTicket('$!{item.orderNo}')"  title="待买家验票">验票</a>
+									#end
+									#if($!{item.status} == "finished" && $!{item.hasBuyerRank} == "N")
+									##<a style="color:#0066cc" href="$!{appServer}/evaluate/buyer.htm?orderNo=$!{item.orderNo}">评价</a>
+									#end
+                                </td>
+						</tr>
+					#end
+				</table>
+			</div>
+			<div>
+				##分页宏
+				#pager($!{query},'searchForm')
+			</div>
+		</div>
+	</div>
+	<div class="b"></div>
+	<div id="orderBuyConfirmDialog"></div>
+	<div id="paygoodsConfirmDialog"></div>
+	<div id="orderCheckGoodsDialog"></div>
+	<div id="orderCheckTicketDialog"></div>
+</div>

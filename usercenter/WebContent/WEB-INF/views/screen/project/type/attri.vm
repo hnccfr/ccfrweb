@@ -1,0 +1,46 @@
+	#set($layout="")
+	## 动态交易属性 START  2011-7-14
+  <TABLE  class="c2">
+	#if($!{projectTypeAttriList} && $!{projectTypeAttriList.size()} > 0) 
+		<tr>
+		#foreach($item in $!{projectTypeAttriList})
+			#set($index = ${velocityCount} - 1)
+			<th>#if($!{item.isRequired} == 1)<span style="color:red;">*</span>#end$!{item.keyTitle}:   </th>
+        	<td>
+    			<input type="hidden" name="metaValues[$index].metaKey" value="$!{item.keyName}" />
+				<input type="hidden" name="metaValues[$index].keyTitle" value="$!{item.keyTitle}" />
+				<input type="hidden" name="metaValues[$index].metaTitle" value="$!{item.keyName}" />
+				<input type="hidden" name="metaValues[$index].inputType" value="$!{item.inputType}" />
+				<input type="hidden" name="metaValues[$index].metaGroup" value="projectType" />
+    			#if($!{item.inputType} == "TEXT"||$!{item.inputType} == "text")
+    				<input type="text" id="$!{item.keyName}" showtype="$!{item.inputType}" name="metaValues[$index].metaValue"  #if($!{item.isRequired} == 1)class="required" #end   maxlength="1024"   value='$!projectDynamicUtils.getDynamicKeyValue($!{item.keyName}, $!{metesBo.metaValues})'    />
+    			#elseif($!{item.inputType} == "select"||$!{item.inputType} == "SELECT")
+    				<select name="metaValues[$index].metaValue" style="width:130px;" id="$!{item.keyName}" showtype="$!{item.inputType}" >
+						#foreach($key in $!{item.selectValueMap.keySet()})
+						<option value="$!{key}" #foreach($valueItem in $!{metesBo.metaValues})  #if($!projectDynamicUtils.isEq($!{valueItem.metaKey},$!{item.keyName},$!{valueItem.metaValue},$!{key}))selected #end  #end>$!{item.selectValueMap.get($!{key})} </option>
+						#end
+                    </select>				
+				#elseif($!{item.inputType} == "checkbox"||$!{item.inputType} == "CHECKBOX")  
+					#foreach($key in $!{item.selectValueMap.keySet()})
+						<input type="checkbox" id="$!{item.keyName}" showtype="$!{item.inputType}"   name="metaValues[$index].metaValue" value="$!{key}"  #if($!{item.isRequired} == 1)class="required" #end #foreach($valueItem in $!{metesBo.metaValues}) #if(${item.keyName} == ${valueItem.metaKey} && $projectDynamicUtils.contains(${valueItem.metaValue},${key})) checked=true #end #end  /> $!{item.selectValueMap.get($!{key})}
+					#end
+				#elseif($!{item.inputType} == "radio"||$!{item.inputType} == "RADIO")
+					#foreach($key in $!{item.selectValueMap.keySet()})
+						 <input type="radio" id="$!{item.keyName}" showtype="$!{item.inputType}"  name="metaValues[$index].metaValue"  #if($!{item.isRequired} == 1)class="required" #end  value="$!{key}" #foreach($valueItem in $!{metesBo.metaValues}) #if(${item.keyName} == ${valueItem.metaKey} && $projectDynamicUtils.contains(${valueItem.metaValue},${key})) checked=true #end #end >$!{item.selectValueMap.get($!{key})}
+					#end
+				#elseif($!{item.inputType} == "date"||$!{item.inputType} == "DATE")
+					#foreach($key in $!{item.selectValueMap.keySet()})
+						 <input type="text"  id="$!{item.keyName}" showtype="$!{item.inputType}"  name="$!{item.name}" value="$!{status.value}"   #if($!{item.isRequired} == 1)class="required" #end  value="$!dateTool.format('yyyy-MM-dd')"   onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01'})"    #foreach($valueItem in $!{metesBo.metaValues}) #if(${item.keyName} == ${valueItem.metaKey} )value="$!{valueItem.metaValue}" #end #end />
+						 <span class="error" id="$!{item.key}_remind_show_message" ></span>
+					#end
+				#else
+					<input type="text"  id="$!{item.keyName}" showtype="$!{item.inputType}"   name="metaValues[$index].inputValue"  #if($!{item.isRequired} == 1)class="required" #end   maxlength="1024" #foreach($valueItem in $!{metesBo.metaValues}) #if(${item.keyName} == ${valueItem.metaKey} )value="$!{valueItem.metaValue}" #end #end   />
+					<span class="error" id="$!{item.key}_remind_show_message" ></span>
+				#end
+    		</td>
+            #if($velocityCount % 2 == 0 && $velocityCount!=${attriList.size()} ) </tr><tr> #end 
+		#end
+        </tr>
+	#end
+
+</TABLE>

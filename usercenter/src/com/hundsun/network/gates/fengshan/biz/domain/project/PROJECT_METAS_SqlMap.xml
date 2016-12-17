@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROJECT_METAS">
+	<typeAlias alias="ProjectMetas" type="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectMetas"/>
+	<resultMap id="BaseResultMap" class="ProjectMetas">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="META_GROUP" property="metaGroup" jdbcType="VARCHAR" />
+		<result column="PROJECT_ID" property="projectId" jdbcType="DECIMAL" />
+		<result column="META_KEY" property="metaKey" jdbcType="VARCHAR" />
+		<result column="META_TITLE" property="metaTitle" jdbcType="VARCHAR" />
+		<result column="META_VALUE" property="metaValue" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, META_GROUP, PROJECT_ID, META_KEY, META_TITLE,
+		META_VALUE, OPERATOR,
+		GMT_CREATE,
+		GMT_MODIFY
+	</sql>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterClass="ProjectMetas">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where ID = #id:DECIMAL#
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterClass="ProjectMetas">
+		delete from PROJECT_METAS
+		where ID = #id:DECIMAL#
+	</delete>
+	
+	<insert id="insert"
+		parameterClass="ProjectMetas">
+		<selectKey keyProperty="id" resultClass="java.lang.Long"
+			type="pre">
+			select seq_project_metas.nextval as id from dual
+		</selectKey>
+		insert into PROJECT_METAS (ID, META_GROUP, PROJECT_ID,
+		META_KEY,
+		META_TITLE, META_VALUE, OPERATOR, GMT_CREATE,
+		GMT_MODIFY)
+		values
+		(#id:DECIMAL#, #metaGroup:VARCHAR#, #projectId:DECIMAL#,
+		#metaKey:VARCHAR#,
+		#metaTitle:VARCHAR#, #metaValue:VARCHAR#,
+		#operator:VARCHAR#, sysdate, sysdate)
+	</insert>
+	
+	<update id="updateByPrimaryKey"
+		parameterClass="ProjectMetas">
+		update PROJECT_METAS
+		set META_GROUP =
+		#metaGroup:VARCHAR#,
+		PROJECT_ID = #projectId:DECIMAL#,
+		META_KEY =
+		#metaKey:VARCHAR#,
+		META_TITLE = #metaTitle:VARCHAR#,
+		META_VALUE =
+		#metaValue:VARCHAR#,
+		OPERATOR = #operator:VARCHAR#,
+		GMT_CREATE =
+		#gmtCreate:TIMESTAMP#,
+		GMT_MODIFY = #gmtModify:TIMESTAMP#
+		where ID =
+		#id:DECIMAL#
+	</update>
+	<select id="selectByProjectId" resultMap="BaseResultMap"
+		parameterClass="long">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where PROJECT_ID = #projectId:DECIMAL# 
+	</select>
+	<select id="selectByProjectIdAndMetaGroup" resultMap="BaseResultMap"
+		parameterClass="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from PROJECT_METAS
+		where 
+			PROJECT_ID = #projectId:DECIMAL# AND
+			META_GROUP =#metaGroup:VARCHAR#
+	</select>
+	<select id="selectMetaValue" resultClass="java.lang.String" parameterClass="ProjectMetas">
+		select meta_value from project_metas where meta_key = #metaKey:VARCHAR# and project_id = #projectId:VARCHAR#
+	</select>
+	
+	<!-- 用此sql判断当前时间与拍卖开始时间大小 -->
+	<select id="selectBeforeBidStatrdTime" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select count(id) from project_metas where meta_key = 'bidStartTime'
+			and project_id = #projectId:DECIMAL#
+			and to_date(meta_value, 'yyyy-mm-dd hh24:mi:ss') > sysdate
+	</select>
+	
+	<!-- 查询当前时间是否大于报名开始时间 -->
+	<select id="selectAfterApplyStatrdTime" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select count(id) from project_metas where meta_key = 'applyStartTime'
+			and project_id = #projectId:DECIMAL#
+			and sysdate > to_date(meta_value, 'yyyy-mm-dd hh24:mi:ss')
+	</select>
+
+	<!-- 查询当前时间是否小于报名结束时间 -->
+	<select id="selectBeforeApplyEndTime" resultClass="java.lang.Integer" parameterClass="java.lang.Long">
+		select count(id) from project_metas where meta_key = 'applyEndTime'
+			and project_id = #projectId:DECIMAL#
+			and to_date(meta_value, 'yyyy-mm-dd hh24:mi:ss') > sysdate
+	</select>	
+</sqlMap>

@@ -1,0 +1,193 @@
+#set($title = '项目详情')
+##set($layout = 'screen/project/home.vm')  
+#set($layout = 'layout/home.vm') 
+
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<script type="text/javascript" src="$!{imageServer}/scripts/jquery.ui.js"></script>
+<script type="text/javascript" src="${imageServer}/scripts/client/clientTrade.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$(".list table tr:even").addClass("bg");
+});
+$(document).ready(function(){
+$("#pict_show_tab").bind("click",function(){
+	$("img[name='limited']").each(function(){
+		var imgWdth=$(this).attr("width");
+		if(imgWdth>980){
+		$(this).attr("width",980);
+		}
+		$(this).click(function(){
+			window.open($(this).attr("src"));
+		});
+	});
+});
+	
+});
+$(function(){
+	$(".property .hd span:first").addClass("selected");
+	$(".property .bd .content:first").show().siblings().hide();
+	var tab_menu=$(".property .hd span")
+	tab_menu.click(function()
+	 {
+		 $(this).addClass("selected").siblings().removeClass("selected");
+		 var index=tab_menu.index(this);
+		 $(".property .bd .content").eq(index).show().siblings().hide();
+	 })
+});
+</script>
+<div class="path mt10">当前位置：<a href="$!{cmsServer}">首页</a> &raquo; <a href="$!{appServer}/home/list.htm">交易中心</a> &raquo; 项目详情</div>
+<div class="hr10"></div>
+<div class="pt_information">
+	<div class="hd">
+    	项目信息
+    </div>
+    <div class="bd">
+    	<div class="pic">
+			<a href="#">
+				#if($stringUtils.isEmpty(${projectListing.picturePath}))
+					<img src="$!{imageServer}/images/nophoto.jpg" width="118" height="109" />
+				#else
+					<img src="$!{uploadServer}/$!{projectListing.picturePath}" width="118" height="109" />
+				#end
+			</a>
+		</div>
+        <div class="content">
+       	  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        	  <tr>
+        	    <td height="26"  colspan="2" >
+					项目名称: $!{projectListing.title}
+					#if($!{projectListing.attachedFilePath})
+						&nbsp;&nbsp;<a style="color:#0066CC; text-decoration: underline;" href="$!{uploadServer}/$!{projectListing.attachedFilePath}">[附件下载]</a>
+					#end
+				</td>
+        	    <td>项目类型:$!{projectListing.projectTypeCodeDesc}</td>
+        	    <td>挂牌类型:$!{projectListing.listingTypeDesc}</td> 
+      	    </tr>
+        	 <tr>
+				 <td>交易方式:$!{projectListing.tradingTypeDesc}</td>
+        	    <td height="26">标准规格: <a href="$!{appServer}/home/standard/show.htm?sid=$!{projectListing.breedStandardId}" target="_blank" title="点击查看规格详细">$!{projectListing.breedStandard}</a></td>
+				<td>挂牌开始时间: $!dateTool.format("yyyy-MM-dd",$!{projectListing.listingStartTime})</td>
+        	    <td>挂牌结束时间: $!dateTool.format("yyyy-MM-dd",$!{projectListing.listingEndTime})</td>
+				
+      	    </tr>
+        	  <tr>
+				<td>支付方式: $!{projectListing.paymentTypeDesc}</td>
+        	    <td height="26">计量单位: $!{projectListing.measureUnitDesc}</td>
+        	    <td>计价单位: $!{projectListing.valuationUnitDesc}</td>
+        	    <td>挂牌数量: $!{projectListing.quantity}$!{projectListing.measureUnitDesc}</td>
+        	     </tr>
+        	  <tr>
+				#if("$!{projectListing.projectTypeCode}"=="0|3")
+					<td>挂牌参考价:$!commonUtils.getValuationUnitDesc($!{projectListing.listingPrice},$!{projectListing.valuationUnit})(总价)</td>
+			    #else
+					<td>挂牌参考价:$!commonUtils.getValuationUnitDesc($!{projectListing.listingPrice},$!{projectListing.valuationUnit})/$!{projectListing.measureUnitDesc}</td>
+			    #end
+        	    <td height="26">交收时间: $!dateTool.format("yyyy-MM-dd",$!{projectListing.deliveryDate})</td>
+				<td>提供发票: $!{projectListing.invoiceDesc}</td>
+				##<td>交收方式: $!{projectListing.deliveryTypeDesc}</td>
+				
+      	    </tr>
+            <tr>
+				#if($!{projectListing.listingType} == "sell")
+    				##<td>交货仓库: $!{projectListing.storehouse}</td>
+            	    <td height="26" colspan="2">地址: $!{projectListing.area}$!{projectListing.address}</td>
+    				<td>剩余挂牌保证金：
+						$!{projectListing.depositDesc}
+    				</td>
+				#else
+					<td height="26" colspan="2">地址: $!{projectListing.deliveryPlace}</td>
+    				<td colspan="2">剩余挂牌保证金：
+						$!{projectListing.depositDesc}
+    				</td>
+				#end
+       	    </tr>
+			<tr>
+				<td colspan="3">&nbsp;</td> 
+				<td>
+				#if($!{projectListing.status} == "T" && ($!{projectListing.tradingType}=="bidOrder" || $!{projectListing.tradingType}== "mulitBidOrder"))
+					<a href="$!{clientServer}/auction/join.htm?projectCode=$!{projectListing.code}" title="进入大厅"  class="dating"></a>
+				#end
+				</td>
+				
+			</tr>
+      	  </table>
+        </div>
+    </div>
+</div>
+<div class="hr10"></div>
+<div class="property">
+		<div class="hd"><span class="selected">更多属性</span><span >交易属性</span><span id="pict_show_tab">图片展示</span></div>
+		<div class="bd">
+			<div class="content">
+				
+				<div class="property_list">
+					#if(!${projectListing.breedStandardId})
+                	<ul>
+						 #foreach($item in $!{projectListing.attriMeta})
+                        <li>$!{item.attr.keyTitle}：
+							#if($!{item.attr.inputType}=="CHECKBOX" ||$!{item.attr.inputType}=="checkbox" || $!{item.attr.inputType}=="RADIO"|| $!{item.attr.inputType}=="radio"||$!{item.attr.inputType}=="SELECT"||$!{item.attr.inputType}=="select")
+								#foreach($valueItem in $!{item.attr.selectValues})
+									#if($projectDynamicUtils.contains($!{item.meta.metaValue},${valueItem.key}))
+										${valueItem.name}
+									#end
+    							#end
+							#elseif($!{item.attr.inputType}=="DATE" ||$!{item.attr.inputType}=="date" )
+								$!{item.meta.metaValue}
+							#else
+								$!{item.meta.metaValue}
+							#end
+						</li>
+						#end
+                    </ul>
+					#else
+						没有数据！
+					#end
+                </div>
+            </div>
+           <div class="content">
+            	<div class="property_list">
+					<ul>
+                        #foreach($item in $!{projectListing.tradeMeta})
+                        <li>$!{item.attr.keyTitle}：
+							#if($!{item.attr.inputType}=="CHECKBOX" ||$!{item.attr.inputType}=="checkbox" || $!{item.attr.inputType}=="RADIO"|| $!{item.attr.inputType}=="radio"||$!{item.attr.inputType}=="SELECT"||$!{item.attr.inputType}=="select")
+								#foreach($valueItem in $!{item.attr.selectValues})
+									#if($projectDynamicUtils.contains($!{item.meta.metaValue},${valueItem.key}))
+										${valueItem.name}
+									#end
+    							#end
+							#elseif($!{item.attr.inputType}=="DATE" ||$!{item.attr.inputType}=="date" )
+								$!{item.meta.metaValue}
+							#else
+								$!{item.meta.metaValue}
+							#end
+						</li>
+						#end
+					</ul>
+				</div>
+            </div>
+			 <div class="content">
+            	<div class="property_list">
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath1}))
+						<img name="limited" src="$!{uploadServer}/$!{projectListing.picturePath1}"  />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath2}))
+						<img name="limited"  src="$!{uploadServer}/$!{projectListing.picturePath2}"  />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath3}))
+						<img name="limited"  src="$!{uploadServer}/$!{projectListing.picturePath3}"  />
+					#end
+					#if($!stringUtils.isNotEmpty(${projectListing.picturePath4}))
+						<img name="limited"  src="$!{uploadServer}/$!{projectListing.picturePath4}" />
+					#end
+				</div>
+            </div>
+		</div>
+		<div class="details">
+			<p>#direct($!{projectListing.description})</p>
+		</div>
+</div>
+<div class="hr10"></div>
+<div id="clientTradeDiv">
+	 
+</div>

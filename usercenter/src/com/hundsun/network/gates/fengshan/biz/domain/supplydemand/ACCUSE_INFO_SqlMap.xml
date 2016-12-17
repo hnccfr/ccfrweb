@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ACCUSE_INFO">
+	<typeAlias alias="AccuseInfo"
+		type="com.hundsun.network.gates.fengshan.biz.domain.supplydemand.AccuseInfo"/>
+	<resultMap id="BaseResultMap" class="AccuseInfo">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="INFO_ID" property="infoId" jdbcType="DECIMAL" />
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="REASON" property="reason" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="ACCUSER" property="accuser" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		t_sdia.ID,
+		t_sdia.INFO_ID,
+		t_sdia.TYPE,
+		t_sdia.REASON,
+		t_sdia.STATUS,
+		t_sdia.ACCUSER,
+		t_sdia.GMT_CREATE,
+		t_sdia.GMT_MODIFY,
+	</sql>	
+	
+	<!-- 通过id查询举报表中待审核的供求信息 -->
+	<select id="selectAccuseInfoById" parameterClass="Long" resultMap="BaseResultMap">
+		SELECT * FROM 
+			SUPPLY_DEMAND_INFO_ACCUSE t_sdia
+		WHERE 
+			t_sdia.INFO_ID = #infoId:DECIMAL# 
+		AND
+			STATUS='A'
+	</select>
+	
+	<!-- 通过id查询举报表中举报不通过的供求信息 -->
+	<select id="selectAccuseReasonById" parameterClass="Long" resultMap="BaseResultMap">
+		SELECT * FROM 
+			SUPPLY_DEMAND_INFO_ACCUSE t_sdia
+		WHERE 
+			t_sdia.INFO_ID = #infoId:DECIMAL# 
+		AND
+			STATUS='E'
+	</select>
+	
+	<!-- 删除举报表中的供求信息 -->
+	<delete id="deleteInfo" parameterClass="Long" >
+		delete from
+		SUPPLY_DEMAND_INFO_ACCUSE t_sdia
+		where t_sdia.INFO_ID = #infoId:DECIMAL#
+	</delete>
+		
+	<insert id="accuse" parameterClass="AccuseInfo">
+	insert into SUPPLY_DEMAND_INFO_ACCUSE
+	(ID,INFO_ID,TYPE,REASON,STATUS,ACCUSER,GMT_MODIFY,GMT_CREATE) 
+	values (seq_SUPPLY_DEMAND_INFO_ACCUSE.NextVal ,#infoId:DECIMAR#,#type:VARCHAR#,
+	#reason:VARCHAR#,#status:CHAR#,#accuser:VARCHAR#,sysdate,sysdate)
+	</insert>
+	
+	<!-- 更新过期供求信息对应的未操作过的举报信息状态 -->
+	<update id="updateAccuseInfoOverdue">
+		update SUPPLY_DEMAND_INFO_ACCUSE sdia
+		set sdia.STATUS = 'U'
+		where info_id in
+		(select id from SUPPLY_DEMAND_INFO where STATUS = 'O') 
+		and sdia.STATUS ='A'
+	</update>
+</sqlMap>

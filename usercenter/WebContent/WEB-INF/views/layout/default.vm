@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+        <title>$!{title}</title>
+        <link rel="stylesheet" href="$!{imageServer}/styles/base.css" type="text/css">
+            <link rel="stylesheet" href="$!{imageServer}/styles/manage.css" type="text/css">
+                <link rel="stylesheet" href="$!{imageServer}/styles/validate.css" type="text/css">
+                    <script src="$!{imageServer}/scripts/jquery-1.4.4.min.js" type="text/javascript"></script>
+                    <script src="$!{imageServer}/scripts/menu.cookie.js" type="text/javascript"></script>
+                    <script src="$!{imageServer}/scripts/common.js" type="text/javascript"></script>
+                    <script >
+                        var appServer = "$!{appServer}";
+                        var imageServer = "$!{imageServer}";
+                        var clientServer="$!{clientServer}";
+                        var uploadServer="$!{uploadServer}";
+                    </script>
+</head>
+<body>
+    <div class="main">
+        $contain.get('/contain/header.htm')
+        <!-- wrapper -->
+        <div id="wrapperBase">
+            $contain.get('/contain/leftmenu.htm')
+            $screen_content
+            <div class="clear"></div>
+        </div>
+        $contain.get('/contain/footer.htm')
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

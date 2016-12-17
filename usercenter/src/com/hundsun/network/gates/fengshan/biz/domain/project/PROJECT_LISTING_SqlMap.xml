@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="PROJECT_LISTING">
+	<typeAlias alias="ProjectListing"
+		type="com.hundsun.network.gates.fengshan.biz.domain.project.ProjectListing" />
+	<typeAlias alias="ProjectListingQuery"
+		type="com.hundsun.network.gates.fengshan.biz.domain.query.ProjectListingQuery" />
+	<typeAlias alias="DateStatistics"
+		type="com.hundsun.network.gates.fengshan.biz.domain.common.DateStatistics" />
+	<typeAlias alias="AuctionMulitBidProject" 
+		type="com.hundsun.network.gates.fengshan.biz.domain.auction.AuctionMulitBidProject"/>
+	<typeAlias alias="AuctionMulitBidProjectQuery" 
+		type="com.hundsun.network.gates.fengshan.biz.domain.query.AuctionMulitBidProjectQuery"/>
+	
+	<resultMap id="BaseResultMap" class="ProjectListing">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+		<result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+		<result column="LISTING_TYPE" property="listingType" jdbcType="VARCHAR" />
+		<result column="MEASURE_UNIT" property="measureUnit" jdbcType="VARCHAR" />
+		<result column="QUANTITY" property="quantity" jdbcType="DECIMAL" />
+		<result column="VALUATION_UNIT" property="valuationUnit"
+			jdbcType="VARCHAR" />
+		<result column="LISTING_PRICE" property="listingPrice"
+			jdbcType="DECIMAL" />
+		<result column="MULTIPLE_BASE" property="multipleBase"
+			jdbcType="DECIMAL" />
+		<result column="MAX_QUANTITY" property="maxQuantity" jdbcType="DECIMAL" />
+		<result column="MIN_QUANTITY" property="minQuantity" jdbcType="DECIMAL" />
+		<result column="RETAIL" property="retail" jdbcType="CHAR" />
+		<result column="PROJECT_TYPE_CODE" property="projectTypeCode"
+			jdbcType="VARCHAR" />
+		<result column="BREED_STANDARD" property="breedStandard"
+			jdbcType="VARCHAR" />
+		<result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+		<result column="DELIVERY_DATE" property="deliveryDate"
+			jdbcType="TIMESTAMP" />
+		<result column="DELIVERY_PLACE" property="deliveryPlace"
+			jdbcType="VARCHAR" />
+		<result column="DELIVERY_TYPE" property="deliveryType"
+			jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="VARCHAR" />
+		<result column="LISTING_START_TIME" property="listingStartTime"
+			jdbcType="TIMESTAMP" />
+		<result column="LISTING_END_TIME" property="listingEndTime"
+			jdbcType="TIMESTAMP" />
+		<result column="INVOICE" property="invoice" jdbcType="CHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="PROCESS_AUDIT_NODES" property="processAuditNodes"
+			jdbcType="VARCHAR" />
+		<result column="AUDIT_NODE" property="auditNode" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATOR_TYPE" property="creatorType" jdbcType="VARCHAR" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="DEPOSIT" property="deposit" jdbcType="DECIMAL" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="AREA" property="area" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="LINK_MAN" property="linkMan" jdbcType="VARCHAR" />
+		<result column="ZIP_CODE" property="zipCode" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+		<result column="PICTURE_PATH" property="picturePath" jdbcType="VARCHAR" />
+		<result column="PICTURE_PATH1" property="picturePath1"
+			jdbcType="VARCHAR" />
+		<result column="PICTURE_PATH2" property="picturePath2"
+			jdbcType="VARCHAR" />
+		<result column="PICTURE_PATH3" property="picturePath3"
+			jdbcType="VARCHAR" />
+		<result column="PICTURE_PATH4" property="picturePath4"
+			jdbcType="VARCHAR" />
+		<result column="BREED_STANDARD_ID" property="breedStandardId"
+			jdbcType="DECIMAL" />
+		<result column="DESCRIPTION" property="description" jdbcType="CLOB" />
+		<result column="ATTACHED_FILE_PATH" property="attachedFilePath" jdbcType="VARCHAR" />
+		<result column="SUBSTATION_ID" property="substationId" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="queryResultMap" class="ProjectListing"
+		extends="BaseResultMap">
+		<result column="NAME" property="projectTypeCodeDesc" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap class="DateStatistics" id="DateStatisticsMap">
+		<result column="STATISTICS_DATE" property="statisticsDate" 
+			jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+	</resultMap>
+	
+	<resultMap class="AuctionMulitBidProject" id="AuctionMulitBidProjectMap">
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+		<result column="PROJECT_TITLE" property="projectTitle" jdbcType="VARCHAR" />
+		<result column="PROJECT_TYPE_CODE" property="projectTypeCode" jdbcType="VARCHAR" />
+		<result column="PROJECT_TYPE_NAME" property="projectTypeName" jdbcType="VARCHAR" />
+		<result column="TRADING_TYPE" property="tradingType" jdbcType="VARCHAR" />
+		<result column="REVIEWER" property="reviewer" jdbcType="VARCHAR" />
+		<result column="BID_START_TIME" property="bidStartTime" jdbcType="VARCHAR" />
+		<result column="PROJECT_STATUS" property="projectStatus" jdbcType="VARCHAR" />
+		<result column="ACTIVE_TAG" property="activeTag" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		t_pl.ID,
+		t_pl.TITLE,
+		t_pl.CODE,
+		t_pl.USER_ID,
+		t_pl.USER_ACCOUNT,
+		t_pl.LISTING_TYPE,
+		t_pl.MEASURE_UNIT,
+		t_pl.QUANTITY,
+		t_pl.VALUATION_UNIT,
+		t_pl.LISTING_PRICE,
+		t_pl.MULTIPLE_BASE,
+		t_pl.MAX_QUANTITY,
+		t_pl.MIN_QUANTITY,
+		t_pl.RETAIL,
+		t_pl.PROJECT_TYPE_CODE,
+		t_pl.BREED_STANDARD,
+		t_pl.TRADING_TYPE,
+		t_pl.DELIVERY_DATE,
+		t_pl.DELIVERY_PLACE,
+		t_pl.DELIVERY_TYPE,
+		t_pl.PAYMENT_TYPE,
+		t_pl.LISTING_START_TIME,
+		t_pl.LISTING_END_TIME,
+		t_pl.INVOICE,
+		t_pl.STATUS,
+		t_pl.PROCESS_AUDIT_NODES,
+		t_pl.AUDIT_NODE,
+		t_pl.CREATOR,
+		t_pl.CREATOR_TYPE,
+		t_pl.OPERATOR,
+		t_pl.GMT_CREATE,
+		t_pl.GMT_MODIFY,
+		t_pl.DEPOSIT,
+		t_pl.PROVINCE,
+		t_pl.CITY,
+		t_pl.AREA,
+		t_pl.ADDRESS,
+		t_pl.LINK_MAN,
+		t_pl.ZIP_CODE,
+		t_pl.PHONE,
+		t_pl.STOREHOUSE,
+		t_pl.PICTURE_PATH,
+		t_pl.PICTURE_PATH1,
+		t_pl.PICTURE_PATH2,
+		t_pl.PICTURE_PATH3,
+		t_pl.PICTURE_PATH4,
+		t_pl.BREED_STANDARD_ID,
+		t_pl.DESCRIPTION,
+		t_pl.ATTACHED_FILE_PATH,
+		t_pl.SUBSTATION_ID
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="queryResultMap"
+		parameterClass="long">
+		select
+		<include refid="Base_Column_List" />
+		,t_pt.NAME as NAME
+		from PROJECT_LISTING t_pl left join PROJECT_TYPE
+		t_pt
+		on t_pl.PROJECT_TYPE_CODE = t_pt.CODE
+		where t_pl.ID = #id:DECIMAL#
+	</select>
+
+	<insert id="insert" parameterClass="ProjectListing">
+		insert into PROJECT_LISTING
+		(ID, TITLE, CODE, USER_ID, USER_ACCOUNT,
+		LISTING_TYPE, MEASURE_UNIT,
+		QUANTITY, VALUATION_UNIT,
+		LISTING_PRICE, MULTIPLE_BASE, MAX_QUANTITY,
+		MIN_QUANTITY,
+		RETAIL, PROJECT_TYPE_CODE, BREED_STANDARD, TRADING_TYPE,
+		DELIVERY_DATE, DELIVERY_PLACE, DELIVERY_TYPE, PAYMENT_TYPE,
+		LISTING_START_TIME, LISTING_END_TIME, INVOICE, STATUS,
+		PROCESS_AUDIT_NODES, AUDIT_NODE, CREATOR, CREATOR_TYPE,
+		OPERATOR,
+		GMT_CREATE, GMT_MODIFY,DEPOSIT,
+		PROVINCE,CITY,AREA,ADDRESS,LINK_MAN,ZIP_CODE,PHONE,STOREHOUSE,
+		PICTURE_PATH, PICTURE_PATH1,
+		PICTURE_PATH2, PICTURE_PATH3, PICTURE_PATH4, BREED_STANDARD_ID)
+		values (#id:DECIMAL#,
+		#title:VARCHAR#,
+		#code:VARCHAR#, #userId:DECIMAL#,
+		#userAccount:VARCHAR#,
+		#listingType:VARCHAR#, #measureUnit:VARCHAR#,
+		#quantity:DECIMAL#,
+		#valuationUnit:VARCHAR#,
+		#listingPrice:DECIMAL#,
+		#multipleBase:DECIMAL#, #maxQuantity:DECIMAL#,
+		#minQuantity:DECIMAL#,
+		#retail:CHAR#, #projectTypeCode:VARCHAR#, #breedStandard:VARCHAR#,
+		#tradingType:VARCHAR#,
+		#deliveryDate:TIMESTAMP#,
+		#deliveryPlace:VARCHAR#, #deliveryType:VARCHAR#,
+		#paymentType:VARCHAR#,
+		#listingStartTime:TIMESTAMP#,
+		#listingEndTime:TIMESTAMP#, #invoice:CHAR#, #status:VARCHAR#,
+		#processAuditNodes:VARCHAR#, #auditNode:VARCHAR#, #creator:VARCHAR#,
+		#creatorType:VARCHAR#,
+		#operator:VARCHAR#, #gmtCreate:TIMESTAMP#,
+		#gmtModify:TIMESTAMP#,#deposit#,
+		#province#,#city#,#area#,#address#,#linkMan#,#zipCode#,#phone#,#storehouse#,
+		#picturePath:VARCHAR#,
+		#picturePath1:VARCHAR#, #picturePath2:VARCHAR#, #picturePath3:VARCHAR#,
+		#picturePath4:VARCHAR#,
+		#breedStandardId:DECIMAL#, #description:CLOB#)
+	</insert>
+
+
+	<update id="updateByPrimaryKey" parameterClass="ProjectListing">
+		update
+		PROJECT_LISTING
+		set TITLE = #title:VARCHAR#,
+		CODE = #code:VARCHAR#,
+		USER_ID = #userId:DECIMAL#,
+		USER_ACCOUNT = #userAccount:VARCHAR#,
+		LISTING_TYPE = #listingType:VARCHAR#,
+		MEASURE_UNIT =
+		#measureUnit:VARCHAR#,
+		QUANTITY = #quantity:DECIMAL#,
+		VALUATION_UNIT =
+		#valuationUnit:VARCHAR#,
+		LISTING_PRICE = #listingPrice:DECIMAL#,
+		MULTIPLE_BASE = #multipleBase:DECIMAL#,
+		MAX_QUANTITY =
+		#maxQuantity:DECIMAL#,
+		MIN_QUANTITY = #minQuantity:DECIMAL#,
+		RETAIL =
+		#retail:CHAR#,
+		PROJECT_TYPE_CODE = #projectTypeCode:VARCHAR#,
+		BREED_STANDARD = #breedStandard:VARCHAR#,
+		TRADING_TYPE =
+		#tradingType:VARCHAR#,
+		DELIVERY_DATE = #deliveryDate:TIMESTAMP#,
+		DELIVERY_PLACE = #deliveryPlace:VARCHAR#,
+		DELIVERY_TYPE =
+		#deliveryType:VARCHAR#,
+		PAYMENT_TYPE = #paymentType:VARCHAR#,
+		LISTING_START_TIME = #listingStartTime:TIMESTAMP#,
+		LISTING_END_TIME =
+		#listingEndTime:TIMESTAMP#,
+		INVOICE = #invoice:CHAR#,
+		STATUS =
+		#status:VARCHAR#,
+		PROCESS_AUDIT_NODES = #processAuditNodes:VARCHAR#,
+		AUDIT_NODE = #auditNode:VARCHAR#,
+		CREATOR = #creator:VARCHAR#,
+		CREATOR_TYPE = #creatorType:VARCHAR#,
+		OPERATOR = #operator:VARCHAR#,
+		GMT_CREATE = #gmtCreate:TIMESTAMP#,
+		GMT_MODIFY = #gmtModify:TIMESTAMP#,
+		DEPOSIT=#deposit#,
+		PROVINCE=#province#,CITY=#city#,AREA=#area#,ADDRESS=#address#,
+		LINK_MAN=#linkMan#,ZIP_CODE=#zipCode#,PHONE=#phone#,STOREHOUSE=#storehouse#,
+		PICTURE_PATH = #picturePath:VARCHAR#,
+		PICTURE_PATH1 = #picturePath1:VARCHAR#,
+		PICTURE_PATH2 = #picturePath2:VARCHAR#,
+		PICTURE_PATH3 = #picturePath3:VARCHAR#,
+		PICTURE_PATH4 = #picturePath4:VARCHAR#,
+		BREED_STANDARD_ID = #breedStandardId:DECIMAL#,
+		DESCRIPTION = #description:CLOB#
+
+		where ID = #id:DECIMAL#
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterClass="long">
+		delete from
+		PROJECT_LISTING
+		where ID = #id:DECIMAL#
+	</delete>
+
+	<!-- 分页头信息 -->
+	<sql id="pageSQLHead">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				SELECT * FROM (SELECT ROWNUM AS NUMROW, p.* from   (
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+
+	<!-- 分页尾信息 -->
+	<sql id="pageSQLFoot">
+		<isNotEmpty property="beginIndex">
+			<isNotEmpty property="endIndex">
+			<![CDATA[
+				) p  where rownum<=#endIndex#) WHERE NUMROW >= #beginIndex#
+			]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+
+	<sql id="queryProjectListing_where">
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="sysTimeFlag">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) <= TRUNC(sysdate) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="sysTimeFlag">
+			<![CDATA[ TRUNC(t_pl.LISTING_END_TIME) >= TRUNC(sysdate) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="title">
+			<![CDATA[  t_pl.TITLE like '%'||#title#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="code">
+			<![CDATA[ t_pl.CODE  like '%'||#code#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="userAccount">
+			<![CDATA[ t_pl.USER_ACCOUNT like '%'||#userAccount#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="storehouse">
+			<![CDATA[ t_pl.STOREHOUSE like '%'||#storehouse#||'%' ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="projectTypeCode">
+			<![CDATA[ t_pl.PROJECT_TYPE_CODE = #projectTypeCode# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="projectRootTypeCode">
+				<!-- 查询条件中，项目类型根代码‘other’，表示查非林权的其它项目 -->
+				<isEqual property="projectRootTypeCode" compareValue="other">
+					<![CDATA[ t_pl.PROJECT_TYPE_CODE NOT LIKE '0|3%' ]]>
+				</isEqual>
+				<isNotEqual property="projectRootTypeCode" compareValue="other">
+					<![CDATA[ t_pl.PROJECT_TYPE_CODE LIKE '$projectRootTypeCode$%' ]]>
+				</isNotEqual>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingType">
+			<![CDATA[ t_pl.LISTING_TYPE = #listingType# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="status">
+			<![CDATA[ t_pl.STATUS = #status# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingStartTimeFrom">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) >= TRUNC(#listingStartTimeFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingStartTimeTo">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) <= TRUNC(#listingStartTimeTo#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingEndTimeFrom">
+			<![CDATA[ TRUNC(t_pl.LISTING_END_TIME) >= TRUNC(#listingEndTimeFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingEndTimeTo">
+			<![CDATA[ TRUNC(t_pl.LISTING_END_TIME) <= TRUNC(#listingEndTimeTo#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="deliveryTimeFrom">
+			<![CDATA[ TRUNC(t_pl.DELIVERY_DATE) >= TRUNC(#deliveryTimeFrom#) ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="deliveryTimeTo">
+			<![CDATA[ TRUNC(t_pl.DELIVERY_DATE) <= TRUNC(#deliveryTimeTo#) ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="and" property="tradingType">
+			<![CDATA[ t_pl.TRADING_TYPE = #tradingType# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="breedStandard">
+			<![CDATA[ t_pl.BREED_STANDARD = #breedStandard# ]]>
+			</isNotEmpty>
+			<!--
+				<isNotEmpty prepend="and" property="listingType"> <![CDATA[
+				t_pl.LISTING_TYPE = #listingType# ]]> </isNotEmpty>
+			-->
+			<isNotEmpty prepend="and" property="deliveryDate">
+			<![CDATA[ t_pl.LISTING_START_TIME <= #deliveryDate#+3 ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="deliveryDate">
+			<![CDATA[ t_pl.LISTING_END_TIME >= #deliveryDate#-3 ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingPrice">
+			<![CDATA[ t_pl.LISTING_PRICE <= #listingPrice#*1.1 ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="listingPrice">
+			<![CDATA[ t_pl.LISTING_PRICE >= #listingPrice#*0.9 ]]>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+	<sql id="queryProjectListing_order">
+		<dynamic prepend="order by ">
+			<isNotEmpty property="orderStr">
+				<isEqual property="orderStr" compareValue="prjCode asc">t_pl.CODE asc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="prjName asc">t_pl.TITLE asc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="prjType asc">t_pl.PROJECT_TYPE_CODE
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="prjDeadTime asc">t_pl.LISTING_END_TIME
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="prjStartTime asc">t_pl.LISTING_START_TIME
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="prjTradeType asc">t_pl.TRADING_TYPE
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="prjStatus asc">t_pl.STATUS asc
+				</isEqual>
+
+				<isEqual property="orderStr" compareValue="unitPrice asc">t_pl.LISTING_PRICE
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="quantity asc">t_pl.QUANTITY asc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="listType asc">t_pl.LISTING_TYPE
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="standard asc">t_pl.BREED_STANDARD
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="deliveryDate asc">t_pl.DELIVERY_DATE
+					asc</isEqual>
+				<isEqual property="orderStr" compareValue="warehouse asc">t_pl.STOREHOUSE
+					asc</isEqual>
+
+
+				<isEqual property="orderStr" compareValue="prjCode desc">t_pl.CODE desc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="prjName desc">t_pl.TITLE desc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="prjType desc">t_pl.PROJECT_TYPE_CODE
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="prjDeadTime desc">t_pl.LISTING_END_TIME
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="prjStartTime desc">t_pl.LISTING_START_TIME
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="prjTradeType desc">t_pl.TRADING_TYPE
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="prjStatus desc">t_pl.STATUS desc
+				</isEqual>
+
+				<isEqual property="orderStr" compareValue="unitPrice desc">t_pl.LISTING_PRICE
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="quantity desc">t_pl.QUANTITY desc
+				</isEqual>
+				<isEqual property="orderStr" compareValue="listType desc">t_pl.LISTING_TYPE
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="standard desc">t_pl.BREED_STANDARD
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="deliveryDate desc">t_pl.DELIVERY_DATE
+					desc</isEqual>
+				<isEqual property="orderStr" compareValue="warehouse desc">t_pl.STOREHOUSE
+					desc</isEqual>
+			</isNotEmpty>
+			<isEmpty property="orderStr">
+				t_pl.GMT_MODIFY desc
+			</isEmpty>
+		</dynamic>
+	</sql>
+	<select id="queryProjectListingCount" parameterClass="ProjectListingQuery"
+		resultClass="int">
+		select count(1) from
+		PROJECT_LISTING t_pl
+		<include refid="queryProjectListing_where" />
+	</select>
+
+	<select id="queryProjectListing" parameterClass="ProjectListingQuery"
+		resultMap="queryResultMap">
+		<include refid="pageSQLHead" />
+		select
+		<include refid="Base_Column_List" />
+		,t_pt.NAME as NAME
+
+		from PROJECT_LISTING t_pl left join PROJECT_TYPE t_pt
+		on
+		t_pl.PROJECT_TYPE_CODE = t_pt.CODE
+
+		<include refid="queryProjectListing_where" />
+		<include refid="queryProjectListing_order" />
+		<include refid="pageSQLFoot" />
+	</select>
+
+	<!-- 根据项目code获得挂牌项目信息 -->
+	<select id="selectProjectListingByCode" parameterClass="java.lang.String"
+		resultMap="queryResultMap">
+		select
+		<include refid="Base_Column_List" />
+		,t_pt.NAME as NAME
+		from PROJECT_LISTING t_pl left join PROJECT_TYPE
+		t_pt
+		on t_pl.PROJECT_TYPE_CODE = t_pt.CODE
+		where t_pl.CODE =
+		#code:VARCHAR#
+	</select>
+
+
+	<select id="queryProjectListingByDate" parameterClass="java.util.Map"
+		resultMap="DateStatisticsMap">
+		SELECT COUNT (*) AS amount,
+			TO_CHAR (listing_start_time, '$type.value$') AS statistics_date,
+			#type.value# AS TYPE
+		FROM project_listing t_tp
+		WHERE t_tp.status = 'T'
+		AND TO_CHAR (t_tp.listing_start_time, #type.value#) >
+		<isEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (ADD_MONTHS (SYSDATE, -#interval:DECIMAL#),#type.value#)
+		</isEqual>
+		<isNotEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (SYSDATE -(#interval:DECIMAL# * #type.interval#),#type.value#)
+		</isNotEqual>
+		GROUP BY TO_CHAR (t_tp.listing_start_time, '$type.value$')
+		ORDER BY statistics_date
+	</select>
+	
+	<select id="queryDateRange" parameterClass="java.util.Map" resultMap="DateStatisticsMap">
+	   <![CDATA[
+		SELECT 
+			DISTINCT 
+			]]>
+		<isEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (ADD_MONTHS (SYSDATE, (1 - ROWNUM)),#type.value#)
+		</isEqual>
+		<isNotEqual property="type.value" compareValue="YYYY-MM">
+			TO_CHAR (SYSDATE - ((ROWNUM - 1) * #type.interval#),#type.value#)
+		</isNotEqual>
+		<![CDATA[
+			 AS statistics_date,
+               0 AS amount, #type.value# AS TYPE
+         FROM project_listing
+         WHERE ROWNUM <= #interval:DECIMAL#
+      	 ORDER BY statistics_date
+		]]>	
+	</select>
+	
+	
+	
+	
+	<select id="selectAuctionProjectlistCount" parameterClass="ProjectListingQuery"
+		resultClass="int">
+		select count(1) 
+		from PROJECT_LISTING t_pl , PROJECT_METAS t_pm ,PROJECT_TYPE t_pt
+		where t_pm.project_id=t_pl.id and t_pl.project_type_code=t_pt.code
+		<isNotEmpty property="tradingTypeArr">
+			<![CDATA[ and t_pl.trading_type in (]]>
+			<iterate property="tradingTypeArr" conjunction=",">
+				#tradingTypeArr[]#
+			</iterate>
+			)
+		</isNotEmpty>
+		and t_pl.status in (#status:VARCHAR#)
+		and t_pm.meta_key=#applyStartTimeKey:VARCHAR#
+		and exists( select meta_value from project_metas where project_id = t_pl.id and meta_key=#haveAuctioneerKey:VARCHAR# and meta_value = 'Y')
+		and exists( select meta_value from project_metas where project_id = t_pl.id and meta_key=#auctioneerAccountKey:VARCHAR# and meta_value=#auctioneerAccount:VARCHAR#)
+		<isNotEmpty prepend="and" property="code">
+			<![CDATA[ t_pl.code = #code:VARCHAR# ]]>
+		</isNotEmpty> 
+		<isNotEmpty prepend="and" property="listingStartTimeFrom">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) >= TRUNC(#listingStartTimeFrom#) ]]>
+		</isNotEmpty> 
+		<isNotEmpty prepend="and" property="listingStartTimeTo">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) <= TRUNC(#listingStartTimeTo#) ]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="selectAuctionProjectlist" parameterClass="ProjectListingQuery"
+		resultClass="java.util.HashMap">
+		<include refid="pageSQLHead" />
+		select t_pl.ID,
+		   t_pm.META_VALUE as LISTING_START_TIME,
+		   t_pl.TITLE,
+		   t_pl.CODE,
+		   t_pl.USER_ID,
+		   t_pl.USER_ACCOUNT,
+		   t_pl.STATUS,
+		   t_pl.LISTING_TYPE,
+		   t_pl.TRADING_TYPE,
+		   t_pt.NAME as PROJECT_TYPE_NAME,
+		   t_pm.meta_value
+		from PROJECT_LISTING t_pl , PROJECT_METAS t_pm ,PROJECT_TYPE t_pt
+		where t_pm.project_id=t_pl.id and t_pl.project_type_code=t_pt.code
+		<isNotEmpty property="tradingTypeArr">
+			<![CDATA[ and t_pl.trading_type in (]]>
+			<iterate property="tradingTypeArr" conjunction=",">
+				#tradingTypeArr[]#
+			</iterate>
+			)
+		</isNotEmpty>
+		and t_pl.status in (#status:VARCHAR#)
+		and t_pm.meta_key=#applyStartTimeKey:VARCHAR#
+		and exists( select meta_value from project_metas where project_id = t_pl.id and meta_key=#haveAuctioneerKey:VARCHAR# and meta_value = 'Y')
+		and exists( select meta_value from project_metas where project_id = t_pl.id and meta_key=#auctioneerAccountKey:VARCHAR# and meta_value=#auctioneerAccount:VARCHAR#)
+		<isNotEmpty prepend="and" property="code">
+			<![CDATA[ t_pl.code = #code:VARCHAR# ]]>
+		</isNotEmpty> 
+		<isNotEmpty prepend="and" property="listingStartTimeFrom">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) >= TRUNC(#listingStartTimeFrom#) ]]>
+		</isNotEmpty> 
+		<isNotEmpty prepend="and" property="listingStartTimeTo">
+			<![CDATA[ TRUNC(t_pl.LISTING_START_TIME) <= TRUNC(#listingStartTimeTo#) ]]>
+		</isNotEmpty>
+		<include refid="queryProjectListing_order" />
+		<include refid="pageSQLFoot" />
+	</select>
+	
+	<select id="existsAuctioner" parameterClass="java.util.HashMap"
+		resultClass="int">
+		select count(1) 
+		from PROJECT_LISTING t_pl , PROJECT_METAS t_pm  , PROJECT_TYPE t_pt
+		where t_pl.code=#projectCode:VARCHAR# 
+		and t_pm.project_id=t_pl.id and t_pl.project_type_code=t_pt.code
+		<isNotEmpty property="tradingTypeArr">
+			<![CDATA[ and t_pl.trading_type in (]]>
+			<iterate property="tradingTypeArr" conjunction=",">
+				#tradingTypeArr[]#
+			</iterate>
+			)
+		</isNotEmpty>
+		and (t_pm.meta_key=#auctioneerAccountkey:VARCHAR# and t_pm.meta_value=#auctioneerAccount:VARCHAR#)
+		and exists (select meta_value from project_metas where project_id=t_pl.id and meta_key=#haveAuctioneerKey:VARCHAR# and meta_value='Y')
+	</select>
+	
+	<select id="selectStatusByCode" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		select t_pl.STATUS
+		from PROJECT_LISTING t_pl
+		where t_pl.CODE=#code:VARCHAR# 
+	</select>
+	
+	
+	
+	<!-- 查询多次竞价转拍卖条件 -->
+	<sql id="queryAuctionMulitBidProject_where">
+	    <![CDATA[
+	    	 WHERE t_pl.trading_type = #tradingType.value#
+	    	 and t_pl.project_type_code=t_pt.code
+			 ]]>
+			 <isNotEmpty property="userAccount" prepend="and">
+			 	t_pl.user_account = #userAccount:VARCHAR# 
+			 </isNotEmpty>
+			 <isNotEmpty property="reviewed">
+				 <isEqual compareValue="Y" property="reviewed.value">
+				 	 <![CDATA[
+				 	 AND EXISTS (
+			          SELECT t_pm2.project_id
+			            FROM project_metas t_pm2
+			           WHERE t_pm2.meta_key = #bidStartTimeKey.key#
+			             AND t_pl.ID = t_pm2.project_id
+			             AND t_pm2.meta_value <= TO_CHAR (SYSDATE, 'yyyy-mm-dd hh24:mi:ss'))
+			           ]]>
+				 </isEqual>
+				 <isEqual compareValue="N" property="reviewed.value">
+				  <![CDATA[
+				 	 AND EXISTS (
+			          SELECT t_pm2.project_id
+			            FROM project_metas t_pm2
+			           WHERE t_pm2.meta_key = #bidStartTimeKey.key#
+			             AND t_pl.ID = t_pm2.project_id
+			             AND t_pm2.meta_value > TO_CHAR (SYSDATE, 'yyyy-mm-dd hh24:mi:ss'))
+			  			   ]]>	
+			  		 <!--   AND EXISTS (SELECT project_code
+			                 FROM auction_hall t_ah
+			                WHERE t_ah.project_code = t_pl.code )
+			         -->
+				 </isEqual>
+			  </isNotEmpty>
+			 <isNotEmpty prepend="and" property="reviewerKey">
+			    EXISTS (
+			          SELECT t_pm1.project_id
+			            FROM project_metas t_pm1
+			           WHERE t_pm1.meta_key = #reviewerKey.key#
+			             AND t_pl.ID = t_pm1.project_id
+			             AND REGEXP_LIKE
+			                    (t_pm1.meta_value,
+			                     '(^$reviewer$,|,$reviewer$,|,$reviewer$$$|^$reviewer$$$)'
+			                    ))
+			 </isNotEmpty>
+			 <isNotEmpty prepend="and" property="projectStatus">
+			 	 t_pl.status in (
+				<iterate property="projectStatus" conjunction=",">
+	                #projectStatus[].value#
+				</iterate>)
+			</isNotEmpty>   
+			<isNotEmpty prepend="and" property="projectCode">
+				<![CDATA[ t_pl.code= #projectCode# ]]>
+			</isNotEmpty>
+	</sql>
+	
+	<!-- 多次竞价转拍卖排序 -->
+	<sql id="queryAuctionMulitBidProject_order">
+		<dynamic prepend="order by ">
+			<isNotEmpty property="orderStr">
+				<isEqual property="orderStr" compareValue="id asc">ID asc</isEqual>
+				<isEqual property="orderStr" compareValue="id desc">ID desc</isEqual>
+				<isEqual property="orderStr" compareValue="projectCode asc">PROJECT_CODE asc</isEqual>
+				<isEqual property="orderStr" compareValue="projectCode desc">PROJECT_CODE desc</isEqual>
+				<isEqual property="orderStr" compareValue="projectTitle asc">PROJECT_TITLE asc</isEqual>
+				<isEqual property="orderStr" compareValue="projectTitle desc">PROJECT_TITLE desc</isEqual>
+				<isEqual property="orderStr" compareValue="projectTypeCode asc">PROJECT_TYPE_CODE asc</isEqual>
+				<isEqual property="orderStr" compareValue="projectTypeCode desc">PROJECT_TYPE_CODE desc</isEqual>
+				<isEqual property="orderStr" compareValue="bidStartTime asc">BID_START_TIME asc</isEqual>
+				<isEqual property="orderStr" compareValue="bidStartTime desc">BID_START_TIME desc</isEqual>
+				<isEqual property="orderStr" compareValue="tradingType asc">TRADING_TYPE asc</isEqual>
+				<isEqual property="orderStr" compareValue="tradingType desc">TRADING_TYPE desc</isEqual>
+				<isEqual property="orderStr" compareValue="reviewer asc">REVIEWER asc</isEqual>
+				<isEqual property="orderStr" compareValue="reviewer desc">REVIEWER desc</isEqual>
+			</isNotEmpty>
+			<isEmpty property="orderStr">
+				ID desc
+			</isEmpty>
+		</dynamic>
+  </sql>
+	
+  
+  <select id="queryAuctionMulitBidProjectCount" parameterClass="AuctionMulitBidProjectQuery" resultClass="int">
+		select  count(1) from 
+			 project_listing t_pl,PROJECT_TYPE t_pt
+		<include refid="queryAuctionMulitBidProject_where"/>
+	</select>
+
+	<!-- 查询需要评审的多次竞价转拍卖项目 -->
+	<select id="queryAuctionMulitBidProject" parameterClass="AuctionMulitBidProjectQuery" resultMap="AuctionMulitBidProjectMap">
+		<include refid="pageSQLHead"/>
+		 select  
+		 t_pl.ID, t_pl.code AS project_code, t_pl.title AS project_title,
+		 t_pl.project_type_code, t_pl.trading_type, t_pl.status as project_status,
+		  (SELECT distinct meta_value
+		          FROM project_metas
+		         WHERE meta_key = #reviewerKey.key#
+		           AND project_id = t_pl.ID) AS reviewer,
+		   (SELECT distinct meta_value
+		          FROM project_metas
+		         WHERE meta_key = #bidStartTimeKey.key#
+		           AND project_id = t_pl.ID) AS bid_start_time,
+		  t_pt.NAME as PROJECT_TYPE_NAME,
+		   NVL((SELECT 'Y' FROM auction_hall t_ah
+			   WHERE t_ah.project_code = t_pl.code ),'N') as ACTIVE_TAG 
+		  FROM project_listing t_pl,PROJECT_TYPE t_pt
+		<include refid="queryAuctionMulitBidProject_where"/> 
+		<include refid="queryAuctionMulitBidProject_order"/>
+		<include refid="pageSQLFoot"/>
+	</select>
+	
+	<select id="getProjectIdByCode" parameterClass = "java.lang.String" resultClass = "java.lang.Long">
+		select t_pl.ID from project_listing t_pl where t_pl.code=#projectCode:VARCHAR#
+	</select>
+	
+	<update id="updateAttachedFilePath" parameterClass = "ProjectListing">
+		update project_listing set ATTACHED_FILE_PATH = #attachedFilePath:VARCHAR# where id = #id:DECIMAL#
+	</update>
+</sqlMap>

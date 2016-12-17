@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="UserUpgradeAudit">
+
+	<typeAlias alias="UserUpgradeAudit"
+		type="com.hundsun.network.gates.fengshan.biz.domain.user.UserUpgradeAudit" />
+
+	<resultMap id="userUpgradeAuditResultMap" class="UserUpgradeAudit">
+		<result column="ID" property="id" />
+		<result column="USER_ACCOUNT" property="userAccount" />
+		<result column="APPLY_LEVEL" property="applyLevel" />
+		<result column="AUDIT_PROCESS" property="auditProcess" />
+		<result column="AUDIT_NODE" property="auditNode" />
+		<result column="AUDIT_NODE_RESULT" property="auditNodeResult" />
+		<result column="AUDIT_NODE_REMARK" property="auditNodeRemark" />
+		<result column="GMT_CREATE" property="gmtCreate" />
+		<result column="GMT_MODIFY" property="gmtModify" />
+		<result column="OPERATOR" property="operator" />
+		<result column="OPERATE_TYPE" property="operateType" />
+	</resultMap>
+
+	<!-- 根据用户账号获取USER_UPGRADE_AUDIT信息 -->
+	<select id="selectByUserAccount" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.user.UserUpgradeAudit"
+		resultMap="userUpgradeAuditResultMap">
+		select * from user_upgrade_audit where user_account =
+		#userAccount# and audit_node != #auditNode#
+	</select>
+
+	<!-- 第一次审核的话就要往USER_UPGRADE_AUDIT表里插入数据 ，以后的则更新此表-->
+	<insert id="insert" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.user.UserUpgradeAudit">
+		<selectKey keyProperty="id" resultClass="long" type="pre">
+			select
+			seq_user_upgrade_audit.nextval as id from dual
+		</selectKey>
+		insert into user_upgrade_audit
+		(id,user_account,apply_level,audit_process,
+		audit_node,audit_node_result,audit_node_remark,gmt_create,gmt_modify,operator)
+		values
+		(#id:DECIMAL#,#userAccount:VARCHAR#,#applyLevel:VARCHAR#,#auditProcess:VARCHAR#,#auditNode:VARCHAR#,
+		#auditNodeResult:VARCHAR#,#auditNodeRemark:VARCHAR#,sysdate,sysdate,#operator:VARCHAR#)
+	</insert>
+
+	<!-- 更新用户升级审核表（主要用于用户升级操作，比如从普通会员升级到高级会员等等） -->
+	<update id="updateByUserAccount" parameterClass="com.hundsun.network.gates.fengshan.biz.domain.user.UserUpgradeAudit">
+		update user user_upgrade_audit
+		set gmt_modify = sysdate, apply_level = #applyLevel:VARCHAR#,
+		audit_process = #auditProcess:VARCHAR#,
+		audit_node_result = '', audit_node_remark = '', operator = #userAccount:VARCHAR#
+		where user_account = #userAccount:VARCHAR#
+	</update>
+	
+	<!-- 查询用户最近一次升级审核结果的信息 -->
+	<select id="selectRecentAuditResult" resultMap="userUpgradeAuditResultMap" parameterClass="java.lang.String">
+		<![CDATA[select * from ( select t_ur.description as apply_level, t_uua.audit_node, t_uua.audit_node_remark,t_uua.id,t_uua.user_account,
+		  	t_uua.audit_node_result,t_uua.audit_process,t_uua.gmt_create,t_uua.gmt_modify,t_uua.operator,t_uua.operate_type
+		  from user_upgrade_audit t_uua, user_role t_ur
+		 where t_uua.user_account = #userAccount:VARCHAR# and t_uua.apply_level = t_ur.name order by t_uua.gmt_modify desc) where rownum <=1 ]]>
+	</select>
+</sqlMap>

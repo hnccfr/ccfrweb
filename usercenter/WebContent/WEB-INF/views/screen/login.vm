@@ -1,0 +1,102 @@
+#set($layout = 'layout/login.vm')
+#set($title = '用户登录')
+<link rel="stylesheet" type="text/css" href="$!{imageServer}/styles/validate.css" />
+<script src="$!{imageServer}/scripts/jquery.js" type="text/javascript"></script>
+<script src="$!{imageServer}/scripts/jquery.validate.js" type="text/javascript"></script>
+<script>
+
+function changeCheckcode(){
+	$('#imgCheckCode').attr('src',"$!{appServer}/checkcode/simple.htm?t="+(new Date()).getTime());
+}
+
+
+$(document).ready(function(){    
+    
+jQuery.validator.setDefaults({    
+   submitHandler: function(form) { form.submit(); }    
+});    
+ 
+
+$('#loginForm').validate({
+	errorPlacement: function(error, element) {
+   	element.siblings("span[class='error']").text(error.text());
+	},
+   success: function(label) {
+     label.text("");
+    },
+				    
+   rules: {    
+	account: {    
+     required: true    
+    },
+	password: {    
+     required: true    
+    }
+   },      
+   messages: {    
+	account: {    
+     required: "请填写帐号"    
+    },
+	password: {    
+     required: "请填写密码"    
+    }
+  }
+});  
+  
+});  
+</script>
+
+<div class="register">
+    <div class="register-t"></div>
+    
+    <div class="register-c" style="padding:30px 0;">
+    
+        <div class="login-new">
+            <h4><span>用户登录</span></h4>
+             <form  method="post" name="loginForm" id="loginForm" action="$!{appServer}/login.htm">
+				<input type="hidden" name="returnurl" value="#direct($!{returnurl})"/>
+                <p>
+				<label>帐&nbsp;&nbsp;&nbsp;号：</label>
+					#springBind("userLogin.account")
+					<input type="text" class="inp" id="account"  name="${status.expression}" value="$!{status.value}"/>
+					<span class="error">$!{status.errorMessage}</span>
+					<br>
+				</p>
+                <p><label>密&nbsp;&nbsp;&nbsp;码：</label>
+					#springBind("userLogin.password")
+					<input type="password" class="inp" id="password" name="${status.expression}" value="" />
+					<span class="error">$!{status.errorMessage}</span>
+					<br>
+				</p>
+                <p class="yzm">
+					<label>验证码：</label>
+					#springBind("userLogin.checkCode")
+					<input type="text" class="inp" style="width:50px;" name="${status.expression}" value="$!{status.value}"  id="checkCode" onKeyPress="if(event.keyCode==13) $('#loginForm').submit();" />
+					<img id="imgCheckCode" src="$!{appServer}/checkcode/simple.htm"/>
+					<a href="JavaScript:changeCheckcode();">换一张</a>
+					<span class="error">$!{status.errorMessage}</span>
+					<br>
+				</p>
+            </form>
+            <div class="but-box">
+				<a href="#" style="color:#46A3FF" onclick="$('#forgetPsw').show();">忘记密码</a>&nbsp;&nbsp;&nbsp;
+                <button class="login-btn" type="submit" onclick="$('#loginForm').submit();"><span>登录</span></button>
+				<a href="$!{appServer}/register.htm" style="color:#46A3FF">立即注册</a>
+                <br />
+				<span class="err">$!checkCodeError</span>
+				#if($!{success} == false)
+                   <span  class="err">
+					$!{errorMsg}
+				   </span>
+				#end
+				<span id="forgetPsw" style="display:none" class="err">
+					忘记密码请联系管理员处理</br>联系电话0731-85365478
+				</span>
+            </div>
+        </div>
+    </div>
+    <div class="register-b"></div>
+</div>
+
+
+		

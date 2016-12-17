@@ -1,0 +1,60 @@
+#set($title = '举报项目')
+#set($layout = 'layout/home.vm')  
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+<script type="text/javascript" src="${imageServer}/scripts/home/accuse.js"></script>
+<style>
+td {font-size:16px;}
+</style>
+<script type="text/javascript">
+	function go(){
+    	#if($!{url})window.location.href='$!{appServer}$!{url}.htm'#else history.go(-1)#end;
+    }
+</script>
+
+<div class="path mt10">当前位置：<a href="$!{cmsServer}">首页</a> &raquo; <a href="$!{appServer}/home/list.htm">交易大厅</a> &raquo; <a href="$!{appServer}/home/supplydemand/information.htm">供求信息列表</a> 
+	&raquo; <a href="#" onclick="go();">列表详情</a>&raquo; <a href="#">举报项目</a></div>
+<div class="hr10"></div>
+<div class="pt_information">
+	<div class="hd">
+    	举报原因
+    </div>
+	<form action="${appServer}/home/supplydemand/accuse.htm" method="post" onsubmit="return validate();">
+    <div class="bd">
+		<div class="pic"/>
+        <div class="content">
+       	  <table width="100%" border="0" cellspacing="0" cellpadding="10">
+			#springBind("accuseInfo.infoId")
+				<input type="hidden" name="${status.expression}" value="$!{status.value}">
+			#springBind("accuseInfo.accuser")
+				<input type="hidden" name="${status.expression}" value="$!{userAgent.account}">
+        	 <tr align="center" >
+					<td>举报原因：
+						#springBind("accuseInfo.type")
+					<select id="type" name="${status.expression}" style="width:150px;">
+					#foreach($item in $!{enumAccuseTypes})
+    					<option value="$!{item.value}" #if($item.name == $!{status.value}) selected #end >$!{item.name}</option>
+    				#end
+                    </select>
+					</td>
+			 </tr>
+        	 <tr align="center">
+				<td>#springBind("accuseInfo.reason")
+				<textarea rows="10" id="reason" cols="110" name="${status.expression}" title="请最多填写340个字">请输入您认为的具体原因</textarea>
+				</td>
+      	    </tr>
+			<tr/>
+			<br>
+			<tr align="center">
+				<td>
+					<input type="submit" value="提交" style="width:70px;"> &nbsp;
+					<input type="button" value="返回" style="width:70px;" onclick="go();"> 
+				</td>
+			</tr>
+      	  	</table>
+			<br>
+        </div>
+        </div>
+	</form>
+    </div>
+
+</div>

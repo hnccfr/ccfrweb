@@ -1,0 +1,145 @@
+#set($layout = 'layout/blank.vm') 
+ <div class="main_menu">
+                <div class="tel fr">
+                    ##<img src="$!{imageServer}/images/home/tel.png" class="mr10"/>
+                </div>
+                <div class="menu fl">
+                    <i></i>
+                    <ul>
+                        <li >
+                            <p>
+                                <a href="$!{cmsServer}" class="point">首页</a>
+                            </p>
+                        </li>
+                        <li class="hover">
+                            <p>
+                                <a href="$!{appServer}/home/list.htm" class="point">交易大厅</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <a href="$!{cmsServer}/html/guide/" class="point">交易指南</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <a href="$!{cmsServer}/html/news/" class="point">行业资讯</a>
+                            </p>
+                        </li>
+						<li>
+                            <p>
+                                <a href="$!{cmsServer}/html/district/" class="point">商圈</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <a href="$!{cmsServer}/html/law/" class="point">政策法规</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                <a href="$!{cmsServer}/html/download/" class="point">下载中心</a>
+                            </p>
+                        </li>
+                        <li class="nbr">
+                            <p>
+                                <a href="$!{cmsServer}/html/aboutUsCorp.html" class="point">关于我们</a>
+                            </p>
+                        </li>
+                    </ul>
+                    <b></b>
+                </div>
+                <div class="clear"></div>
+                <div class="menu_laye">
+                    <ul class="n1"></ul>
+                    <ul class="n2">
+                        <li>
+                            <a href="$!{appServer}/home/list.htm">交易行情</a>
+                        </li>
+                        <li>
+                            <a href="$!{appServer}/home/announcement/list.htm">交易公告</a>
+                        </li>
+						<li>
+                            <a href="$!{appServer}/home/supplydemand/information.htm">供求信息</a>
+                        </li>
+                    </ul>
+                    <ul class="n3">
+                        <li>
+                            <a href="$!{cmsServer}/html/guideInfo/">交易介绍</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/guideRule/">交易规则</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/guideOper/">操作指南</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/guideOpen/">开户指南</a>
+                        </li>
+                    </ul>
+                    <ul class="n4">
+                        <li>
+                            <a href="$!{cmsServer}/html/newsProduct/">农业产品</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/newsMaterials/">农用物资</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/newsPropertyRight/">农村产权</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/newsFinancing/">农村融资</a>
+                        </li>
+                    </ul>
+                    <ul class="n5">
+                        <li>
+                            <a href="$!{cmsServer}/html/districtInfo/">商圈介绍</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/districtVip/">会员专区</a>
+                        </li>
+                        <li>
+                            <a href="$!{bbsServer}">论坛</a>
+                        </li>
+                    </ul>
+                    <ul class="n6">
+                        <li>
+                            <a href="$!{cmsServer}/html/lawCountry/">国家法规</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/lawShanghai/">上海市法规</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/lawFengxian/">奉贤区有关规定</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/lawOther/">其它政策</a>
+                        </li>
+                    </ul>
+                    <ul class="n7">
+                        <li>
+                            <a href="$!{cmsServer}/html/downloadBiz/">业务资料</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/downloadTools/">软件工具</a>
+                        </li>
+                    </ul>
+                    <ul class="n8">
+                        <li>
+                            <a href="$!{cmsServer}/html/aboutUsCorp.html">公司介绍</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/aboutUsNews/">公司动态（新闻）</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/aboutUsFunc.html">业务功能</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/aboutUsPartner.html">合作伙伴</a>
+                        </li>
+                        <li>
+                            <a href="$!{cmsServer}/html/aboutUsLink.html">联系我们</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>

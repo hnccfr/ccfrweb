@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="UserCredit" >
+  <typeAlias alias="UserCredit" type="com.hundsun.network.gates.fengshan.biz.domain.user.UserCredit"/>
+  <resultMap id="BaseResultMap" class="UserCredit" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="SELLER_CREDIT_LEVEL" property="sellerCreditLevel" jdbcType="VARCHAR" />
+    <result column="SELLER_CREDIT_NUM" property="sellerCreditNum" jdbcType="DECIMAL" />
+    <result column="SELLER_GOOD_NUM" property="sellerGoodNum" jdbcType="DECIMAL" />
+    <result column="SELLER_MIDD_NUM" property="sellerMiddNum" jdbcType="DECIMAL" />
+    <result column="SELLER_BAD_NUM" property="sellerBadNum" jdbcType="DECIMAL" />
+    <result column="SERVICE_ATTITUDE" property="serviceAttitude" jdbcType="DECIMAL" />
+    <result column="LOGISTICS_SPEED" property="logisticsSpeed" jdbcType="DECIMAL" />
+    <result column="BUY_CREDIT_LEVEL" property="buyCreditLevel" jdbcType="VARCHAR" />
+    <result column="BUY_CREDIT_NUM" property="buyCreditNum" jdbcType="DECIMAL" />
+    <result column="BUY_GOOD_NUM" property="buyGoodNum" jdbcType="DECIMAL" />
+    <result column="BUY_MIDD_NUM" property="buyMiddNum" jdbcType="DECIMAL" />
+    <result column="BUY_BAD_NUM" property="buyBadNum" jdbcType="DECIMAL" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="FullResultMap" class="UserCredit" extends="BaseResultMap" >
+	    <result column="SELLER_LEVEL_NAME" property="sellerLevelName" jdbcType="VARCHAR" />
+    	<result column="SELLER_IMG_NAME" property="sellerImgName" jdbcType="VARCHAR" />
+    	 <result column="BUY_LEVEL_NAME" property="buyLevelName" jdbcType="VARCHAR" />
+    	<result column="BUY_IMG_NAME" property="buyImgName" jdbcType="VARCHAR" />
+  </resultMap>
+   
+  <sql id="Base_Column_List" >
+    ID, USER_ACCOUNT, SELLER_CREDIT_LEVEL, SELLER_CREDIT_NUM, SELLER_GOOD_NUM, SELLER_MIDD_NUM, 
+    SELLER_BAD_NUM, SERVICE_ATTITUDE, LOGISTICS_SPEED, BUY_CREDIT_LEVEL, BUY_CREDIT_NUM, 
+    BUY_GOOD_NUM, BUY_MIDD_NUM, BUY_BAD_NUM, CREATOR, MODIFIER, GMT_CREATE, GMT_MODIFY
+  </sql>
+   
+   <sql id="TUC_Column_List" >
+    t_uc.ID, t_uc.USER_ACCOUNT, t_uc.SELLER_CREDIT_LEVEL, t_uc.SELLER_CREDIT_NUM, 
+    t_uc.SELLER_GOOD_NUM, t_uc.SELLER_MIDD_NUM, 
+    t_uc.SELLER_BAD_NUM, t_uc.SERVICE_ATTITUDE, t_uc.LOGISTICS_SPEED, t_uc.BUY_CREDIT_LEVEL, t_uc.BUY_CREDIT_NUM, 
+    t_uc.BUY_GOOD_NUM, t_uc.BUY_MIDD_NUM, t_uc.BUY_BAD_NUM, t_uc.CREATOR, t_uc.MODIFIER, t_uc.GMT_CREATE, t_uc.GMT_MODIFY
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_CREDIT
+    where ID = #id:DECIMAL#
+  </select>
+  
+  <select id="selectByUserAccount" resultMap="FullResultMap" parameterClass="java.lang.String">
+  	SELECT v_uc.*, tt_scl.img_name AS BUY_IMG_NAME,
+       tt_scl.level_name AS BUY_LEVEL_NAME
+	  FROM (SELECT 
+	  			<include refid="TUC_Column_List"/>
+	  			, t_scl.img_name AS SELLER_IMG_NAME,
+	               t_scl.level_name AS SELLER_LEVEL_NAME
+	          FROM user_credit t_uc, system_credit_level t_scl
+	         WHERE t_uc.user_account = #userAccount#
+	           AND t_uc.seller_credit_level = t_scl.credit_level) v_uc,
+	       system_credit_level tt_scl
+	 WHERE v_uc.buy_credit_level = tt_scl.credit_level
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterClass="java.lang.Long" >
+    delete from USER_CREDIT
+    where ID = #id:DECIMAL#
+  </delete>
+  
+  <insert id="insert" parameterClass="UserCredit" >
+    insert into USER_CREDIT (ID, USER_ACCOUNT, SELLER_CREDIT_LEVEL, SELLER_CREDIT_NUM, 
+      SELLER_GOOD_NUM, SELLER_MIDD_NUM, SELLER_BAD_NUM, SERVICE_ATTITUDE, 
+      LOGISTICS_SPEED, BUY_CREDIT_LEVEL, BUY_CREDIT_NUM, BUY_GOOD_NUM, 
+      BUY_MIDD_NUM, BUY_BAD_NUM, CREATOR, MODIFIER, 
+      GMT_CREATE, GMT_MODIFY)
+    values (#id:DECIMAL#, #userAccount:VARCHAR#, #sellerCreditLevel:VARCHAR#, #sellerCreditNum:DECIMAL#, 
+      #sellerGoodNum:DECIMAL#, #sellerMiddNum:DECIMAL#, #sellerBadNum:DECIMAL#, #serviceAttitude:DECIMAL#, 
+      #logisticsSpeed:DECIMAL#, #buyCreditLevel:VARCHAR#, #buyCreditNum:DECIMAL#, #buyGoodNum:DECIMAL#, 
+      #buyMiddNum:DECIMAL#, #buyBadNum:DECIMAL#, #creator#, #modifier#,sysdate, sysdate)
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterClass="UserCredit" >
+    update USER_CREDIT
+    set GMT_MODIFY = sysdate
+      <isNotNull prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCreditLevel" >
+        SELLER_CREDIT_LEVEL = #sellerCreditLevel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCreditNum" >
+        SELLER_CREDIT_NUM = #sellerCreditNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerGoodNum" >
+        SELLER_GOOD_NUM = #sellerGoodNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerMiddNum" >
+        SELLER_MIDD_NUM = #sellerMiddNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBadNum" >
+        SELLER_BAD_NUM = #sellerBadNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="serviceAttitude" >
+        SERVICE_ATTITUDE = #serviceAttitude:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="logisticsSpeed" >
+        LOGISTICS_SPEED = #logisticsSpeed:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="buyCreditLevel" >
+        BUY_CREDIT_LEVEL = #buyCreditLevel:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyCreditNum" >
+        BUY_CREDIT_NUM = #buyCreditNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="buyGoodNum" >
+        BUY_GOOD_NUM = #buyGoodNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="buyMiddNum" >
+        BUY_MIDD_NUM = #buyMiddNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="buyBadNum" >
+        BUY_BAD_NUM = #buyBadNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="creator" >
+        CREATOR = #creator#
+      </isNotNull>
+      <isNotNull prepend="," property="modifier" >
+        MODIFIER = #modifier#
+      </isNotNull>
+    where ID = #id:DECIMAL#
+  </update>
+</sqlMap>

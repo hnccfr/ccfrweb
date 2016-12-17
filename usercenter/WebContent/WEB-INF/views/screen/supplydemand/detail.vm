@@ -1,0 +1,179 @@
+#set($title = '项目详情')
+#set($layout = 'layout/home.vm')  
+<link rel="stylesheet" href="$!{imageServer}/styles/ui.css" type="text/css">
+	<script type="text/javascript" src="$!{imageServer}/scripts/supplydemand/accuse.js"></script>
+<style>
+p{
+word-wrap: break-word;
+word-break: normal;
+}
+
+.fb{ font-weight:bold;}
+.block{display:block;}
+.f12{font-size:12px;}
+.co_b{ color:#000;}
+.mb5{margin-bottom:5px;}
+.mt10{margin-top:10px}
+.fn{ font-weight:normal;}
+
+a{font-family:arial,sans-serif;cursor:pointer;text-decoration:none;color:#666;blr:expression(this.onFocus=this.blur())} 
+a:hover{color:#FF0000;text-decoration:none;} 
+a:focus{outline:1px dotted;}
+.button-2{ background-image:url(../../images/home/btn.png); background-repeat:no-repeat; text-align:center; display:inline-block; border:0; cursor:pointer;background-position: 0 -64px; height:30px; width:99px; color:#FFF; font-weight:600;}
+</style>
+<script type="text/javascript">
+$(function(){
+	$(".list table tr:even").addClass("bg");
+});
+
+$(function(){
+	$(".property .hd span:first").addClass("selected");
+	$(".property .bd .content:first").show().siblings().hide();
+	var tab_menu=$(".property .hd span")
+	tab_menu.click(function()
+	 {
+		 $(this).addClass("selected").siblings().removeClass("selected");
+		 var index=tab_menu.index(this);
+		 $(".property .bd .content").eq(index).show().siblings().hide();
+	 })
+});
+</script>
+<div class="path mt10">当前位置：<a href="$!{cmsServer}">首页</a> &raquo; <a href="$!{appServer}/home/list.htm">交易大厅</a> &raquo; <a href="$!{appServer}/home/supplydemand/information.htm">供求信息列表</a> &raquo; <a href="#">列表详情</a></div>
+<div class="hr10"></div>
+<div class="pt_information">
+	<div class="hd">
+    	列表信息
+    </div>
+    <div class="bd">
+    	<div class="pic">
+			<a href="#">
+				#if($stringUtils.isEmpty(${supplyDemandInfo.picturePath}))
+					<img src="$!{imageServer}/images/nophoto.jpg" width="118" height="109" />
+				#else
+					<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath}" width="118" height="109" />
+				#end
+			</a>
+		</div>
+        <div class="content">
+       	  <table width="98%" border="1" cellspacing="0" cellpadding="0" bordercolor="#808080">
+        	 <tr>
+        	    <td height="36" valign="middle" align="center" bgcolor="#d4fda0">项目名称</td>
+				<td colspan="3" valign="middle" align="center">$!{supplyDemandInfo.title}</td>
+			 </tr>
+        	 <tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">项目类型</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.projectTypeCodeDesc}</td>
+				<td valign="middle" align="center" bgcolor="#d4fda0">标准规格</td>
+				<td valign="middle" align="center"><a href="$!{appServer}/home/standard/show.htm?sid=$!{supplyDemandInfo.breadStandardId}" target="_blank" title="点击查看规格详细">$!{supplyDemandInfo.breadStandard}</a></td>
+			 </tr>
+			 <tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">信息类型</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.InfoTypeDesc}</td>
+				<td valign="middle" align="center" bgcolor="#d4fda0">发票支持</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.InvoiceDesc}</td>
+			 </tr>
+        	 <tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">有效开始时间</td> 
+				<td valign="middle" align="center">$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveStartDate})</td>
+        	    <td valign="middle" align="center" bgcolor="#d4fda0">有效截止时间</td>
+				<td valign="middle" align="center">$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.effectiveEndDate})</td>
+			 </tr>
+             <tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">总价</td> 
+				<td valign="middle" align="center">$!{supplyDemandInfo.amount}</td>
+				#* 
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">价格</td> 
+				<td valign="middle" align="center">$commonUtils.getValuationUnit($!{supplyDemandInfo.price},$!{supplyDemandInfo.valuationUnit})$!{supplyDemandInfo.valuationUnitDesc}/$!{supplyDemandInfo.measureUnitDesc}</td>
+        	    <td valign="middle" align="center" bgcolor="#d4fda0">货物计价单位</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.valuationUnitDesc}</td>
+				*#
+			 </tr>
+			 <tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">货物数量</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.quantity}$!{supplyDemandInfo.measureUnitDesc}</td>
+        	    <td valign="middle" align="center" bgcolor="#d4fda0">货物计量单位</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.measureUnitDesc}</td>
+      	    </tr>
+		     <tr>
+        	    <td height="36" valign="middle" align="center" bgcolor="#d4fda0">交易日期:</td>
+				<td valign="middle" align="center">$!dateTool.format("yyyy-MM-dd",$!{supplyDemandInfo.deliveryDate})</td>
+				<td valign="middle" align="center" bgcolor="#d4fda0">交易方式:</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.DeliveryTypeDesc}</td>
+			 </tr>
+			 <tr> 
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">联系人</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.linkMan}</td>
+				<td valign="middle" align="center" bgcolor="#d4fda0">是否零售</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.retailDesc}</td>
+      	    </tr>
+			<tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">交收地址</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.deliveryPlace}</td>
+        	    <td valign="middle" align="center" bgcolor="#d4fda0">详细地址</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.address}</td>
+			</tr>
+			<tr>
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">联系电话</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.phone}</td>
+				<td valign="middle" align="center" bgcolor="#d4fda0">邮编</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.zipCode}</td>
+      	    </tr>
+			<tr>
+				#if($!{supplyDemandInfo.InfoType}=="supply")
+				<td height="36" valign="middle" align="center" bgcolor="#d4fda0">仓库名称</td>
+				<td valign="middle" align="center">$!{supplyDemandInfo.storehouse}</td>
+				#end
+				<input type="hidden" id="publisherAccount" value="${supplyDemandInfo.publisherAccount}">
+				<input type="hidden" id="account" value="${userAgent.account}">
+			 </tr>
+          </table>
+		   <table width="90%" border="0" cellspacing="0" cellpadding="0">
+            <tr><td height="12"></td></tr>
+				<td colspan="3" valign="middle" align="right">
+					<input type="hidden" id="reURL" name="reURL" value="/home/supplydemand/accuse.htm?infoId=$!{supplyDemandInfo.id}">
+					#if($!userAgent.haveFunction("BIZ_U_INFO_ACCUSE"))
+					<a style="line-height:30px;font-size:16px;" class="button-2 block f12 mb5" href="#" onclick="checkAccuse($!{supplyDemandInfo.id});" title="若该信息存在违法、虚假、恶意等情况,请点击此处">举报该项目</a>
+					#end
+			    </td>
+			<tr>
+				<td colspan="4">&nbsp;</td> 
+			</tr>
+      	  </table>
+        </div>
+    </div>
+</div>
+
+<div class="hr10"></div>
+<div class="property">
+		<div class="hd"><span class="selected">描述</span><span >图片展示</span></div>
+		<div class="bd">
+			<div class="content">
+				<div class="details">
+					<p>$!{supplyDemandInfo.remark}</p>
+				</div>
+             </div>
+			<div class="content">
+            	<div class="property_list" align="center">
+					#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath1}))
+						<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath1}" />
+					#end
+					 <br/>
+					#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath2}))
+						<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath2}"  />
+					#end
+					<br/>
+					#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath3}))
+						<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath3}"  />
+					#end
+					<br/>
+					#if($!stringUtils.isNotEmpty(${supplyDemandInfo.picturePath4}))
+						<img src="$!{uploadServer}/$!{supplyDemandInfo.picturePath4}" />
+					#end
+				</div>
+            </div>
+		   </div>
+	</div>
+<div class="hr10"></div>
+<div id="clientTradeDiv">
+	 
+</div>
