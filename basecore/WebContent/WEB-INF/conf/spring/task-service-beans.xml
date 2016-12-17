@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 定时器配置 -->
+
+	<!-- 第四步,定义我们的时间任务对象,我们自己的类(整个配置文件中,唯一一个需要我们自己去实现的类定义) -->
+	<!-- bean begin 
+		<bean id="initBaseServiceBean"
+			class="com.hundsun.network.greenlake.gold.biz.service.base.pojo.BaseServiceImpl">
+		</bean>
+		-->
+	<!-- bean end -->
+
+	<!-- 第三步,定义我们的时间任务,主要是用来配置要运行的任务的方法 -->
+	<!-- detail begin  -->
+	<bean id="autoOrderOptionDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 类头注解的方式定义了 -->
+		<property name="targetObject" ref="tradeOrderAutoService" />
+		<property name="targetMethod" value="autoOrderOption" />
+		<!-- 同一任务在前一次执行未完成而Trigger时间又到时是否并发开始新的执行, 默认为true. -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<!-- 类头注解的方式定义了 -->
+	<!--
+		-->
+	<bean id="autoProjectDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="projectAutoService" />
+		<property name="targetMethod" value="autoProjectValidate" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+
+	<!-- 第二步,定义任务triggers对象,主要是用来配置时间任务对象,及其运行时间和运行周期等 -->
+	<!--trigger begin -->
+	<bean id="autoOrderOptionTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="autoOrderOptionDetail" />
+		<property name="cronExpression" value="${autoOrderOptionTrigger.cronExpression}" />
+	</bean>
+	<!--
+		-->
+	<bean id="autoProjectDetailTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="autoProjectDetail" />
+		<property name="cronExpression" value="${autoProjectDetailTrigger.cronExpression}" />
+	</bean>
+	
+
+	
+
+
+	<!-- 第一步,定义时间程序对象,实现类是Spring提供的,我们只要使用他就可以了. -->
+	<bean id="autoOrderOptionTimetaskScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- 以下就是我们自己的时间程序任务triggers列表了,也是配置的Bean对象 -->
+				<!-- <ref bean="initBaseRestartTrigger" />-->
+				<ref bean="autoOrderOptionTrigger" />
+				<!--
+					-->
+				<ref bean="autoProjectDetailTrigger" />
+				
+			</list>
+		</property>
+		<property name="autoStartup">
+			<value>true</value>
+		</property>
+		<property name="schedulerName">
+			<value>autoOrderOptionTimetaskScheduler</value>
+		</property>
+	</bean>
+
+
+	<!-- executor end  -->
+</beans>

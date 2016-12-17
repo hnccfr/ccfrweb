@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CashTradeAccount" >
+  <typeAlias alias="CashTradeAccount" type="com.hundsun.network.gates.wulin.biz.domain.funds.CashTradeAccount"/>
+  <resultMap id="BaseResultMap" class="CashTradeAccount" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+    <result column="TRADE_PWD" property="tradePwd" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="VARCHAR" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="FROZEN_MONEY" property="frozenMoney" jdbcType="DECIMAL" />
+    <result column="FREE_MONEY" property="freeMoney" jdbcType="DECIMAL" />
+    <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+    <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+    <result column="TAID" property="taid" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_TYPE" property="certificateType" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_NUM" property="certificateNum" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ID, BALANCE, TRADE_PWD, STATE, USER_ACCOUNT, FROZEN_MONEY, FREE_MONEY, BANK_NAME, 
+    BANK_ACCOUNT, TAID, CERTIFICATE_TYPE, CERTIFICATE_NUM
+  </sql>
+  
+  <!-- 根据资金账号或者账户类型获取资金账号信息 -->
+  <select id="selectCashTradeAccountBytaid" parameterClass="java.util.Map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from CASH_TRADE_ACCOUNT
+    where 1=1
+    <isNotEmpty prepend="and" property="taid" >
+		TAID = #taid:DECIMAL#  
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="cerNum" >
+		CERTIFICATE_NUM = #cerNum:VARCHAR# 
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="cerType" >
+		CERTIFICATE_TYPE = #cerType:VARCHAR# 
+	</isNotEmpty>  
+  </select>
+  
+  <!-- 冻结资金、保证金 -->
+  <update id="frozenCash" parameterClass="java.util.Map"  >
+    update CASH_TRADE_ACCOUNT
+    set FREE_MONEY = FREE_MONEY - #money:DECIMAL#,
+      STATE = 'F',
+      FROZEN_MONEY = FROZEN_MONEY + #money:DECIMAL#
+    where TAID = #taid:DECIMAL#
+  </update>
+  
+    <!-- 解冻资金保证金 -->
+  <update id="thawCash" parameterClass="java.util.Map"  >
+    update CASH_TRADE_ACCOUNT
+    set FREE_MONEY = FREE_MONEY + #money:DECIMAL#,
+      STATE = 'N',
+      FROZEN_MONEY = FROZEN_MONEY - #money:DECIMAL#
+    where TAID = #taid:DECIMAL#
+  </update>
+  
+  <!-- 出金、划出 、支付服务费、货款-->
+  <update id="outcomeCash" parameterClass="java.util.Map" >
+    update CASH_TRADE_ACCOUNT
+    set FREE_MONEY = FREE_MONEY - #money:DECIMAL#,
+    BALANCE = BALANCE - #money:DECIMAL#
+    where TAID = #taid:DECIMAL#
+  </update>
+  
+   <!-- 入金 、划入、收入服务费、货款-->
+  <update id="incomeCash" parameterClass="java.util.Map" >
+    update CASH_TRADE_ACCOUNT
+    set FREE_MONEY = FREE_MONEY + #money:DECIMAL#,
+    BALANCE = BALANCE + #money:DECIMAL#
+    where TAID = #taid:DECIMAL#
+  </update>
+ 
+  
+  <!-- 新建资金账户 -->  
+   <insert id="insert" parameterClass="CashTradeAccount"  >
+   <selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_CASH_TRADE_ACCOUNT.nextVal AS VALUE FROM DUAL   
+    </selectKey>
+    insert into CASH_TRADE_ACCOUNT (ID, BALANCE, TRADE_PWD, STATE, USER_ACCOUNT, 
+      FROZEN_MONEY, FREE_MONEY, BANK_NAME, BANK_ACCOUNT, 
+      TAID, CERTIFICATE_TYPE, CERTIFICATE_NUM)
+    values (#id:DECIMAL#, #balance:DECIMAL#, #tradePwd:VARCHAR#, #state:CHAR#, #userAccount:VARCHAR#, 
+      #frozenMoney:DECIMAL#, #freeMoney:DECIMAL#, #bankName:VARCHAR#, #bankAccount:VARCHAR#, 
+      #taid:VARCHAR#, #certificateType:VARCHAR#, #certificateNum:VARCHAR#)
+  </insert>
+</sqlMap>

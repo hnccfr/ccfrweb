@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="SYSTEM_MEMBERLEVEL_SET" >
+	<resultMap id="systemMemberlevelSetResult" class="com.hundsun.network.gates.wulin.biz.domain.baseset.SystemMemberlevelSet" >
+		<result column="ID" property="id" jdbcType="DECIMAL" />
+		<result column="MEMBER_LEVEL" property="memberLevel" jdbcType="VARCHAR" />
+		<result column="LEVEL_NAME" property="levelName" jdbcType="VARCHAR" />
+		<result column="INTEGRAL_START" property="integralStart" jdbcType="DECIMAL" />
+		<result column="INTEGRAL_END" property="integralEnd" jdbcType="DECIMAL" />
+		<result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+		<result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="IMG_NAME" property="imgName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询所有 -->
+	<select id="selectAll" resultMap="systemMemberlevelSetResult">
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+			OPERATOR, REMARK, IMG_NAME
+		from SYSTEM_MEMBERLEVEL_SET
+		order by INTEGRAL_START
+	</select>
+	
+	<!-- 查询最小的会员级别 -->
+	<select id="selectInitLevel" resultMap="systemMemberlevelSetResult">
+	<![CDATA[
+		select * from (
+			select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+      			OPERATOR, REMARK, IMG_NAME
+    		from SYSTEM_MEMBERLEVEL_SET
+    		order by INTEGRAL_START 
+		)a where rownum<=1
+	]]>
+	</select>
+	
+	<!-- 查询分值所在会员级别 -->
+	<select id="selectByIntegral" parameterClass="java.lang.Integer" resultMap="systemMemberlevelSetResult">
+	<![CDATA[
+		select * from (
+		select ID, MEMBER_LEVEL, LEVEL_NAME, INTEGRAL_START, INTEGRAL_END, GMT_CREATE, GMT_MODIFY,
+		      OPERATOR, REMARK, IMG_NAME
+		    from SYSTEM_MEMBERLEVEL_SET
+		    where  
+		(CASE
+           WHEN #value# < 0
+              THEN 0
+           ELSE #value#
+        END)>= INTEGRAL_START
+         and (CASE
+           WHEN #value# < 0
+              THEN 0
+           ELSE #value#
+        END)<=INTEGRAL_END
+		    order by INTEGRAL_START 
+		)a where rownum<=1
+	]]>
+	</select>
+		
+</sqlMap>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ProjectBaseSetting" >
+  <typeAlias alias="ProjectBaseSetting" type="com.hundsun.network.gates.wulin.biz.domain.project.ProjectBaseSetting"/>
+  
+  <resultMap id="BaseResultMap" class="ProjectBaseSetting" >   
+    <result column="LISTING_CHECK_PROCESS" property="listingCheckProcess" jdbcType="VARCHAR" />
+    <result column="INTENTION_CHECK_PROCESS" property="intentionCheckProcess" jdbcType="VARCHAR" />
+    <result column="LISTING_JY_PROPORTION" property="listingJyProportion" jdbcType="DECIMAL" />
+    <result column="LISTING_JS_PROPORTION" property="listingJsProportion" jdbcType="DECIMAL" />
+    <result column="ORDER_JY_PROPORTION" property="orderJyProportion" jdbcType="DECIMAL" />
+    <result column="ORDER_JS_PROPORTION" property="orderJsProportion" jdbcType="DECIMAL" />  
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+   t_pbs.LISTING_CHECK_PROCESS, t_pbs.INTENTION_CHECK_PROCESS, t_pbs.LISTING_JY_PROPORTION, t_pbs.LISTING_JS_PROPORTION, 
+   t_pbs.ORDER_JY_PROPORTION, t_pbs.ORDER_JS_PROPORTION
+  </sql>
+  
+  <sql id="Where_Clause" >
+		<isNotEmpty prepend="and" property="proTypeCode" >
+			((#proTypeCode:VARCHAR# like t_pbs.PRO_TYPE_CODE || '%') or (t_pbs.PRO_TYPE_CODE is null))
+		</isNotEmpty>	
+		<isEmpty prepend="and" property="proTypeCode" >
+			t_pbs.PRO_TYPE_CODE is null
+		</isEmpty>	
+		
+		
+		<isNotEmpty prepend="and" property="tradingType" >
+			(t_pbs.TRADING_TYPE = #tradingType:VARCHAR# or t_pbs.TRADING_TYPE is null )
+		</isNotEmpty>
+		<isEmpty prepend="and" property="tradingType" >
+			t_pbs.TRADING_TYPE is null
+		</isEmpty>
+		
+		
+		<isNotEmpty prepend="and" property="memberLevel" >
+			(t_pbs.MEMBER_LEVEL = #memberLevel:VARCHAR# or t_pbs.MEMBER_LEVEL is null )
+		</isNotEmpty>
+		<isEmpty prepend="and" property="memberLevel" >
+			t_pbs.MEMBER_LEVEL is null 
+		</isEmpty>
+		
+		<isNotNull prepend="and" property="goodComment" >
+			(<![CDATA[ t_pbs.GOOD_COMMENT <= #goodComment:DECIMAL# ]]> or t_pbs.GOOD_COMMENT is null)
+		</isNotNull>
+		<isNull prepend="and" property="goodComment" >
+			t_pbs.GOOD_COMMENT is null
+		</isNull>
+		 
+		<isNotNull prepend="and" property="badComment" >
+			(<![CDATA[ t_pbs.BAD_COMMENT >= #badComment:DECIMAL# ]]>  or t_pbs.BAD_COMMENT is null)
+		</isNotNull>
+		<isNull prepend="and" property="badComment" >
+			t_pbs.BAD_COMMENT is null 
+		</isNull>
+	</sql>
+	
+  <!-- 查询一条记录 -->
+  <select id="selectBaseSet" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+    select
+    	t_tmp.LISTING_CHECK_PROCESS, t_tmp.INTENTION_CHECK_PROCESS, t_tmp.LISTING_JY_PROPORTION, t_tmp.LISTING_JS_PROPORTION, 
+        t_tmp.ORDER_JY_PROPORTION, t_tmp.ORDER_JS_PROPORTION 
+    	from (
+		    select
+		       <include refid="Base_Column_List" /> ,
+		       case when t_pbs.pro_type_code is not null then 8 else 0 end as a,
+		       case when t_pbs.trading_type is not null then 4 else 0 end as b,
+		       case when t_pbs.member_level is not null then 2 else 0 end as c,
+		       case when t_pbs.good_comment is not null then 1 else 0 end as d,
+		       case when t_pbs.bad_comment is not null then 16 else 0 end as e, 
+		             
+		       case when t_pbs.member_level is not null then t_pbs.member_level else '-' end as x,
+		       case when t_pbs.good_comment is not null then t_pbs.good_comment else 0 end as y  
+		    from project_base_setting t_pbs 
+		    where t_pbs.ENABLE='Y' 
+		   <include refid="Where_Clause" />
+		   order by (a+b+c+d+e)  desc,length(t_pbs.pro_type_code) desc,t_pbs.trading_type asc,t_pbs.bad_comment asc,x desc,y desc
+   ) t_tmp
+   where rownum = 1
+  </select>
+  
+  <!-- 查询 返回符合条件的列表，按权重高低排序 -->
+  <select id="selectBaseSetList" resultMap="BaseResultMap" parameterClass="java.util.Map" >
+	    select
+	       <include refid="Base_Column_List" /> ,
+	       case when t_pbs.pro_type_code is not null then 8 else 0 end as a,
+	       case when t_pbs.trading_type is not null then 4 else 0 end as b,
+	       case when t_pbs.member_level is not null then 2 else 0 end as c,
+	       case when t_pbs.good_comment is not null then 1 else 0 end as d,
+	       case when t_pbs.bad_comment is not null then 16 else 0 end as e, 
+	       
+	       case when t_pbs.pro_type_code is not null then length(t_pbs.pro_type_code) else 0 end as l,      
+	       case when t_pbs.member_level is not null then t_pbs.member_level else '-' end as x,
+	       case when t_pbs.good_comment is not null then t_pbs.good_comment else 0 end as y  
+	    from project_base_setting t_pbs 
+	    where t_pbs.ENABLE='Y' 
+	   <include refid="Where_Clause" />
+	   order by (a+b+c+d+e)  desc,l desc,t_pbs.trading_type asc,t_pbs.bad_comment asc,x desc,y desc
+  </select>
+  
+</sqlMap>

@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="FINANC_COLL_LIST" >
+  <resultMap id="BaseResultMap" class="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SERIAL_NO" property="serialNo" jdbcType="DECIMAL" />
+    <result column="WAREHOUSE_ID" property="warehouseId" jdbcType="DECIMAL" />
+    <result column="GOODS_LIST_ID" property="goodsListId" jdbcType="DECIMAL" />
+    <result column="RATIO" property="ratio" jdbcType="DECIMAL" />
+    <result column="CUR_COLL_NUM" property="curCollNum" jdbcType="DECIMAL" />
+    <result column="CUR_UNIT_PRICE" property="curUnitPrice" jdbcType="DECIMAL" />
+    <result column="CUR_TOTAL_PRICE" property="curTotalPrice" jdbcType="DECIMAL" />
+    <result column="IS_VALID" property="isValid" jdbcType="DECIMAL" />
+    <result column="MERCH_ACK" property="merchAck" jdbcType="DECIMAL" />
+    <result column="MERCH_ACK_PERSON" property="merchAckPerson" jdbcType="VARCHAR" />
+    <result column="MERCH_ACK_DATE" property="merchAckDate" jdbcType="TIMESTAMP" />
+    <result column="BANKS_ACK" property="banksAck" jdbcType="DECIMAL" />
+    <result column="BANKS_ACK_PERSON" property="banksAckPerson" jdbcType="VARCHAR" />
+    <result column="BANKS_ACK_DATE" property="banksAckDate" jdbcType="TIMESTAMP" />
+    <result column="STORE_ACK" property="storeAck" jdbcType="DECIMAL" />
+    <result column="STORE_ACK_PERSON" property="storeAckPerson" jdbcType="VARCHAR" />
+    <result column="STORE_ACK_DATE" property="storeAckDate" jdbcType="TIMESTAMP" />
+    <result column="REGU_ACK" property="reguAck" jdbcType="DECIMAL" />
+    <result column="REGU_ACK_PERSON" property="reguAckPerson" jdbcType="VARCHAR" />
+    <result column="REGU_ACK_DATE" property="reguAckDate" jdbcType="TIMESTAMP" />
+    <result column="PLAT_ACK" property="platAck" jdbcType="DECIMAL" />
+    <result column="PLAT_ACK_PERSON" property="platAckPerson" jdbcType="VARCHAR" />
+    <result column="PLAT_ACK_DATE" property="platAckDate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <iterate property="oredCriteria" conjunction="or" prepend="where" removeFirstPrepend="iterate" >
+      <isEqual property="oredCriteria[].valid" compareValue="true" >
+        (
+        <iterate prepend="and" property="oredCriteria[].criteriaWithoutValue" conjunction="and" >
+          $oredCriteria[].criteriaWithoutValue[]$
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithSingleValue" conjunction="and" >
+          $oredCriteria[].criteriaWithSingleValue[].condition$ #oredCriteria[].criteriaWithSingleValue[].value#
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithListValue" conjunction="and" >
+          $oredCriteria[].criteriaWithListValue[].condition$
+          <iterate property="oredCriteria[].criteriaWithListValue[].values" open="(" close=")" conjunction="," >
+            #oredCriteria[].criteriaWithListValue[].values[]#
+          </iterate>
+        </iterate>
+        <iterate prepend="and" property="oredCriteria[].criteriaWithBetweenValue" conjunction="and" >
+          $oredCriteria[].criteriaWithBetweenValue[].condition$
+          #oredCriteria[].criteriaWithBetweenValue[].values[0]# and
+          #oredCriteria[].criteriaWithBetweenValue[].values[1]#
+        </iterate>
+        )
+      </isEqual>
+    </iterate>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, SERIAL_NO, WAREHOUSE_ID, GOODS_LIST_ID, RATIO, CUR_COLL_NUM, CUR_UNIT_PRICE, 
+    CUR_TOTAL_PRICE, IS_VALID, MERCH_ACK, MERCH_ACK_PERSON, MERCH_ACK_DATE, BANKS_ACK, 
+    BANKS_ACK_PERSON, BANKS_ACK_DATE, STORE_ACK, STORE_ACK_PERSON, STORE_ACK_DATE, REGU_ACK, 
+    REGU_ACK_PERSON, REGU_ACK_DATE, PLAT_ACK, PLAT_ACK_PERSON, PLAT_ACK_DATE, GMT_MODIFY, 
+    GMT_CREATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollListCriteria" >
+    select
+    <isParameterPresent >
+      <isEqual property="distinct" compareValue="true" >
+        distinct
+      </isEqual>
+    </isParameterPresent>
+    <include refid="FINANC_COLL_LIST.Base_Column_List" />
+    from "FINANC_COLL_LIST"
+    <isParameterPresent >
+      <include refid="FINANC_COLL_LIST.Example_Where_Clause" />
+      <isNotNull property="orderByClause" >
+        order by $orderByClause$
+      </isNotNull>
+    </isParameterPresent>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    select 
+    <include refid="FINANC_COLL_LIST.Base_Column_List" />
+    from "FINANC_COLL_LIST"
+    where ID = #id:DECIMAL#
+  </select>
+  <delete id="deleteByPrimaryKey" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    delete from "FINANC_COLL_LIST"
+    where ID = #id:DECIMAL#
+  </delete>
+  <delete id="deleteByExample" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollListCriteria" >
+    delete from "FINANC_COLL_LIST"
+    <include refid="FINANC_COLL_LIST.Example_Where_Clause" />
+  </delete>
+  <insert id="insert" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      SELECT SEQ_FINANC_COLL_LIST.NEXTVAL AS ID FROM DUAL
+    </selectKey>
+    insert into "FINANC_COLL_LIST" (ID, SERIAL_NO, WAREHOUSE_ID, GOODS_LIST_ID, 
+      RATIO, CUR_COLL_NUM, CUR_UNIT_PRICE, CUR_TOTAL_PRICE, 
+      IS_VALID, MERCH_ACK, MERCH_ACK_PERSON, MERCH_ACK_DATE, 
+      BANKS_ACK, BANKS_ACK_PERSON, BANKS_ACK_DATE, STORE_ACK, 
+      STORE_ACK_PERSON, STORE_ACK_DATE, REGU_ACK, REGU_ACK_PERSON, 
+      REGU_ACK_DATE, PLAT_ACK, PLAT_ACK_PERSON, PLAT_ACK_DATE, 
+      GMT_MODIFY, GMT_CREATE)
+    values (#id:DECIMAL#, #serialNo:DECIMAL#, #warehouseId:DECIMAL#, #goodsListId:DECIMAL#, 
+      #ratio:DECIMAL#, #curCollNum:DECIMAL#, #curUnitPrice:DECIMAL#, #curTotalPrice:DECIMAL#, 
+      #isValid:DECIMAL#, #merchAck:DECIMAL#, #merchAckPerson:VARCHAR#, #merchAckDate:TIMESTAMP#, 
+      #banksAck:DECIMAL#, #banksAckPerson:VARCHAR#, #banksAckDate:TIMESTAMP#, #storeAck:DECIMAL#, 
+      #storeAckPerson:VARCHAR#, #storeAckDate:TIMESTAMP#, #reguAck:DECIMAL#, #reguAckPerson:VARCHAR#, 
+      #reguAckDate:TIMESTAMP#, #platAck:DECIMAL#, #platAckPerson:VARCHAR#, #platAckDate:TIMESTAMP#, 
+      #gmtModify:TIMESTAMP#, #gmtCreate:TIMESTAMP#)
+  </insert>
+  <insert id="insertSelective" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    <selectKey resultClass="java.lang.Long" keyProperty="id" >
+      SELECT SEQ_FINANC_COLL_LIST.NEXTVAL AS ID FROM DUAL
+    </selectKey>
+    insert into "FINANC_COLL_LIST"
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        ID
+      </isNotNull>
+      <isNotNull prepend="," property="serialNo" >
+        SERIAL_NO
+      </isNotNull>
+      <isNotNull prepend="," property="warehouseId" >
+        WAREHOUSE_ID
+      </isNotNull>
+      <isNotNull prepend="," property="goodsListId" >
+        GOODS_LIST_ID
+      </isNotNull>
+      <isNotNull prepend="," property="ratio" >
+        RATIO
+      </isNotNull>
+      <isNotNull prepend="," property="curCollNum" >
+        CUR_COLL_NUM
+      </isNotNull>
+      <isNotNull prepend="," property="curUnitPrice" >
+        CUR_UNIT_PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="curTotalPrice" >
+        CUR_TOTAL_PRICE
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID
+      </isNotNull>
+      <isNotNull prepend="," property="merchAck" >
+        MERCH_ACK
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckPerson" >
+        MERCH_ACK_PERSON
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckDate" >
+        MERCH_ACK_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="banksAck" >
+        BANKS_ACK
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckPerson" >
+        BANKS_ACK_PERSON
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckDate" >
+        BANKS_ACK_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="storeAck" >
+        STORE_ACK
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckPerson" >
+        STORE_ACK_PERSON
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckDate" >
+        STORE_ACK_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="reguAck" >
+        REGU_ACK
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckPerson" >
+        REGU_ACK_PERSON
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckDate" >
+        REGU_ACK_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="platAck" >
+        PLAT_ACK
+      </isNotNull>
+      <isNotNull prepend="," property="platAckPerson" >
+        PLAT_ACK_PERSON
+      </isNotNull>
+      <isNotNull prepend="," property="platAckDate" >
+        PLAT_ACK_DATE
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE
+      </isNotNull>
+      )
+    </dynamic>
+    values
+    <dynamic prepend="(" >
+      <isNotNull prepend="," property="id" >
+        #id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="serialNo" >
+        #serialNo:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="warehouseId" >
+        #warehouseId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goodsListId" >
+        #goodsListId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="ratio" >
+        #ratio:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curCollNum" >
+        #curCollNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curUnitPrice" >
+        #curUnitPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curTotalPrice" >
+        #curTotalPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        #isValid:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAck" >
+        #merchAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckPerson" >
+        #merchAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckDate" >
+        #merchAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAck" >
+        #banksAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckPerson" >
+        #banksAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckDate" >
+        #banksAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAck" >
+        #storeAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckPerson" >
+        #storeAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckDate" >
+        #storeAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAck" >
+        #reguAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckPerson" >
+        #reguAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckDate" >
+        #reguAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="platAck" >
+        #platAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="platAckPerson" >
+        #platAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="platAckDate" >
+        #platAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      )
+    </dynamic>
+  </insert>
+  <select id="countByExample" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollListCriteria" resultClass="java.lang.Integer" >
+    select count(*) from "FINANC_COLL_LIST"
+    <include refid="FINANC_COLL_LIST.Example_Where_Clause" />
+  </select>
+  <update id="updateByExampleSelective" >
+    update "FINANC_COLL_LIST"
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="record.id" >
+        ID = #record.id:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.serialNo" >
+        SERIAL_NO = #record.serialNo:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.warehouseId" >
+        WAREHOUSE_ID = #record.warehouseId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.goodsListId" >
+        GOODS_LIST_ID = #record.goodsListId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.ratio" >
+        RATIO = #record.ratio:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.curCollNum" >
+        CUR_COLL_NUM = #record.curCollNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.curUnitPrice" >
+        CUR_UNIT_PRICE = #record.curUnitPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.curTotalPrice" >
+        CUR_TOTAL_PRICE = #record.curTotalPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.isValid" >
+        IS_VALID = #record.isValid:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchAck" >
+        MERCH_ACK = #record.merchAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchAckPerson" >
+        MERCH_ACK_PERSON = #record.merchAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.merchAckDate" >
+        MERCH_ACK_DATE = #record.merchAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.banksAck" >
+        BANKS_ACK = #record.banksAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.banksAckPerson" >
+        BANKS_ACK_PERSON = #record.banksAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.banksAckDate" >
+        BANKS_ACK_DATE = #record.banksAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.storeAck" >
+        STORE_ACK = #record.storeAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.storeAckPerson" >
+        STORE_ACK_PERSON = #record.storeAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.storeAckDate" >
+        STORE_ACK_DATE = #record.storeAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.reguAck" >
+        REGU_ACK = #record.reguAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.reguAckPerson" >
+        REGU_ACK_PERSON = #record.reguAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.reguAckDate" >
+        REGU_ACK_DATE = #record.reguAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.platAck" >
+        PLAT_ACK = #record.platAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="record.platAckPerson" >
+        PLAT_ACK_PERSON = #record.platAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="record.platAckDate" >
+        PLAT_ACK_DATE = #record.platAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.gmtModify" >
+        GMT_MODIFY = #record.gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="record.gmtCreate" >
+        GMT_CREATE = #record.gmtCreate:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    <isParameterPresent >
+      <include refid="FINANC_COLL_LIST.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByExample" >
+    update "FINANC_COLL_LIST"
+    set ID = #record.id:DECIMAL#,
+      SERIAL_NO = #record.serialNo:DECIMAL#,
+      WAREHOUSE_ID = #record.warehouseId:DECIMAL#,
+      GOODS_LIST_ID = #record.goodsListId:DECIMAL#,
+      RATIO = #record.ratio:DECIMAL#,
+      CUR_COLL_NUM = #record.curCollNum:DECIMAL#,
+      CUR_UNIT_PRICE = #record.curUnitPrice:DECIMAL#,
+      CUR_TOTAL_PRICE = #record.curTotalPrice:DECIMAL#,
+      IS_VALID = #record.isValid:DECIMAL#,
+      MERCH_ACK = #record.merchAck:DECIMAL#,
+      MERCH_ACK_PERSON = #record.merchAckPerson:VARCHAR#,
+      MERCH_ACK_DATE = #record.merchAckDate:TIMESTAMP#,
+      BANKS_ACK = #record.banksAck:DECIMAL#,
+      BANKS_ACK_PERSON = #record.banksAckPerson:VARCHAR#,
+      BANKS_ACK_DATE = #record.banksAckDate:TIMESTAMP#,
+      STORE_ACK = #record.storeAck:DECIMAL#,
+      STORE_ACK_PERSON = #record.storeAckPerson:VARCHAR#,
+      STORE_ACK_DATE = #record.storeAckDate:TIMESTAMP#,
+      REGU_ACK = #record.reguAck:DECIMAL#,
+      REGU_ACK_PERSON = #record.reguAckPerson:VARCHAR#,
+      REGU_ACK_DATE = #record.reguAckDate:TIMESTAMP#,
+      PLAT_ACK = #record.platAck:DECIMAL#,
+      PLAT_ACK_PERSON = #record.platAckPerson:VARCHAR#,
+      PLAT_ACK_DATE = #record.platAckDate:TIMESTAMP#,
+      GMT_MODIFY = #record.gmtModify:TIMESTAMP#,
+      GMT_CREATE = #record.gmtCreate:TIMESTAMP#
+    <isParameterPresent >
+      <include refid="FINANC_COLL_LIST.Example_Where_Clause" />
+    </isParameterPresent>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    update "FINANC_COLL_LIST"
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="serialNo" >
+        SERIAL_NO = #serialNo:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="warehouseId" >
+        WAREHOUSE_ID = #warehouseId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goodsListId" >
+        GOODS_LIST_ID = #goodsListId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="ratio" >
+        RATIO = #ratio:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curCollNum" >
+        CUR_COLL_NUM = #curCollNum:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curUnitPrice" >
+        CUR_UNIT_PRICE = #curUnitPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="curTotalPrice" >
+        CUR_TOTAL_PRICE = #curTotalPrice:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="isValid" >
+        IS_VALID = #isValid:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAck" >
+        MERCH_ACK = #merchAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckPerson" >
+        MERCH_ACK_PERSON = #merchAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="merchAckDate" >
+        MERCH_ACK_DATE = #merchAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAck" >
+        BANKS_ACK = #banksAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckPerson" >
+        BANKS_ACK_PERSON = #banksAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="banksAckDate" >
+        BANKS_ACK_DATE = #banksAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAck" >
+        STORE_ACK = #storeAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckPerson" >
+        STORE_ACK_PERSON = #storeAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="storeAckDate" >
+        STORE_ACK_DATE = #storeAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAck" >
+        REGU_ACK = #reguAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckPerson" >
+        REGU_ACK_PERSON = #reguAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="reguAckDate" >
+        REGU_ACK_DATE = #reguAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="platAck" >
+        PLAT_ACK = #platAck:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="platAckPerson" >
+        PLAT_ACK_PERSON = #platAckPerson:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="platAckDate" >
+        PLAT_ACK_DATE = #platAckDate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull>
+    </dynamic>
+    where ID = #id:DECIMAL#
+  </update>
+  <update id="updateByPrimaryKey" parameterClass="com.hundsun.network.gates.wulin.biz.domain.financing.FinancCollList" >
+    update "FINANC_COLL_LIST"
+    set SERIAL_NO = #serialNo:DECIMAL#,
+      WAREHOUSE_ID = #warehouseId:DECIMAL#,
+      GOODS_LIST_ID = #goodsListId:DECIMAL#,
+      RATIO = #ratio:DECIMAL#,
+      CUR_COLL_NUM = #curCollNum:DECIMAL#,
+      CUR_UNIT_PRICE = #curUnitPrice:DECIMAL#,
+      CUR_TOTAL_PRICE = #curTotalPrice:DECIMAL#,
+      IS_VALID = #isValid:DECIMAL#,
+      MERCH_ACK = #merchAck:DECIMAL#,
+      MERCH_ACK_PERSON = #merchAckPerson:VARCHAR#,
+      MERCH_ACK_DATE = #merchAckDate:TIMESTAMP#,
+      BANKS_ACK = #banksAck:DECIMAL#,
+      BANKS_ACK_PERSON = #banksAckPerson:VARCHAR#,
+      BANKS_ACK_DATE = #banksAckDate:TIMESTAMP#,
+      STORE_ACK = #storeAck:DECIMAL#,
+      STORE_ACK_PERSON = #storeAckPerson:VARCHAR#,
+      STORE_ACK_DATE = #storeAckDate:TIMESTAMP#,
+      REGU_ACK = #reguAck:DECIMAL#,
+      REGU_ACK_PERSON = #reguAckPerson:VARCHAR#,
+      REGU_ACK_DATE = #reguAckDate:TIMESTAMP#,
+      PLAT_ACK = #platAck:DECIMAL#,
+      PLAT_ACK_PERSON = #platAckPerson:VARCHAR#,
+      PLAT_ACK_DATE = #platAckDate:TIMESTAMP#,
+      GMT_MODIFY = #gmtModify:TIMESTAMP#,
+      GMT_CREATE = #gmtCreate:TIMESTAMP#
+    where ID = #id:DECIMAL#
+  </update>
+</sqlMap>

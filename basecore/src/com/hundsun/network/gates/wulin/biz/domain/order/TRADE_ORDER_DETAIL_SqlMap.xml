@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_ORDER_DETAIL" >
+  <resultMap id="TradeOrderDetailResult" class="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderDetail" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="DEAL" property="deal" jdbcType="VARCHAR" />
+    <result column="SELLER_LINK_MAN" property="sellerLinkMan" jdbcType="VARCHAR" />
+    <result column="SELLER_PHONE" property="sellerPhone" jdbcType="VARCHAR" />
+    <result column="SELLER_PROVINCE" property="sellerProvince" jdbcType="VARCHAR" />
+    <result column="SELLER_CITY" property="sellerCity" jdbcType="VARCHAR" />
+    <result column="SELLER_AREA" property="sellerArea" jdbcType="VARCHAR" />
+    <result column="SELLER_ZIP_CODE" property="sellerZipCode" jdbcType="VARCHAR" />
+    <result column="SELLER_ADDRESS" property="sellerAddress" jdbcType="VARCHAR" />
+    <result column="SELLER_BANK" property="sellerBank" jdbcType="VARCHAR" />
+    <result column="SELLER_BANKNUM" property="sellerBanknum" jdbcType="VARCHAR" />
+    <result column="BUYER_LINK_MAN" property="buyerLinkMan" jdbcType="VARCHAR" />
+    <result column="BUYER_PHONE" property="buyerPhone" jdbcType="VARCHAR" />
+    <result column="BUYER_PROVINCE" property="buyerProvince" jdbcType="VARCHAR" />
+    <result column="BUYER_CITY" property="buyerCity" jdbcType="VARCHAR" />
+    <result column="BUYER_AREA" property="buyerArea" jdbcType="VARCHAR" />
+    <result column="BUYER_ZIP_CODE" property="buyerZipCode" jdbcType="VARCHAR" />
+    <result column="BUYER_ADDRESS" property="buyerAddress" jdbcType="VARCHAR" />
+    <result column="BUYER_BANK" property="buyerBank" jdbcType="VARCHAR" />
+    <result column="BUYER_BANKNUM" property="buyerBanknum" jdbcType="VARCHAR" />
+    <result column="SELLER_NAME" property="sellerName" jdbcType="VARCHAR" />
+    <result column="SELLER_COMPANY" property="sellerCompany" jdbcType="VARCHAR" />
+    <result column="BUYER_NAME" property="buyerName" jdbcType="VARCHAR" />
+    <result column="BUYER_COMPANY" property="buyerCompany" jdbcType="VARCHAR" />
+    <result column="CERTIFICATES" property="certificates" jdbcType="VARCHAR" />
+    <result column="TAKEGOODS_PASSWORD" property="takegoodsPassword" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="STOREHOUSE" property="storehouse" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 新增 -->
+  <insert id="insert" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderDetail" >
+    <selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_TRADE_ORDER_DETAIL.NextVal AS VALUE FROM DUAL   
+    </selectKey>
+    insert into TRADE_ORDER_DETAIL (ID,GMT_CREATE, GMT_MODIFY
+    <isNotNull prepend="," property="orderNo" >
+        ORDER_NO
+      </isNotNull>
+      <isNotNull prepend="," property="deal" >
+        DEAL
+      </isNotNull>
+      <isNotNull prepend="," property="sellerLinkMan" >
+        SELLER_LINK_MAN
+      </isNotNull>
+      <isNotNull prepend="," property="sellerPhone" >
+        SELLER_PHONE
+      </isNotNull>
+      <isNotNull prepend="," property="sellerProvince" >
+        SELLER_PROVINCE
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCity" >
+        SELLER_CITY
+      </isNotNull>
+      <isNotNull prepend="," property="sellerArea" >
+        SELLER_AREA
+      </isNotNull>
+      <isNotNull prepend="," property="sellerZipCode" >
+        SELLER_ZIP_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="sellerAddress" >
+        SELLER_ADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBank" >
+        SELLER_BANK
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBanknum" >
+        SELLER_BANKNUM
+      </isNotNull>
+      <isNotNull prepend="," property="buyerLinkMan" >
+        BUYER_LINK_MAN
+      </isNotNull>
+      <isNotNull prepend="," property="buyerPhone" >
+        BUYER_PHONE
+      </isNotNull>
+      <isNotNull prepend="," property="buyerProvince" >
+        BUYER_PROVINCE
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCity" >
+        BUYER_CITY
+      </isNotNull>
+      <isNotNull prepend="," property="buyerArea" >
+        BUYER_AREA
+      </isNotNull>
+      <isNotNull prepend="," property="buyerZipCode" >
+        BUYER_ZIP_CODE
+      </isNotNull>
+      <isNotNull prepend="," property="buyerAddress" >
+        BUYER_ADDRESS
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBank" >
+        BUYER_BANK
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBanknum" >
+        BUYER_BANKNUM
+      </isNotNull>
+      <isNotNull prepend="," property="sellerName" >
+        SELLER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCompany" >
+        SELLER_COMPANY
+      </isNotNull>
+      <isNotNull prepend="," property="buyerName" >
+        BUYER_NAME
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCompany" >
+        BUYER_COMPANY
+      </isNotNull>
+      <isNotNull prepend="," property="certificates" >
+        CERTIFICATES
+      </isNotNull>
+      <isNotNull prepend="," property="takegoodsPassword" >
+        TAKEGOODS_PASSWORD
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR
+      </isNotNull>
+      <isNotNull prepend="," property="storehouse" >
+        STOREHOUSE
+      </isNotNull>
+    )values (#id:DECIMAL#, sysdate, sysdate  
+    <isNotNull prepend="," property="orderNo" >
+        #orderNo:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="deal" >
+        #deal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerLinkMan" >
+        #sellerLinkMan:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerPhone" >
+        #sellerPhone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerProvince" >
+        #sellerProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCity" >
+        #sellerCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerArea" >
+        #sellerArea:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerZipCode" >
+        #sellerZipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerAddress" >
+        #sellerAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBank" >
+        #sellerBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBanknum" >
+        #sellerBanknum:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerLinkMan" >
+        #buyerLinkMan:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerPhone" >
+        #buyerPhone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerProvince" >
+        #buyerProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCity" >
+        #buyerCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerArea" >
+        #buyerArea:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerZipCode" >
+        #buyerZipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerAddress" >
+        #buyerAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBank" >
+        #buyerBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBanknum" >
+        #buyerBanknum:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerName" >
+        #sellerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCompany" >
+        #sellerCompany:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerName" >
+        #buyerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCompany" >
+        #buyerCompany:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certificates" >
+        #certificates:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="takegoodsPassword" >
+        #takegoodsPassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="storehouse" >
+        #storehouse:VARCHAR#
+      </isNotNull>
+      )
+  </insert>
+  
+  <!-- 更新updateByOrderNo -->
+  <update id="updateByOrderNo" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderDetail" >
+    update TRADE_ORDER_DETAIL
+    <dynamic prepend="set" >
+      <isNotNull prepend="," property="deal" >
+        DEAL = #deal:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerLinkMan" >
+        SELLER_LINK_MAN = #sellerLinkMan:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerPhone" >
+        SELLER_PHONE = #sellerPhone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerProvince" >
+        SELLER_PROVINCE = #sellerProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCity" >
+        SELLER_CITY = #sellerCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerArea" >
+        SELLER_AREA = #sellerArea:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerZipCode" >
+        SELLER_ZIP_CODE = #sellerZipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerAddress" >
+        SELLER_ADDRESS = #sellerAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBank" >
+        SELLER_BANK = #sellerBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerBanknum" >
+        SELLER_BANKNUM = #sellerBanknum:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerLinkMan" >
+        BUYER_LINK_MAN = #buyerLinkMan:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerPhone" >
+        BUYER_PHONE = #buyerPhone:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerProvince" >
+        BUYER_PROVINCE = #buyerProvince:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCity" >
+        BUYER_CITY = #buyerCity:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerArea" >
+        BUYER_AREA = #buyerArea:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerZipCode" >
+        BUYER_ZIP_CODE = #buyerZipCode:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerAddress" >
+        BUYER_ADDRESS = #buyerAddress:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBank" >
+        BUYER_BANK = #buyerBank:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerBanknum" >
+        BUYER_BANKNUM = #buyerBanknum:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerName" >
+        SELLER_NAME = #sellerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="sellerCompany" >
+        SELLER_COMPANY = #sellerCompany:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerName" >
+        BUYER_NAME = #buyerName:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="buyerCompany" >
+        BUYER_COMPANY = #buyerCompany:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="certificates" >
+        CERTIFICATES = #certificates:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="takegoodsPassword" >
+        TAKEGOODS_PASSWORD = #takegoodsPassword:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="remark" >
+        REMARK = #remark:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtCreate" >
+        GMT_CREATE = #gmtCreate:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="gmtModify" >
+        GMT_MODIFY = #gmtModify:TIMESTAMP#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="storehouse" >
+        STOREHOUSE = #storehouse:VARCHAR#
+      </isNotNull>
+    </dynamic>
+    where ORDER_NO = #orderNo:VARCHAR#
+  </update>
+  
+  <!-- 根据orderNo查询selectByOrderNo -->
+  <select id="selectByOrderNo" resultMap="TradeOrderDetailResult" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderDetail" >
+    select ID, ORDER_NO, DEAL, SELLER_LINK_MAN, SELLER_PHONE, SELLER_PROVINCE, SELLER_CITY,
+      SELLER_AREA, SELLER_ZIP_CODE, SELLER_ADDRESS, SELLER_BANK, SELLER_BANKNUM, BUYER_LINK_MAN,
+      BUYER_PHONE, BUYER_PROVINCE, BUYER_CITY, BUYER_AREA, BUYER_ZIP_CODE, BUYER_ADDRESS,
+      BUYER_BANK, BUYER_BANKNUM, SELLER_NAME, SELLER_COMPANY, BUYER_NAME, BUYER_COMPANY,
+      CERTIFICATES, TAKEGOODS_PASSWORD, REMARK, GMT_CREATE, GMT_MODIFY, OPERATOR ,STOREHOUSE
+    from TRADE_ORDER_DETAIL
+    where ORDER_NO = #orderNo:VARCHAR#
+  </select>
+  
+  <!-- 删除deleteByOrderNo -->
+  <delete id="deleteByOrderNo" parameterClass="string" >
+    delete from TRADE_ORDER_DETAIL
+    where ORDER_NO = #value#
+  </delete>
+</sqlMap>

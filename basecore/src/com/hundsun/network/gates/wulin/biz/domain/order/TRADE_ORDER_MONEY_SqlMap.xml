@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_ORDER_MONEY" >
+  <resultMap id="tradeOrderMoneyResult" class="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderMoney" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="USER_ACCOUNT" property="userAccount" jdbcType="VARCHAR" />
+    <result column="FUND_ACCOUNT" property="fundAccount" jdbcType="VARCHAR" />
+    <result column="TRADE_DEPOSIT" property="tradeDeposit" jdbcType="DECIMAL" />
+    <result column="DELIVERY_DEPOSIT" property="deliveryDeposit" jdbcType="DECIMAL" />
+    <result column="TRADE_SERVICE_CHARGE" property="tradeServiceCharge" jdbcType="DECIMAL" />
+    <result column="GOODS_AMOUNT" property="goodsAmount" jdbcType="DECIMAL" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="GMT_MODIFY" property="gmtModify" jdbcType="TIMESTAMP" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="PENALTY_AMOUNT" property="penaltyAmount" jdbcType="DECIMAL" />
+  </resultMap>
+  <!-- 新增 -->
+  <insert id="insert" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderMoney" >
+  <selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_TRADE_ORDER_MONEY.NEXTVAL AS VALUE FROM DUAL
+    </selectKey>
+    insert into TRADE_ORDER_MONEY (ID, ORDER_NO, USER_ACCOUNT, FUND_ACCOUNT
+    	, GMT_CREATE, GMT_MODIFY, OPERATOR 
+    <isNotNull prepend="," property="tradeDeposit" >
+        TRADE_DEPOSIT
+      </isNotNull>
+      <isNotNull prepend="," property="deliveryDeposit" >
+        DELIVERY_DEPOSIT
+      </isNotNull>
+      <isNotNull prepend="," property="tradeServiceCharge" >
+        TRADE_SERVICE_CHARGE
+      </isNotNull>
+      <isNotNull prepend="," property="goodsAmount" >
+        GOODS_AMOUNT
+      </isNotNull>
+      <isNotNull prepend="," property="penaltyAmount" >
+        PENALTY_AMOUNT
+      </isNotNull>
+    )values (#id:DECIMAL#, #orderNo:VARCHAR#, #userAccount:VARCHAR#, #fundAccount:VARCHAR#
+    	,sysdate, sysdate, #operator:VARCHAR#
+      <isNotNull prepend="," property="tradeDeposit" >
+        #tradeDeposit:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deliveryDeposit" >
+        #deliveryDeposit:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="tradeServiceCharge" >
+        #tradeServiceCharge:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goodsAmount" >
+        #goodsAmount:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="penaltyAmount" >
+        #penaltyAmount:DECIMAL#
+      </isNotNull>
+      )
+  </insert>
+  
+  <!-- 根据条件查询 -->
+  <select id="selectByCondition" resultMap="tradeOrderMoneyResult" parameterClass="com.hundsun.network.gates.wulin.biz.domain.query.TradeOrderMoneyQuery" >
+    select ID, ORDER_NO, USER_ACCOUNT, FUND_ACCOUNT, TRADE_DEPOSIT, DELIVERY_DEPOSIT,
+      TRADE_SERVICE_CHARGE, GOODS_AMOUNT, GMT_CREATE, GMT_MODIFY, OPERATOR , PENALTY_AMOUNT
+    from TRADE_ORDER_MONEY
+    where ORDER_NO = #orderNo:VARCHAR#
+    <isNotEmpty prepend="," property="userAccount" >
+        USER_ACCOUNT = #userAccount:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="fundAccount" >
+        FUND_ACCOUNT = #fundAccount:VARCHAR#
+      </isNotEmpty>
+  </select>
+  
+  <!-- 根据orderNo 和 userAccount查询订单操作金额数据 -->
+  <select id="selectByAccountOrderNo" resultMap="tradeOrderMoneyResult" parameterClass="com.hundsun.network.gates.wulin.biz.domain.query.TradeOrderMoneyQuery" >
+    select ID, ORDER_NO, USER_ACCOUNT, FUND_ACCOUNT, TRADE_DEPOSIT, DELIVERY_DEPOSIT,
+      TRADE_SERVICE_CHARGE, GOODS_AMOUNT, GMT_CREATE, GMT_MODIFY, OPERATOR , PENALTY_AMOUNT
+    from TRADE_ORDER_MONEY
+    where ORDER_NO = #orderNo:VARCHAR# and USER_ACCOUNT = #userAccount:VARCHAR#
+  </select>
+  
+  <!-- 更新 -->
+  <update id="updateBySelective" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderMoney" >
+    update TRADE_ORDER_MONEY set GMT_MODIFY = sysdate
+    <dynamic>
+      <isNotNull prepend="," property="tradeDeposit" >
+        TRADE_DEPOSIT = #tradeDeposit:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="deliveryDeposit" >
+        DELIVERY_DEPOSIT = #deliveryDeposit:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="tradeServiceCharge" >
+        TRADE_SERVICE_CHARGE = #tradeServiceCharge:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="goodsAmount" >
+        GOODS_AMOUNT = #goodsAmount:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="," property="operator" >
+        OPERATOR = #operator:VARCHAR#
+      </isNotNull>
+      <isNotNull prepend="," property="penaltyAmount" >
+        PENALTY_AMOUNT = #penaltyAmount:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    where ORDER_NO = #orderNo:VARCHAR# and USER_ACCOUNT = #userAccount:VARCHAR#
+  </update>
+  
+  <delete id="deleteByOrderNo" parameterClass="string" >
+    delete from TRADE_ORDER_MONEY where ORDER_NO = #orderNo:VARCHAR#
+  </delete>
+</sqlMap>

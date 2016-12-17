@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TRADE_ORDER_LOG" >
+  <resultMap id="tradeOrderLogResult" class="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderLog" >
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="PRE_ORDER_STATUS" property="preOrderStatus" jdbcType="VARCHAR" />
+    <result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="OPERATOR" property="operator" jdbcType="VARCHAR" />
+    <result column="OPER_TYPE" property="operType" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="GMT_CREATE" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 新增 -->
+  <insert id="insert" parameterClass="com.hundsun.network.gates.wulin.biz.domain.order.TradeOrderLog" >
+  <selectKey resultClass="long" type="pre" keyProperty="id" >   
+        SELECT SEQ_TRADE_ORDER_LOG.NextVal AS VALUE FROM DUAL
+    </selectKey>
+    insert into TRADE_ORDER_LOG (ID, ORDER_NO, PRE_ORDER_STATUS, ORDER_STATUS, OPERATOR, OPER_TYPE,
+      REMARK, GMT_CREATE)
+    values (#id:DECIMAL#, #orderNo:VARCHAR#, #preOrderStatus:VARCHAR#, #orderStatus:VARCHAR#,
+      #operator:VARCHAR#, #operType:VARCHAR#, #remark:VARCHAR#, sysdate )
+  </insert>
+  
+  <!-- 根据orderNo查询列表 -->
+  <select id="selectByOrderNo" resultMap="tradeOrderLogResult" parameterClass="string" >
+    select ID, ORDER_NO, PRE_ORDER_STATUS, ORDER_STATUS, OPERATOR, OPER_TYPE, REMARK, GMT_CREATE
+    from TRADE_ORDER_LOG
+    where ORDER_NO = #value#
+    order by GMT_CREATE
+  </select>
+</sqlMap>
