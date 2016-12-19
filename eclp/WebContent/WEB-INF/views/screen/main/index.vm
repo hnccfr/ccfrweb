@@ -1,0 +1,115 @@
+#set($layout = 'layout/blank.vm')
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <title>#if($systemTitle)$systemTitle #else 信息管理系统&nbsp;v1.0 #end</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<link href="/easyuimaker/css/base.css" rel="stylesheet">
+	<link href="/easyuimaker/css/platform.css" rel="stylesheet">
+	<link href="/easyuimaker/uimaker/easyui.css" rel="stylesheet">
+	<link href="/easyuimaker/js/layer/skin/default/layer.css" rel="stylesheet">
+</head> 
+<body>
+    <div class="container">
+        $contain.get('contain/crmheader.htm')
+		
+        <div id="pf-bd">
+        	<div id="pf-sider">
+           		$contain.get('contain/crmmenu.htm')
+			</div>
+			
+            <div id="pf-page">
+                <div id="pf-tabs" class="easyui-tabs1" style="width:100%;height:100%;">
+                  <div title="首页" style="padding:10px 5px 5px 10px;">
+                    <iframe class="page-iframe" src="$appServer.get('contain/crmbody.htm')" frameborder="no"   border="no" height="100%" width="100%" scrolling="auto"></iframe>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pf-ft">
+            <div class="system-name">
+              <i class="iconfont">&#xe6fe;</i>
+              <span>#if($systemTitle)$systemTitle #else 信息管理系统&nbsp;v1.0 #end</span>
+            </div>
+            <div class="copyright-name">
+              <span>CopyRight&nbsp;2016&nbsp;&nbsp;uimaker.com&nbsp;版权所有</span>
+              <i class="iconfont" >&#xe6ff;</i>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/easyuimaker/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/easyuimaker/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyuimaker/js/layer/layer.js"></script>
+    <script type="text/javascript" src="/easyuimaker/js/main.js"></script>
+    
+    <!--[if IE 7]>
+      <script type="text/javascript">
+        $(window).resize(function(){
+          $('#pf-bd').height($(window).height()-76);
+        }).resize();
+        
+      </script>
+    <![endif]-->  
+
+    
+    <script type="text/javascript">
+    var appServer ='$appServer';
+    
+    $('.easyui-tabs1').tabs({
+      tabHeight: 44,
+      onSelect:function(title,index){
+        var currentTab = $('.easyui-tabs1').tabs("getSelected");
+        if(currentTab.find("iframe") && currentTab.find("iframe").size()){
+            currentTab.find("iframe").attr("src",currentTab.find("iframe").attr("src"));
+        }
+      }
+    })
+    $(window).resize(function(){
+          $('.tabs-panels').height($("#pf-page").height()-46);
+          $('.panel-body').height($("#pf-page").height()-76)
+    }).resize();
+
+    var page = 0,
+        pages = ($('.pf-nav').height() / 70) - 1;
+
+    if(pages === 0){
+      $('.pf-nav-prev,.pf-nav-next').hide();
+    }
+    $(document).on('click', '.pf-nav-prev,.pf-nav-next', function(){
+
+
+      if($(this).hasClass('disabled')) return;
+      if($(this).hasClass('pf-nav-next')){
+        page++;
+        $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
+        if(page == pages){
+          $(this).addClass('disabled');
+          $('.pf-nav-prev').removeClass('disabled');
+        }else{
+          $('.pf-nav-prev').removeClass('disabled');
+        }
+        
+      }else{
+        page--;
+        $('.pf-nav').stop().animate({'margin-top': -70*page}, 200);
+        if(page == 0){
+          $(this).addClass('disabled');
+          $('.pf-nav-next').removeClass('disabled');
+        }else{
+          $('.pf-nav-next').removeClass('disabled');
+        }
+        
+      }
+    })
+
+    // setTimeout(function(){
+    //    $('.tabs-panels').height($("#pf-page").height()-46);
+    //    $('.panel-body').height($("#pf-page").height()-76)
+    // }, 200)
+    </script>
+</body> 
+</html>

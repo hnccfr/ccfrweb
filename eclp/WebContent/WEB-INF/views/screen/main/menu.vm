@@ -1,0 +1,35 @@
+ #set($layout = 'layout/blank.vm')
+<h2 class="pf-model-name">
+    <span class="iconfont">&#xe64a;</span>
+    <span class="pf-name" id="pf-title">统一登录系统</span>
+    <span class="toggle-icon"></span>
+</h2>
+
+<ul class="sider-nav">
+	 #if($!menuList)
+	  	#foreach($m in $!menuList)
+	  		<li>
+	            <a href="javascript:;">
+	                <span class="iconfont sider-nav-icon">&#xe620;</span>
+	                <span class="sider-nav-title">$m.name</span>
+	                <i class="iconfont">&#xe642;</i>
+	            </a>
+	            #if($m.isLeaf==2)
+	            <ul class="sider-nav-s">
+	               	#foreach($c in $m.childList)
+		               	#if($c.openType==1)					
+							#if($subSys.domain)
+		                         <li><a href="javascript:void(0);" onclick="addTab('$c.name','$subSys.domain/$!c.url')">$c.name</a></li>
+							#else
+								<li><a href="javascript:void(0);" onclick="addTab('$c.name','$appServer/$!c.url')">$c.name</a></li>
+							#end
+						#else
+							<li><a href="$!c.url" target="_blank">$c.name</a></li>
+						#end
+					#end
+	            </ul>
+	            #end
+	        </li>
+	  	#end
+	 #end	 
+</ul> 
